@@ -1,10 +1,10 @@
+import { once } from "events";
 import type {
   ChatInputCommandInteraction,
   RESTPostAPIApplicationCommandsJSONBody,
 } from "discord.js";
 import { ReplyableError } from "../error";
 import Pipeline from "../pipeline";
-import { once } from "events";
 
 export const definition = {
   name: "leave",

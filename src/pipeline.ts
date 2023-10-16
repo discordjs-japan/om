@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
+import { EventEmitter } from "events";
 import {
   joinVoiceChannel,
   type CreateVoiceConnectionOptions,
@@ -15,7 +17,6 @@ import {
   MessageCollector,
   type VoiceBasedChannel,
 } from "discord.js";
-import { EventEmitter } from "events";
 import { synthesis } from "./synthesis";
 
 export interface StateOptions
@@ -107,7 +108,7 @@ export default class Pipeline extends EventEmitter {
     const message = this.messageQueue.shift();
     if (!message) return;
     this.isSynthesizing = true;
-    synthesis(message)
+    void synthesis(message)
       .then((audio) => this.emit("synthesis", audio))
       .finally(() => (this.isSynthesizing = false));
   }
