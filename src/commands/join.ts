@@ -1,3 +1,4 @@
+import { once } from "events";
 import {
   ApplicationCommandOptionType,
   type ChatInputCommandInteraction,
@@ -6,7 +7,6 @@ import {
 } from "discord.js";
 import { ReplyableError } from "../error";
 import Pipeline from "../pipeline";
-import { VoiceConnectionStatus, entersState } from "@discordjs/voice";
 
 export const definition = {
   name: "join",
@@ -38,9 +38,6 @@ export async function handler(
     );
   }
   const pipeline = new Pipeline(channel);
-  await Promise.all([
-    interaction.deferReply(),
-    entersState(pipeline.connection, VoiceConnectionStatus.Ready, 10_000),
-  ]);
+  await Promise.all([interaction.deferReply(), once(pipeline, "ready")]);
   await interaction.editReply(`${channel}に参加しました。`);
 }

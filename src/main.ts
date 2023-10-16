@@ -1,7 +1,7 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
-import { ReplyableError } from "./error";
 import * as join from "./commands/join";
 import * as leave from "./commands/leave";
+import { ReplyableError } from "./error";
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
@@ -25,4 +25,4 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
-client.login();
+void client.login();

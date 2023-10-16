@@ -9,7 +9,8 @@
   "plugins": ["@typescript-eslint", "import"],
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": "latest"
+    "ecmaVersion": "latest",
+    "project": true
   },
   "env": {
     "node": true
@@ -21,6 +22,8 @@
         "alphabetize": { "order": "asc" },
         "newlines-between": "never"
       }
-    ]
+    ],
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/no-base-to-string": "off"
   }
 }
