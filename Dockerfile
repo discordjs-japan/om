@@ -13,7 +13,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY --from=builder /app/dist/main.js ./dist
-COPY /app/package.json ./
+COPY ./package.json ./
 
 RUN npm install
 
