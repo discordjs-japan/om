@@ -12,7 +12,8 @@
     "lint:check": "eslint src",
     "lint:fix": "eslint src --fix",
     "format:check": "prettier --check src",
-    "format:write": "prettier --write src"
+    "format:write": "prettier --write src",
+    "prepare": "simple-git-hooks"
   },
   "author": "Discord.js Japan User Group (discordjs-japan.org)",
   "license": "MIT",
