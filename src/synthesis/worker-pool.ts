@@ -1,45 +1,40 @@
 import { AsyncResource } from "node:async_hooks";
 import { EventEmitter } from "node:events";
-import * as util from "node:util";
 import { Worker } from "node:worker_threads";
-import { AltJTalkConfig, SynthesisOption } from "node-altjtalk-binding";
-import { Result, Task } from "./worker-task";
 
 const kWorkerFreedEvent = Symbol("kWorkerFreedEvent");
 
-type Callback = (err: Error | null, result: Result | null) => void;
+type Callback<R> = (err: Error | null, result: R | null) => void;
 
-class WorkerPoolTaskInfo extends AsyncResource {
-  constructor(private callback: Callback) {
+class WorkerPoolTaskInfo<R> extends AsyncResource {
+  constructor(private callback: Callback<R>) {
     super("WorkerPoolTaskInfo");
   }
 
   done(err: Error, result: null): void;
-  done(err: null, result: Result): void;
-  done(err: Error | null, result: Result | null) {
+  done(err: null, result: R): void;
+  done(err: Error | null, result: R | null) {
     this.runInAsyncScope(this.callback, null, err, result);
     this.emitDestroy();
   }
 }
 
-export default class SynthesizeWorkerPool extends EventEmitter {
+export default class WorkerPool<T, R> extends EventEmitter {
   workers: Worker[];
   freeWorkers: Worker[];
-  workerInfo = new Map<number, WorkerPoolTaskInfo>();
-  tasks: { task: Task; callback: Callback }[];
+  workerInfo = new Map<number, WorkerPoolTaskInfo<R>>();
+  tasks: { task: T; callback: Callback<R> }[];
 
   constructor(
-    private config: AltJTalkConfig,
-    numThreads?: number,
+    private workerPath: URL,
+    numThreads: number,
   ) {
     super();
     this.workers = [];
     this.freeWorkers = [];
     this.tasks = [];
 
-    const threads = numThreads ?? 1;
-
-    for (let i = 0; i < threads; i++) this.addNewWorker();
+    for (let i = 0; i < numThreads; i++) this.addNewWorker();
 
     // Any time the kWorkerFreedEvent is emitted, dispatch
     // the next task pending in the queue, if any.
@@ -52,14 +47,10 @@ export default class SynthesizeWorkerPool extends EventEmitter {
     });
   }
 
-  addNewWorker() {
-    const worker = new Worker(new URL("worker-task.js", import.meta.url));
-    worker.postMessage({
-      type: "setup",
-      config: this.config,
-    } satisfies Task);
-
-    worker.on("message", (result: Result) => {
+  protected addNewWorker() {
+    const worker = new Worker(this.workerPath);
+    this.prepareWorker(worker);
+    worker.on("message", (result: R) => {
       // In case of success: Call the callback that was passed to `runTask`,
       // remove the `TaskInfo` associated with the Worker, and mark it as free
       // again.
@@ -88,7 +79,10 @@ export default class SynthesizeWorkerPool extends EventEmitter {
     this.emit(kWorkerFreedEvent);
   }
 
-  private runTask(task: Task, callback: Callback) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected prepareWorker(worker: Worker) {}
+
+  protected runTask(task: T, callback: Callback<R>) {
     const worker = this.freeWorkers.pop();
     if (!worker) {
       // No free threads, wait until a worker thread becomes free.
@@ -101,21 +95,7 @@ export default class SynthesizeWorkerPool extends EventEmitter {
     worker.postMessage(task);
   }
 
-  public async synthesize(
-    inputText: string,
-    option: SynthesisOption,
-  ): Promise<Int16Array> {
-    const result = await util.promisify(this.runTask.bind(this))({
-      type: "task",
-      inputText,
-      option,
-    });
-    if (!result) throw new Error("Task returned error!");
-
-    return result?.data;
-  }
-
-  async close() {
+  public async close() {
     for (const worker of this.workers) await worker.terminate();
   }
 }

@@ -1,38 +1,46 @@
 import { Readable } from "node:stream";
+import * as util from "node:util";
+import { Worker } from "node:worker_threads";
 import {
   AudioResource,
   StreamType,
   createAudioResource,
 } from "@discordjs/voice";
 import { Message } from "discord.js";
-import SynthesizeWorkerPool from "./worker-pool";
+import { AltJTalkConfig, SynthesisOption } from "node-altjtalk-binding";
+import WorkerPool from "./worker-pool";
+import { Result, Task } from "./worker-task";
 
-const pool =
-  process.env.DICTIONARY && process.env.MODEL
-    ? new SynthesizeWorkerPool(
-        {
-          dictionary: process.env.DICTIONARY,
-          model: process.env.MODEL,
-        },
-        process.env.NUM_THREADS ? Number(process.env.NUM_THREADS) : undefined,
-      )
-    : undefined;
+class SynthesizeWorkerPool extends WorkerPool<Task, Result> {
+  constructor(
+    private config: AltJTalkConfig,
+    numThreads?: number,
+  ) {
+    super(new URL("worker-task.js", import.meta.url), numThreads ?? 1);
+  }
 
-export async function synthesis(message: Message): Promise<AudioResource> {
-  if (!pool) throw new Error("Please provide path to the dictionary and model");
+  protected override prepareWorker(worker: Worker): void {
+    worker.postMessage({
+      type: "setup",
+      config: this.config,
+    } satisfies Task);
+  }
 
-  const content =
-    message.cleanContent.length > 200
-      ? `${message.cleanContent.slice(0, 190)} 以下略`
-      : message.cleanContent;
+  public async synthesize(
+    inputText: string,
+    option: SynthesisOption,
+  ): Promise<Int16Array> {
+    const result = await util.promisify(this.runTask.bind(this))({
+      type: "task",
+      inputText,
+      option,
+    });
+    if (!result) throw new Error("Task returned error!");
+    if (result.type !== "task")
+      throw new Error("Task returned wrong type of response!");
 
-  const data = await pool.synthesize(content, {
-    samplingFrequency: 48000,
-  });
-
-  return createAudioResource(new SynthesizedSoundStream(data), {
-    inputType: StreamType.Raw,
-  });
+    return result?.data;
+  }
 }
 
 class SynthesizedSoundStream extends Readable {
@@ -69,4 +77,32 @@ class SynthesizedSoundStream extends Readable {
   _destroy() {
     this.buf = null;
   }
+}
+
+const pool =
+  process.env.DICTIONARY && process.env.MODEL
+    ? new SynthesizeWorkerPool(
+        {
+          dictionary: process.env.DICTIONARY,
+          model: process.env.MODEL,
+        },
+        process.env.NUM_THREADS ? Number(process.env.NUM_THREADS) : undefined,
+      )
+    : undefined;
+
+export async function synthesis(message: Message): Promise<AudioResource> {
+  if (!pool) throw new Error("Please provide path to the dictionary and model");
+
+  const content =
+    message.cleanContent.length > 200
+      ? `${message.cleanContent.slice(0, 190)} 以下略`
+      : message.cleanContent;
+
+  const data = await pool.synthesize(content, {
+    samplingFrequency: 48000,
+  });
+
+  return createAudioResource(new SynthesizedSoundStream(data), {
+    inputType: StreamType.Raw,
+  });
 }
