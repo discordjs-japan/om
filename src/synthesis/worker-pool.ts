@@ -1,3 +1,5 @@
+// Reference: https://nodejs.org/api/async_context.html#using-asyncresource-for-a-worker-thread-pool
+
 import { AsyncResource } from "node:async_hooks";
 import { EventEmitter } from "node:events";
 import { Worker } from "node:worker_threads";
