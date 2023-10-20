@@ -5,7 +5,7 @@ import {
   createAudioResource,
 } from "@discordjs/voice";
 import { Message } from "discord.js";
-import SynthesizeWorkerPool from "./synthesizer/worker-pool";
+import SynthesizeWorkerPool from "./worker-pool";
 
 const pool =
   process.env.DICTIONARY && process.env.MODEL
