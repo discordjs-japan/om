@@ -1,7 +1,8 @@
 {
   "ts-node": {
     "esm": true,
-    "experimentalSpecifierResolution": "node"
+    "experimentalSpecifierResolution": "node",
+    "require": ["dotenv/config"]
   },
   "compilerOptions": {
     "target": "ES2022",
