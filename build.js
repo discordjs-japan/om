@@ -10,3 +10,13 @@ await build({
   external: Object.keys(packageJson.dependencies),
   minify: true,
 });
+
+await build({
+  entryPoints: ["src/synthesizer/worker-task.ts"],
+  bundle: true,
+  outfile: "dist/worker-task.js",
+  platform: "node",
+  format: "esm",
+  external: Object.keys(packageJson.dependencies),
+  minify: true,
+});
