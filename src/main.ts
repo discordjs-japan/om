@@ -4,7 +4,12 @@ import * as leave from "./commands/leave";
 import { ReplyableError } from "./error";
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.MessageContent,
+  ],
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
