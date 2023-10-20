@@ -8,15 +8,15 @@ import {
 } from "@discordjs/voice";
 import { Message } from "discord.js";
 import { AltJTalkConfig, SynthesisOption } from "node-altjtalk-binding";
+import { Result, Task } from "./task";
 import WorkerPool from "./worker-pool";
-import { Result, Task } from "./worker-task";
 
 class SynthesizeWorkerPool extends WorkerPool<Task, Result> {
   constructor(
     private config: AltJTalkConfig,
     numThreads?: number,
   ) {
-    super(new URL("worker-task.js", import.meta.url), numThreads ?? 1);
+    super(new URL("task.js", import.meta.url), numThreads ?? 1);
   }
 
   protected override prepareWorker(worker: Worker): void {

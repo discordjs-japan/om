@@ -12,9 +12,9 @@ await build({
 });
 
 await build({
-  entryPoints: ["src/synthesizer/worker-task.ts"],
+  entryPoints: ["src/synthesis/task.ts"],
   bundle: true,
-  outfile: "dist/worker-task.js",
+  outfile: "dist/task.js",
   platform: "node",
   format: "esm",
   external: Object.keys(packageJson.dependencies),
