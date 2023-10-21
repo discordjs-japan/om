@@ -13,7 +13,7 @@
     "lint:fix": "eslint src --fix",
     "format:check": "prettier --check src",
     "format:write": "prettier --write src",
-    "prepare": "simple-git-hooks"
+    "prepare": "simple-git-hooks || [ \"$NODE_ENV\" = \"production\" ]"
   },
   "author": "Discord.js Japan User Group (discordjs-japan.org)",
   "license": "MIT",
