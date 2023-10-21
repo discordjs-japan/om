@@ -89,7 +89,19 @@ export default class WorkerPool<T, R, W> extends EventEmitter {
     this.emit(kWorkerFreedEvent);
   }
 
-  protected runTask(task: T, callback: Callback<R>) {
+  protected runTask(task: T): Promise<R>;
+  protected runTask(task: T, callback: Callback<R>): void;
+  protected runTask(task: T, callback?: Callback<R>): Promise<R> | undefined {
+    if (!callback) {
+      return new Promise((resolve, reject) => {
+        this.runTask(task, (err, result) => {
+          if (err) reject(err);
+          else if (result) resolve(result);
+          else reject(new Error("Task failed for unknown reason"));
+        });
+      });
+    }
+
     const worker = this.freeWorkers.pop();
     if (!worker) {
       // No free threads, wait until a worker thread becomes free.

@@ -1,5 +1,4 @@
 import { Readable } from "node:stream";
-import * as util from "node:util";
 import {
   AudioResource,
   StreamType,
@@ -19,12 +18,8 @@ class SynthesizeWorkerPool extends WorkerPool<Task, Result, AltJTalkConfig> {
     inputText: string,
     option: SynthesisOption,
   ): Promise<Int16Array> {
-    const result = await util.promisify(this.runTask.bind(this))({
-      inputText,
-      option,
-    });
-    if (result) return result?.data;
-    else throw new Error("Task returned error!");
+    const result = await this.runTask({ inputText, option });
+    return result.data;
   }
 }
 
