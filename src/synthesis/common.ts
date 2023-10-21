@@ -6,7 +6,6 @@ export type Task = {
 };
 
 export type Result = {
-  type: "task";
   data: Int16Array;
 };
 

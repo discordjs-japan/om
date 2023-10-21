@@ -12,7 +12,6 @@ if (parentPort) {
     if (!parentPort) return;
     const data = synthesizer.synthesize(task.inputText, task.option);
     parentPort.postMessage({
-      type: "task",
       data,
     } satisfies Result);
   });
