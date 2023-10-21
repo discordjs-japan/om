@@ -1,13 +1,13 @@
 import { AltJTalkConfig, SynthesisOption } from "node-altjtalk-binding";
 
-export type Task = {
+export interface Task {
   inputText: string;
   option: SynthesisOption;
-};
+}
 
-export type Result = {
+export interface Result {
   data: Int16Array;
-};
+}
 
 export function isAltJTalkConfigValid(arg: unknown): arg is AltJTalkConfig {
   return (
