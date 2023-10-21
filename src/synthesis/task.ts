@@ -1,45 +1,19 @@
-import { parentPort } from "node:worker_threads";
-import {
-  AltJTalk,
-  AltJTalkConfig,
-  SynthesisOption,
-} from "node-altjtalk-binding";
+import { parentPort, workerData } from "node:worker_threads";
+import { AltJTalk } from "node-altjtalk-binding";
+import { Result, Task, isAltJTalkConfigValid } from "./common";
 
-export type Task =
-  | {
-      type: "setup";
-      config: AltJTalkConfig;
-    }
-  | {
-      type: "task";
-      inputText: string;
-      option: SynthesisOption;
-    };
+if (!isAltJTalkConfigValid(workerData))
+  throw new Error("AltJTalk config is invalid.");
 
-export type Result = {
-  type: "task";
-  data: Int16Array;
-};
-
-let synthesizer: AltJTalk | undefined = undefined;
+const synthesizer: AltJTalk = AltJTalk.fromConfig(workerData);
 
 if (parentPort) {
   parentPort.on("message", (task: Task) => {
     if (!parentPort) return;
-
-    switch (task.type) {
-      case "setup":
-        synthesizer = AltJTalk.fromConfig(task.config);
-        break;
-      case "task": {
-        if (!synthesizer) throw new Error("Synthesizer is not initialized!");
-        const data = synthesizer.synthesize(task.inputText, task.option);
-        parentPort.postMessage({
-          type: "task",
-          data,
-        } satisfies Result);
-        break;
-      }
-    }
+    const data = synthesizer.synthesize(task.inputText, task.option);
+    parentPort.postMessage({
+      type: "task",
+      data,
+    } satisfies Result);
   });
 }

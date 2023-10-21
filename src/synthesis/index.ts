@@ -1,6 +1,5 @@
 import { Readable } from "node:stream";
 import * as util from "node:util";
-import { Worker } from "node:worker_threads";
 import {
   AudioResource,
   StreamType,
@@ -8,22 +7,12 @@ import {
 } from "@discordjs/voice";
 import { Message } from "discord.js";
 import { AltJTalkConfig, SynthesisOption } from "node-altjtalk-binding";
-import { Result, Task } from "./task";
+import { Result, Task } from "./common";
 import WorkerPool from "./worker-pool";
 
-class SynthesizeWorkerPool extends WorkerPool<Task, Result> {
-  constructor(
-    private config: AltJTalkConfig,
-    numThreads?: number,
-  ) {
-    super(new URL("task.js", import.meta.url), numThreads ?? 1);
-  }
-
-  protected override prepareWorker(worker: Worker): void {
-    worker.postMessage({
-      type: "setup",
-      config: this.config,
-    } satisfies Task);
+class SynthesizeWorkerPool extends WorkerPool<Task, Result, AltJTalkConfig> {
+  constructor(config: AltJTalkConfig, numThreads?: number) {
+    super(new URL("task", import.meta.url), config, numThreads ?? 1);
   }
 
   public async synthesize(
@@ -31,15 +20,11 @@ class SynthesizeWorkerPool extends WorkerPool<Task, Result> {
     option: SynthesisOption,
   ): Promise<Int16Array> {
     const result = await util.promisify(this.runTask.bind(this))({
-      type: "task",
       inputText,
       option,
     });
-    if (!result) throw new Error("Task returned error!");
-    if (result.type !== "task")
-      throw new Error("Task returned wrong type of response!");
-
-    return result?.data;
+    if (result) return result?.data;
+    else throw new Error("Task returned error!");
   }
 }
 

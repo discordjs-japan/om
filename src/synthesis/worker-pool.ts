@@ -4,6 +4,11 @@ import { AsyncResource } from "node:async_hooks";
 import { EventEmitter } from "node:events";
 import { Worker } from "node:worker_threads";
 
+const isTsNode = () => {
+  const tsNodeSymbol = Symbol.for("ts-node.register.instance");
+  return tsNodeSymbol in process && !!process[tsNodeSymbol];
+};
+
 const kWorkerFreedEvent = Symbol("kWorkerFreedEvent");
 
 type Callback<R> = (err: Error | null, result: R | null) => void;
@@ -21,14 +26,15 @@ class WorkerPoolTaskInfo<R> extends AsyncResource {
   }
 }
 
-export default class WorkerPool<T, R> extends EventEmitter {
-  workers: Worker[];
-  freeWorkers: Worker[];
-  workerInfo = new Map<number, WorkerPoolTaskInfo<R>>();
-  tasks: { task: T; callback: Callback<R> }[];
+export default class WorkerPool<T, R, W> extends EventEmitter {
+  private workers: Worker[];
+  private freeWorkers: Worker[];
+  private workerInfo = new Map<number, WorkerPoolTaskInfo<R>>();
+  private tasks: { task: T; callback: Callback<R> }[];
 
   constructor(
-    private workerPath: URL,
+    protected workerPath: string | URL,
+    protected workerData: W,
     numThreads: number,
   ) {
     super();
@@ -50,8 +56,10 @@ export default class WorkerPool<T, R> extends EventEmitter {
   }
 
   protected addNewWorker() {
-    const worker = new Worker(this.workerPath);
-    this.prepareWorker(worker);
+    const worker = new Worker(this.workerPath, {
+      execArgv: isTsNode() ? ["--loader", "ts-node/esm"] : undefined,
+      workerData: this.workerData,
+    });
     worker.on("message", (result: R) => {
       // In case of success: Call the callback that was passed to `runTask`,
       // remove the `TaskInfo` associated with the Worker, and mark it as free
@@ -80,9 +88,6 @@ export default class WorkerPool<T, R> extends EventEmitter {
     this.freeWorkers.push(worker);
     this.emit(kWorkerFreedEvent);
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected prepareWorker(worker: Worker) {}
 
   protected runTask(task: T, callback: Callback<R>) {
     const worker = this.freeWorkers.pop();
