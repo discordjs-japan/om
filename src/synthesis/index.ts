@@ -1,25 +1,42 @@
 import { Readable } from "node:stream";
-import {
-  AudioResource,
-  StreamType,
-  createAudioResource,
-} from "@discordjs/voice";
-import { Message } from "discord.js";
-import { AltJTalkConfig, SynthesisOption } from "node-altjtalk-binding";
+import { StreamType, createAudioResource } from "@discordjs/voice";
+import { AltJTalkConfig } from "node-altjtalk-binding";
 import { Result, Task } from "./common";
 import WorkerPool from "./worker-pool";
 
-class SynthesizeWorkerPool extends WorkerPool<Task, Result, AltJTalkConfig> {
-  constructor(config: AltJTalkConfig, numThreads?: number) {
-    super(new URL("task", import.meta.url), config, numThreads ?? 1);
+export class SynthesisWorkerPool extends WorkerPool<
+  Task,
+  Result,
+  AltJTalkConfig,
+  object
+> {
+  constructor(dictionary: string, model: string) {
+    super(
+      new URL("task", import.meta.url),
+      {
+        dictionary,
+        model,
+      },
+      process.env.NUM_THREADS ? Number(process.env.NUM_THREADS) : 1,
+    );
+    this.on("data", ({ data }: Result) => {
+      const resource = createAudioResource(new SynthesizedSoundStream(data), {
+        inputType: StreamType.Raw,
+      });
+      this.emit("synthesis", resource);
+    });
   }
 
-  public async synthesize(
-    inputText: string,
-    option: SynthesisOption,
-  ): Promise<Int16Array> {
-    const result = await this.runTask({ inputText, option });
-    return result.data;
+  public dispatchSynthesis(inputText: string) {
+    this.dispatchTask(
+      {
+        inputText,
+        option: {
+          samplingFrequency: 48000,
+        },
+      },
+      {},
+    );
   }
 }
 
@@ -57,32 +74,4 @@ class SynthesizedSoundStream extends Readable {
   _destroy() {
     this.buf = null;
   }
-}
-
-const pool =
-  process.env.DICTIONARY && process.env.MODEL
-    ? new SynthesizeWorkerPool(
-        {
-          dictionary: process.env.DICTIONARY,
-          model: process.env.MODEL,
-        },
-        process.env.NUM_THREADS ? Number(process.env.NUM_THREADS) : undefined,
-      )
-    : undefined;
-
-export async function synthesis(message: Message): Promise<AudioResource> {
-  if (!pool) throw new Error("Please provide path to the dictionary and model");
-
-  const content =
-    message.cleanContent.length > 200
-      ? `${message.cleanContent.slice(0, 190)} 以下略`
-      : message.cleanContent;
-
-  const data = await pool.synthesize(content, {
-    samplingFrequency: 48000,
-  });
-
-  return createAudioResource(new SynthesizedSoundStream(data), {
-    inputType: StreamType.Raw,
-  });
 }

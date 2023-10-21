@@ -17,7 +17,7 @@ import {
   MessageCollector,
   type VoiceBasedChannel,
 } from "discord.js";
-import { synthesis } from "./synthesis";
+import { SynthesisWorkerPool } from "./synthesis";
 
 export interface StateOptions
   extends CreateVoiceConnectionOptions,
@@ -35,9 +35,8 @@ export default class Pipeline extends EventEmitter {
   public readonly connection: VoiceConnection;
   public readonly player: AudioPlayer;
   private readonly collector: MessageCollector;
-  private messageQueue: Message[] = [];
   private audioQueue: AudioResource[] = [];
-  private isSynthesizing = false;
+  private readonly pool?: SynthesisWorkerPool;
 
   constructor(public readonly channel: VoiceBasedChannel) {
     super();
@@ -53,6 +52,16 @@ export default class Pipeline extends EventEmitter {
     this.collector = channel.createMessageCollector({
       filter: (message) => !message.author.bot,
     });
+
+    if (process.env.DICTIONARY && process.env.MODEL) {
+      this.pool = new SynthesisWorkerPool(
+        process.env.DICTIONARY,
+        process.env.MODEL,
+      );
+      this.pool.on("synthesis", (resource: AudioResource) => {
+        this.emit("synthesis", resource);
+      });
+    }
 
     this.init();
   }
@@ -90,27 +99,19 @@ export default class Pipeline extends EventEmitter {
       Pipeline.#cache.delete(this.channel.guild.id);
     });
     this.on("message", (message) => {
-      this.messageQueue.push(message);
-      this.synthesis();
+      this.pool?.dispatchSynthesis(
+        message.cleanContent.length > 200
+          ? `${message.cleanContent.slice(0, 196)} 以下略`
+          : message.cleanContent,
+      );
     });
     this.on("synthesis", (audio) => {
       this.audioQueue.push(audio);
       this.play();
-      this.synthesis();
     });
     this.on("idle", () => {
       this.play();
     });
-  }
-
-  synthesis() {
-    if (this.isSynthesizing) return;
-    const message = this.messageQueue.shift();
-    if (!message) return;
-    this.isSynthesizing = true;
-    void synthesis(message)
-      .then((audio) => this.emit("synthesis", audio))
-      .finally(() => (this.isSynthesizing = false));
   }
 
   play() {
