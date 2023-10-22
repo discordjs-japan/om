@@ -17,7 +17,7 @@ import {
   MessageCollector,
   type VoiceBasedChannel,
 } from "discord.js";
-import { SynthesisWorkerPool } from "./synthesis";
+import { synthesizer } from "./synthesis";
 
 export interface StateOptions
   extends CreateVoiceConnectionOptions,
@@ -36,7 +36,6 @@ export default class Pipeline extends EventEmitter {
   public readonly player: AudioPlayer;
   private readonly collector: MessageCollector;
   private audioQueue: AudioResource[] = [];
-  private readonly pool?: SynthesisWorkerPool;
 
   constructor(public readonly channel: VoiceBasedChannel) {
     super();
@@ -52,16 +51,6 @@ export default class Pipeline extends EventEmitter {
     this.collector = channel.createMessageCollector({
       filter: (message) => !message.author.bot,
     });
-
-    if (process.env.DICTIONARY && process.env.MODEL) {
-      this.pool = new SynthesisWorkerPool(
-        process.env.DICTIONARY,
-        process.env.MODEL,
-      );
-      this.pool.on("synthesis", (resource: AudioResource) => {
-        this.emit("synthesis", resource);
-      });
-    }
 
     this.init();
   }
@@ -88,6 +77,10 @@ export default class Pipeline extends EventEmitter {
       "collect",
       (message) => void this.emit("message", message),
     );
+    synthesizer.on("synthesis", (resource, message) => {
+      if (message.channelId !== this.channel.id) return;
+      this.emit("synthesis", resource);
+    });
 
     this.on("ready", () => {
       this.play();
@@ -99,11 +92,7 @@ export default class Pipeline extends EventEmitter {
       Pipeline.#cache.delete(this.channel.guild.id);
     });
     this.on("message", (message) => {
-      this.pool?.dispatchSynthesis(
-        message.cleanContent.length > 200
-          ? `${message.cleanContent.slice(0, 196)} 以下略`
-          : message.cleanContent,
-      );
+      synthesizer.dispatchSynthesis(message);
     });
     this.on("synthesis", (audio) => {
       this.audioQueue.push(audio);
