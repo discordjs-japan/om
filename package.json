@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/main.js",
   "scripts": {
-    "dev": "ts-node src/main.ts",
+    "dev": "node --loader ts-node/esm --require dotenv/config src/main.ts",
     "build": "node build.js",
     "start": "node dist/main.js",
     "tsc:check": "tsc --noEmit",
