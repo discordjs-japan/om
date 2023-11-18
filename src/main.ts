@@ -30,4 +30,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
+client.once(Events.ClientReady, async (client) => {
+  client.application.commands.cache.clear();
+  await client.application.commands.set([join.definition, leave.definition]);
+});
+
 void client.login();
