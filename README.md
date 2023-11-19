@@ -15,7 +15,22 @@ Discord.js Japan User Group向けの読み上げボットです．
 [hts_voice_nitech_jp_atr503_m001-1.05.tar.gz](http://downloads.sourceforge.net/open-jtalk/hts_voice_nitech_jp_atr503_m001-1.05.tar.gz)
 をお勧めします．
 いずれもダウンロードした後解凍が必要です．
-それぞれパスが`model/naist-jdic`，`model/nitech_jp_atr503_m001.htsvoice`となるように配置してください．
+
+それぞれ次の図のように，パスが`model/naist-jdic`，`model/nitech_jp_atr503_m001.htsvoice`となるように配置してください．
+```
+(project-root)
+┣ model
+┃  ┣ naist-jdic
+┃  ┃  ┣ char_def.bin
+┃  ┃  ┣ dict.da
+┃  ┃  ┣ dict.vals
+┃  ┃  ┣ dict.words
+┃  ┃  ┣ dict.wordsidx
+┃  ┃  ┣ matrix.mtx
+┃  ┃  ┗ unk.bin
+┃  ┗ nitech_jp_atr503_m001.htsvoice
+┗ .env
+```
 
 最後に，次のコマンドを実行すると，ボットが起動します（Dockerがインストールされていることが必要です）．
 
