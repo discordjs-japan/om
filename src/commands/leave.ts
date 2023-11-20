@@ -18,7 +18,8 @@ export async function handler(
   if (!pipeline) {
     throw new ReplyableError("ボイスチャンネルに参加していません。");
   }
-  pipeline.connection.destroy();
+  // State change to `destoryed` is done synchronously.
+  setImmediate(() => pipeline.connection.destroy());
   await Promise.all([interaction.deferReply(), once(pipeline, "destroy")]);
   await interaction.editReply("退出しました。");
 }
