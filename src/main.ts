@@ -35,7 +35,11 @@ client.once(Events.ClientReady, async (client) => {
   await client.application.commands.set([join.definition, leave.definition]);
 });
 
-process.on("SIGINT", () => process.exit(0));
-process.on("SIGTERM", () => process.exit(0));
+function shutdown() {
+  void client.destroy().then(() => process.exit(0));
+}
+
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
 
 void client.login();
