@@ -3,7 +3,7 @@ import {
   ApplicationCommandOptionType,
   type ChatInputCommandInteraction,
   ChannelType,
-  type RESTPostAPIApplicationCommandsJSONBody,
+  type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from "discord.js";
 import { ReplyableError } from "../error";
 import Pipeline from "../pipeline";
@@ -21,7 +21,7 @@ export const definition = {
       channel_types: [ChannelType.GuildVoice, ChannelType.GuildStageVoice],
     },
   ],
-} satisfies RESTPostAPIApplicationCommandsJSONBody;
+} satisfies RESTPostAPIChatInputApplicationCommandsJSONBody;
 
 type AllowedChannelType =
   (typeof definition.options)[0]["channel_types"][number];

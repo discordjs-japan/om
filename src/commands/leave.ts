@@ -1,7 +1,7 @@
 import { once } from "events";
 import type {
   ChatInputCommandInteraction,
-  RESTPostAPIApplicationCommandsJSONBody,
+  RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from "discord.js";
 import { ReplyableError } from "../error";
 import Pipeline from "../pipeline";
@@ -9,7 +9,7 @@ import Pipeline from "../pipeline";
 export const definition = {
   name: "leave",
   description: "現在参加しているボイスチャンネルから退出します。",
-} satisfies RESTPostAPIApplicationCommandsJSONBody;
+} satisfies RESTPostAPIChatInputApplicationCommandsJSONBody;
 
 export async function handler(
   interaction: ChatInputCommandInteraction<"cached">,
