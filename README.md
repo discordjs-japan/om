@@ -17,4 +17,4 @@ docker run --rm -d --env-file .env ghcr.io/discordjs-japan/om:latest
 ## License Notice
 
 The docker version includes `HTS Voice "NIT ATR503 M001" version 1.05` downloaded from:
-<http://downloads.sourceforge.net/open-jtalk/hts_voice_nitech_jp_atr503_m001-1.05.tar.gz?
+<http://downloads.sourceforge.net/open-jtalk/hts_voice_nitech_jp_atr503_m001-1.05.tar.gz>
