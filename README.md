@@ -14,7 +14,26 @@ Discord.js Japan User Group向けの読み上げボットです．
 docker run --rm -d --env-file .env ghcr.io/discordjs-japan/om:latest
 ```
 
-## Notice
+## Copyright Notice
 
-The docker version includes `HTS Voice "NIT ATR503 M001" version 1.05` downloaded from:
-<http://downloads.sourceforge.net/open-jtalk/hts_voice_nitech_jp_atr503_m001-1.05.tar.gz>
+### [HTS Voice "NIT ATR503 M001" version 1.05](http://downloads.sourceforge.net/open-jtalk/hts_voice_nitech_jp_atr503_m001-1.05.tar.gz)
+
+> [!NOTE]
+> HTS Voice is only included in Docker container
+
+Creative Commons Attribution 3.0
+
+- Copyright (c) 2003-2012  Nagoya Institute of Technology Department of Computer Science
+- Copyright (c) 2003-2008  Tokyo Institute of Technology Interdisciplinary Graduate School of Science and Engineering
+
+### [naist-jdic](https://github.com/jpreprocess/jpreprocess/releases/download/v0.6.1/naist-jdic-jpreprocess.tar.gz)
+
+> [!NOTE]
+> naist-jdic is only included in Docker container
+
+BSD 3-Clause License
+
+- Copyright (c) 2009, Nara Institute of Science and Technology, Japan.
+- Copyright (c) 2011-2017, The UniDic Consortium
+- Copyright (c) 2008-2016 Nagoya Institute of Technology Department of Computer Science
+- Copyright (c) 2023, JPreprocess Team
