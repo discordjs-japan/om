@@ -23,9 +23,7 @@ RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.6.1/nai
     && rm naist-jdic-jpreprocess.tar.gz
 RUN wget http://downloads.sourceforge.net/open-jtalk/hts_voice_nitech_jp_atr503_m001-1.05.tar.gz \
     && tar xzf hts_voice_nitech_jp_atr503_m001-1.05.tar.gz \
-    && mv hts_voice_nitech_jp_atr503_m001-1.05/* ./ \
-    && rm hts_voice_nitech_jp_atr503_m001-1.05.tar.gz \
-    && rmdir hts_voice_nitech_jp_atr503_m001-1.05
+    && rm hts_voice_nitech_jp_atr503_m001-1.05.tar.gz
 
 FROM gcr.io/distroless/nodejs18-debian12:nonroot AS runner
 WORKDIR /app
