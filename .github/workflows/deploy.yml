@@ -33,10 +33,10 @@ jobs:
         with:
           images: ghcr.io/discordjs-japan/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
+            type=edge,branch=main
 
       - name: Build and push Docker image
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
