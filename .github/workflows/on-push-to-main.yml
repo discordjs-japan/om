@@ -1,0 +1,57 @@
+on:
+  push:
+    branches: main
+
+name: on push to main
+
+jobs:
+  release-please:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release-please.outputs.release_created }}
+      tag_name: ${{ steps.release-please.outputs.tag_name }}
+      pr: ${{ steps.release-please.outputs.pr }}
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        id: release-please
+        with:
+          release-type: node
+
+  docker-publish:
+    needs: release-please
+    permissions:
+      contents: write
+      packages: write
+    uses: ./.github/workflows/docker-publish.yml
+    with:
+      tag-name: ${{ needs.release-please.outputs.tag_name }}
+
+  post-release:
+    needs: [release-please, docker-publish]
+    if: ${{ needs.release-please.outputs.release_created }}
+    permissions:
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create published label
+        run: |
+          gh label create 'autorelease: published' --color=EDEDED || true
+      - name: Get PR number
+        id: pr-number
+        run: |
+          echo "pr_number=$(printf '${{ github.event.head_commit.message }}' | head -n1 | sed -nE 's/.+\(#([0-9]+)\)$/\1/p')" >> "$GITHUB_OUTPUT"
+      - name: Add comment to PR
+        run: |
+          printf ':robot: Successfully published to ${{ needs.docker-publish.outputs.image_url }} :truck:\n```\n${{ join(needs.docker-publish.outputs.image_tags, '\n') }}\n```' \
+          | gh pr comment ${{ steps.pr-number.outputs.pr_number }} --body-file=-
+      - name: Change labels on PR
+        run: |
+          gh pr edit ${{ steps.pr-number.outputs.pr_number }} \
+          --remove-label='autorelease: tagged' \
+          --add-label='autorelease: published'

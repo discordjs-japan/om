@@ -1,7 +1,14 @@
 on:
-  push:
-    branches: [main]
-    tags: [v*.*.*]
+  workflow_call:
+    inputs:
+      tag-name:
+        required: true
+        type: string
+    outputs:
+      image_tags:
+        value: ${{ jobs.docker-publish.outputs.image_tags }}
+      image_url:
+        value: https://ghcr.io/${{ github.repository_owner }}/om
 
 env:
   IMAGE_NAME: om
@@ -9,6 +16,8 @@ env:
 jobs:
   docker-publish:
     runs-on: ubuntu-latest
+    outputs:
+      image_tags: ${{ steps.metadata.outputs.tags }}
     permissions:
       contents: read
       packages: write
