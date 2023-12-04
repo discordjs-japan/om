@@ -15,6 +15,15 @@
   ],
   "dependencyDashboardAutoclose": true,
   "prConcurrentLimit": 3,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["(^|/)\\.npmrc$"],
+      "matchStrings": ["use-node-version=(?<currentValue>.*?)\\n"],
+      "depNameTemplate": "node",
+      "datasourceTemplate": "node-version"
+    }
+  ],
   "packageRules": [
     {
       "matchDepTypes": ["dependencies", "require"],
