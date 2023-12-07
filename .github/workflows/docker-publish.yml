@@ -7,7 +7,7 @@ env:
   IMAGE_NAME: om
 
 jobs:
-  build:
+  docker-publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
