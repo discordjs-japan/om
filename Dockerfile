@@ -6,7 +6,7 @@ WORKDIR /app
 COPY ./package*.json ./
 RUN npm ci
 
-FROM node:18.19.0 AS builder
+FROM --platform=$BUILDPLATFORM node:18.19.0 AS builder
 ARG NODE_ENV=development
 WORKDIR /app
 COPY ./build.js ./
@@ -15,7 +15,7 @@ RUN npm ci
 COPY ./src/ ./src/
 RUN npm run build
 
-FROM node:18 AS model-fetch
+FROM --platform=$BUILDPLATFORM node:18 AS model-fetch
 
 WORKDIR /app
 RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.6.1/naist-jdic-jpreprocess.tar.gz \
