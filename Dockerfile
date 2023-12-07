@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
 
-FROM node:18.18.2 AS deps
+FROM node:18.19.0 AS deps
 ARG NODE_ENV=production
 WORKDIR /app
 COPY ./package*.json ./
 RUN npm ci
 
-FROM node:18.18.2 AS builder
+FROM node:18.19.0 AS builder
 ARG NODE_ENV=development
 WORKDIR /app
 COPY ./build.js ./
