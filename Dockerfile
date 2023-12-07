@@ -11,7 +11,7 @@ ARG NODE_ENV=development
 WORKDIR /app
 COPY ./build.js ./
 COPY ./package*.json ./
-RUN npm ci
+RUN npm i -g npm@10.2.5 && npm ci
 COPY ./src/ ./src/
 RUN npm run build
 
