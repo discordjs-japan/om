@@ -1,8 +1,8 @@
+name: release
+
 on:
   push:
     branches: main
-
-name: on push to main
 
 jobs:
   release-please:
@@ -15,13 +15,15 @@ jobs:
       tag_name: ${{ steps.release-please.outputs.tag_name }}
       pr: ${{ steps.release-please.outputs.pr }}
     steps:
-      - uses: google-github-actions/release-please-action@v3
+      - uses: google-github-actions/release-please-action@a2d8d683f209466ee8c695cd994ae2cf08b1642d # v4.0.1
         id: release-please
         with:
-          release-type: node
+          config-file: .github/.config/release-please-config.json
+          manifest-file: .release-please-manifest.json
 
   docker-publish:
     needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
     permissions:
       contents: write
       packages: write
