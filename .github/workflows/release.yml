@@ -31,7 +31,7 @@ jobs:
     with:
       tag-name: ${{ needs.release-please.outputs.tag_name }}
 
-  post-release:
+  label-published:
     needs: [release-please, docker-publish]
     if: ${{ needs.release-please.outputs.release_created }}
     permissions:
