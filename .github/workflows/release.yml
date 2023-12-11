@@ -48,10 +48,6 @@ jobs:
         id: pr-number
         run: |
           echo "pr_number=$(printf '${{ github.event.head_commit.message }}' | head -n1 | sed -nE 's/.+\(#([0-9]+)\)$/\1/p')" >> "$GITHUB_OUTPUT"
-      - name: Add comment to PR
-        run: |
-          printf ':robot: Successfully published to ${{ needs.docker-publish.outputs.image_url }} :truck:\n```\n${{ join(needs.docker-publish.outputs.image_tags, '\n') }}\n```' \
-          | gh pr comment ${{ steps.pr-number.outputs.pr_number }} --body-file=-
       - name: Change labels on PR
         run: |
           gh pr edit ${{ steps.pr-number.outputs.pr_number }} \
