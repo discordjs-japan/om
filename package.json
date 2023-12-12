@@ -18,7 +18,7 @@
   "author": "Discord.js Japan User Group (discordjs-japan.org)",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "18",
+    "@types/node": "20",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "dotenv": "^16.3.1",
