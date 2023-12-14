@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1@sha256:ac85f380a63b13dfcefa89046420e1781752bab202122f8f50032edf31be0021
 
 FROM node:20.10.0-bookworm AS deps
 ARG NODE_ENV=production
@@ -25,7 +25,7 @@ RUN wget http://downloads.sourceforge.net/open-jtalk/hts_voice_nitech_jp_atr503_
     && tar xzf hts_voice_nitech_jp_atr503_m001-1.05.tar.gz \
     && rm hts_voice_nitech_jp_atr503_m001-1.05.tar.gz
 
-FROM gcr.io/distroless/nodejs20-debian12:nonroot AS runner
+FROM gcr.io/distroless/nodejs20-debian12:nonroot@sha256:375bec317b659469f2abb7df949a81ae5c4120c5bc0acad2c8bfb283cea19cc1 AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 COPY ./package.json ./
