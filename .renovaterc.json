@@ -20,6 +20,12 @@
       "matchDepTypes": ["dependencies", "require"],
       "semanticCommitType": "deps",
       "semanticCommitScope": null
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["docker/dockerfile"],
+      "matchDepTypes": "syntax",
+      "pinDigests": false
     }
   ]
 }
