@@ -25,7 +25,7 @@ RUN wget http://downloads.sourceforge.net/open-jtalk/hts_voice_nitech_jp_atr503_
     && tar xzf hts_voice_nitech_jp_atr503_m001-1.05.tar.gz \
     && rm hts_voice_nitech_jp_atr503_m001-1.05.tar.gz
 
-FROM gcr.io/distroless/nodejs20-debian12:nonroot@sha256:375bec317b659469f2abb7df949a81ae5c4120c5bc0acad2c8bfb283cea19cc1 AS runner
+FROM gcr.io/distroless/nodejs20-debian12:nonroot@sha256:015be521134f97b5f2b4c1543615eb4be907fadc8c6a52e60fd0c18f7cda0337 AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 COPY ./package.json ./
