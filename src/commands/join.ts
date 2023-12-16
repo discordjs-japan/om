@@ -37,6 +37,9 @@ export async function handler(
       "ボイスチャンネルに参加するか、チャンネルを指定してください。",
     );
   }
+  if (Pipeline.get(channel.guildId) != null) {
+    throw new ReplyableError("すでにボイスチャンネルに接続しています。");
+  }
   const pipeline = new Pipeline(channel);
   await Promise.all([interaction.deferReply(), once(pipeline, "ready")]);
   await interaction.editReply(`${channel}に参加しました。`);
