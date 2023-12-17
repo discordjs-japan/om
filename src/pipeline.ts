@@ -86,10 +86,10 @@ export default class Pipeline extends EventEmitter {
       this.play();
     });
     this.on("disconnect", () => {
-      this.destroy();
+      this.connection.destroy();
     });
     this.on("destroy", () => {
-      Pipeline.#cache.delete(this.channel.guild.id);
+      this.destroy();
     });
     this.on("message", (message) => {
       synthesizer.dispatchSynthesis(message);
@@ -112,7 +112,7 @@ export default class Pipeline extends EventEmitter {
   }
 
   destroy() {
-    this.connection.destroy();
+    Pipeline.#cache.delete(this.channel.guild.id);
     this.player.stop(true);
     this.collector.stop();
   }
