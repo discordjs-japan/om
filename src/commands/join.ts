@@ -38,6 +38,9 @@ export async function handler(
       "ボイスチャンネルに参加するか、チャンネルを指定してください。",
     );
   }
+  if (!channel.joinable) {
+    throw new ReplyableError("ボイスチャンネルに接続する権限がありません。");
+  }
   if (Pipeline.get(channel.guildId) != null) {
     throw new ReplyableError("すでにボイスチャンネルに接続しています。");
   }
