@@ -21,9 +21,7 @@ WORKDIR /app
 RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.6.1/naist-jdic-jpreprocess.tar.gz \
     && tar xzf naist-jdic-jpreprocess.tar.gz \
     && rm naist-jdic-jpreprocess.tar.gz
-RUN wget http://downloads.sourceforge.net/open-jtalk/hts_voice_nitech_jp_atr503_m001-1.05.tar.gz \
-    && tar xzf hts_voice_nitech_jp_atr503_m001-1.05.tar.gz \
-    && rm hts_voice_nitech_jp_atr503_m001-1.05.tar.gz
+RUN git clone --depth 1 https://github.com/icn-lab/htsvoice-tohoku-f01.git
 
 FROM gcr.io/distroless/nodejs20-debian12:nonroot@sha256:015be521134f97b5f2b4c1543615eb4be907fadc8c6a52e60fd0c18f7cda0337 AS runner
 WORKDIR /app
