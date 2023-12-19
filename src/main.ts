@@ -1,4 +1,5 @@
-import { Client, Events, GatewayIntentBits } from "discord.js";
+import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
+import packageJson from "../package.json" assert { type: "json" };
 import * as join from "./commands/join";
 import * as leave from "./commands/leave";
 import { ReplyableError } from "./error";
@@ -33,6 +34,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.once(Events.ClientReady, async (client) => {
   client.application.commands.cache.clear();
   await client.application.commands.set([join.definition, leave.definition]);
+  client.user.setActivity({
+    type: ActivityType.Custom,
+    name: `v${packageJson.version}`,
+  });
 });
 
 function shutdown() {
