@@ -35,5 +35,6 @@ export function createSynthesisOption(message: Message): SynthesisOption {
   return {
     additionalHalfTone: rng.range(-4, 3),
     speechSpeedRate: rng.range(1.2, 0.3, 3),
+    weightOfGvForLogF0: Math.exp(rng.range(0, 1, 3)),
   };
 }
