@@ -1,3 +1,4 @@
+import { esbuildPluginVersionInjector } from "esbuild-plugin-version-injector";
 import { build } from "esbuild";
 import packageJson from "./package.json" assert { type: "json" };
 
@@ -11,5 +12,6 @@ await build({
   platform: "node",
   format: "esm",
   external: Object.keys(packageJson.dependencies),
+  plugins: [esbuildPluginVersionInjector()],
   minify: true,
 });

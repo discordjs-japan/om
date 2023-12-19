@@ -1,7 +1,8 @@
-import { Client, Events, GatewayIntentBits } from "discord.js";
+import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
 import * as join from "./commands/join";
 import * as leave from "./commands/leave";
 import { ReplyableError } from "./error";
+import { version } from "./version";
 
 const client = new Client({
   intents: [
@@ -33,6 +34,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.once(Events.ClientReady, async (client) => {
   client.application.commands.cache.clear();
   await client.application.commands.set([join.definition, leave.definition]);
+  client.user.setActivity({
+    type: ActivityType.Custom,
+    name: `v${version}`,
+  });
 });
 
 function shutdown() {
