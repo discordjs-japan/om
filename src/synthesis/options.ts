@@ -33,7 +33,7 @@ export function createSynthesisOption(message: Message): SynthesisOption {
   const rng = new SeededRng(message.author.id);
 
   return {
-    additionalHalfTone: rng.range(-5, 3),
+    additionalHalfTone: rng.range(-4, 3),
     speechSpeedRate: rng.range(1.2, 0.3, 3),
   };
 }
