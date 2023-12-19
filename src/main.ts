@@ -1,8 +1,8 @@
 import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
-import packageJson from "../package.json" assert { type: "json" };
 import * as join from "./commands/join";
 import * as leave from "./commands/leave";
 import { ReplyableError } from "./error";
+import { version } from "./version";
 
 const client = new Client({
   intents: [
@@ -36,7 +36,7 @@ client.once(Events.ClientReady, async (client) => {
   await client.application.commands.set([join.definition, leave.definition]);
   client.user.setActivity({
     type: ActivityType.Custom,
-    name: `v${packageJson.version}`,
+    name: `v${version}`,
   });
 });
 
