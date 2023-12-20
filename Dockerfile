@@ -24,7 +24,8 @@ ENV PATH="$PNPM_HOME:$PATH"
 WORKDIR /package
 COPY --link --from=fetch-pnpm /pnpm/ /pnpm/
 RUN pnpm config set store-dir /.pnpm-store
-COPY --link .npmrc ./
+COPY --link .npmrc .node-version ./
+RUN echo "use-node-version=`cat .node-version`" >> .npmrc
 RUN --mount=type=cache,target=/.pnpm-store \
 # package.json: for simple-git-hooks 
     --mount=type=bind,source=package.json,target=package.json \
