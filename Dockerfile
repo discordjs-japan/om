@@ -27,8 +27,6 @@ RUN pnpm config set store-dir /.pnpm-store
 COPY --link .npmrc .node-version ./
 RUN echo "use-node-version=`cat .node-version`" >> .npmrc
 RUN --mount=type=cache,target=/.pnpm-store \
-# package.json: for simple-git-hooks 
-    --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
     pnpm fetch
 COPY --link package.json ./
