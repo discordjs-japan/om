@@ -1,6 +1,7 @@
 import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
 import * as join from "./commands/join";
 import * as leave from "./commands/leave";
+import * as skip from "./commands/skip";
 import { ReplyableError } from "./error";
 import { version } from "./version";
 
@@ -22,6 +23,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
         return await join.handler(interaction);
       case "leave":
         return await leave.handler(interaction);
+      case "skip":
+        return await skip.handler(interaction);
       default:
         throw new Error("不明なコマンドです。");
     }
@@ -33,7 +36,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.once(Events.ClientReady, async (client) => {
   client.application.commands.cache.clear();
-  await client.application.commands.set([join.definition, leave.definition]);
+  await client.application.commands.set([
+    join.definition,
+    leave.definition,
+    skip.definition,
+  ]);
   client.user.setActivity({
     type: ActivityType.Custom,
     name: `v${version}`,

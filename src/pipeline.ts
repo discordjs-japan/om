@@ -111,6 +111,11 @@ export default class Pipeline extends EventEmitter {
     this.player.play(audio);
   }
 
+  skip() {
+    this.player.stop();
+    // then this.player#stateChange will be emitted
+  }
+
   destroy() {
     Pipeline.#cache.delete(this.channel.guild.id);
     this.player.stop(true);
