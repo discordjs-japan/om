@@ -1,7 +1,7 @@
 services:
-  discordbot-om:
-    image: discordbot-om
-    container_name: discordbot-om
+  om:
+    image: discordjs-japan-om
+    container_name: discordjs-japan-om
     build: .
     env_file: .env
     pull_policy: build
