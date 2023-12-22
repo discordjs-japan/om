@@ -3,17 +3,18 @@
 FROM node:20.10.0-bookworm AS deps
 ARG NODE_ENV=production
 WORKDIR /app
-COPY ./package*.json ./
-RUN npm ci
+COPY ./package.json ./pnpm-lock.yaml ./
+RUN corepack pnpm install --frozen-lockfile
 
 FROM --platform=$BUILDPLATFORM node:20.10.0-bookworm AS builder
 ARG NODE_ENV=development
 WORKDIR /app
+RUN corepack enable pnpm
 COPY ./build.js ./
-COPY ./package*.json ./
-RUN npm ci
+COPY ./package*.json ./pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 COPY ./src/ ./src/
-RUN npm run build
+RUN pnpm run build
 
 FROM --platform=$BUILDPLATFORM node:20.10.0-bookworm AS model-fetch
 
