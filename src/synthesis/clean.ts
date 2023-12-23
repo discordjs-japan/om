@@ -24,7 +24,6 @@ function text(ast: ASTNode, message: Message): string {
     case "strong":
     case "underline":
     case "strikethrough":
-    case "spoiler":
       return text(astNodeOrEmpty(ast.content), message);
 
     case "text":
@@ -35,6 +34,9 @@ function text(ast: ASTNode, message: Message): string {
     case "url":
     case "autolink":
       return " URL省略 ";
+
+    case "spoiler":
+      return " 伏字 ";
 
     case "newline":
     case "br":
