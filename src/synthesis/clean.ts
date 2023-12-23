@@ -1,10 +1,11 @@
-import { parse } from "discord-markdown-parser";
-import type { Message } from "discord.js";
+import { parse, rules } from "discord-markdown-parser";
+import type { Guild, Message } from "discord.js";
+import { parserFor } from "simple-markdown";
 import type { SingleASTNode, ASTNode } from "simple-markdown";
 
 export function cleanMarkdown(message: Message) {
   const ast = parse(message.content, "extended");
-  return text(ast, message);
+  return text(ast, message.guild);
 }
 
 const dateTimeFormat = new Intl.DateTimeFormat("ja-JP", {
@@ -12,9 +13,9 @@ const dateTimeFormat = new Intl.DateTimeFormat("ja-JP", {
   timeStyle: "full",
 });
 
-function text(ast: ASTNode, message: Message): string {
+function text(ast: ASTNode, guild: Guild | null): string {
   if (Array.isArray(ast)) {
-    return ast.map((node) => text(node, message)).join("");
+    return ast.map((node) => text(node, guild)).join("");
   }
 
   switch (ast.type) {
@@ -24,7 +25,7 @@ function text(ast: ASTNode, message: Message): string {
     case "strong":
     case "underline":
     case "strikethrough":
-      return text(astNodeOrEmpty(ast.content), message);
+      return text(astNodeOrEmpty(ast.content), guild);
 
     case "text":
     case "escape":
@@ -35,15 +36,16 @@ function text(ast: ASTNode, message: Message): string {
       const url = stringOrEmpty(ast.url);
       const discordUrl = parseDiscordUrl(url);
       if (!discordUrl) return " URL省略 ";
-      if (message.guildId !== discordUrl.guildId) return " 外部サーバーのURL ";
+      if (guild?.id !== discordUrl.guildId) return " 外部サーバーのURL ";
 
-      const channel = message.guild?.channels.cache.get(discordUrl.channelId);
+      const channel = guild.channels.cache.get(discordUrl.channelId);
       if (!channel) return " 不明なチャンネル ";
 
+      const name = cleanTwemojis(channel.name);
       if (discordUrl.messageId) {
-        return `${channel.name}のメッセージ`;
+        return `${name}のメッセージ`;
       } else {
-        return channel.name;
+        return name;
       }
     }
     case "autolink":
@@ -63,22 +65,22 @@ function text(ast: ASTNode, message: Message): string {
 
     case "user": {
       const id = stringOrEmpty(ast.id);
-      const member = message.guild?.members.cache.get(id);
-      return member?.displayName ?? " 不明なユーザー ";
+      const member = guild?.members.cache.get(id);
+      return member ? cleanTwemojis(member.displayName) : " 不明なユーザー ";
     }
     case "channel": {
       const id = stringOrEmpty(ast.id);
-      const channel = message.guild?.channels.cache.get(id);
-      return channel?.name ?? " 不明なチャンネル ";
+      const channel = guild?.channels.cache.get(id);
+      return channel ? cleanTwemojis(channel.name) : " 不明なチャンネル ";
     }
     case "role": {
       const id = stringOrEmpty(ast.id);
-      const role = message.guild?.roles.cache.get(id);
-      return role?.name ?? " 不明なロール ";
+      const role = guild?.roles.cache.get(id);
+      return role ? cleanTwemojis(role.name) : " 不明なロール ";
     }
     case "emoji": {
       const id = stringOrEmpty(ast.id);
-      const emoji = message.guild?.emojis.cache.get(id);
+      const emoji = guild?.emojis.cache.get(id);
       return emoji?.name ?? " 不明な絵文字 ";
     }
     case "everyone": {
@@ -148,4 +150,14 @@ function parseDiscordUrl(url: string): DiscordUrl | undefined {
   if (!guildId || !channelId) return;
 
   return { guildId, channelId, messageId };
+}
+
+const twemojiParser = parserFor({
+  twemoji: rules.twemoji,
+  text: rules.text,
+});
+
+function cleanTwemojis(s: string) {
+  const ast = twemojiParser(s);
+  return text(ast, null); // should be only twemoji and text, so no problem with null
 }
