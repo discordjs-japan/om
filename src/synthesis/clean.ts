@@ -9,6 +9,7 @@ export function cleanMarkdown(message: Message) {
 }
 
 const dateTimeFormat = new Intl.DateTimeFormat("ja-JP", {
+  timeZone: "Asia/Tokyo",
   dateStyle: "full",
   timeStyle: "full",
 });
