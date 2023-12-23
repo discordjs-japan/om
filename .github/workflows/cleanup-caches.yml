@@ -1,0 +1,40 @@
+name: cleanup caches by a branch
+on:
+  pull_request:
+    types:
+      - closed
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      # https://docs.github.com/en/rest/actions/cache?apiVersion=2022-11-28#delete-a-github-actions-cache-for-a-repository-using-a-cache-id
+      actions: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Cleanup
+        env:
+          BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref  }}
+          MERGE_BRANCH: refs/pull/${{ github.event.pull_request.number }}/merge
+        run: |
+          gh extension install actions/gh-actions-cache
+
+          echo "Fetching list of cache key"
+          cacheKeysForBranch=$(gh actions-cache list --branch=$BRANCH --limit=100 | cut -f 1)
+          cacheKeysForPR=$(gh actions-cache list --branch=$MERGE_BRANCH --limit=100 | cut -f 1)
+
+          # Setting this to not fail the workflow while deleting cache keys.
+          set +e
+          echo "Deleting caches..."
+          for cacheKey in $cacheKeysForBranch
+          do
+            gh actions-cache delete $cacheKey --branch=$BRANCH --confirm
+          done
+          for cacheKey in $cacheKeysForPR
+          do
+            gh actions-cache delete $cacheKey --branch=$MERGE_BRANCH --confirm
+          done
+          echo "Done"
