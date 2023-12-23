@@ -31,7 +31,21 @@ function text(ast: ASTNode, message: Message): string {
     case "inlineCode":
       return stringOrEmpty(ast.content);
 
-    case "url":
+    case "url": {
+      const url = stringOrEmpty(ast.url);
+      const discordUrl = parseDiscordUrl(url);
+      if (!discordUrl) return " URL省略 ";
+      if (message.guildId !== discordUrl.guildId) return " 外部サーバーのURL ";
+
+      const channel = message.guild?.channels.cache.get(discordUrl.channelId);
+      if (!channel) return " 不明なチャンネル ";
+
+      if (discordUrl.messageId) {
+        return `${channel.name}のメッセージ`;
+      } else {
+        return channel.name;
+      }
+    }
     case "autolink":
       return " URL省略 ";
 
@@ -117,4 +131,21 @@ function isSingleASTNode(ast: unknown): ast is SingleASTNode {
 
 function stringOrEmpty(str: unknown): string {
   return typeof str === "string" ? str : "";
+}
+
+interface DiscordUrl {
+  guildId: string;
+  channelId: string;
+  messageId?: string | undefined;
+}
+
+function parseDiscordUrl(url: string): DiscordUrl | undefined {
+  const { protocol, host, pathname } = new URL(url);
+  if (protocol !== "https:") return;
+  if (!["discord.com", "canary.discord.com"].includes(host)) return;
+
+  const [, guildId, channelId, messageId] = pathname.split("/");
+  if (!guildId || !channelId) return;
+
+  return { guildId, channelId, messageId };
 }
