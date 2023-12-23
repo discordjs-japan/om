@@ -34,7 +34,7 @@ function text(ast: ASTNode, message: Message): string {
 
     case "url":
     case "autolink":
-      return "URL省略";
+      return " URL省略 ";
 
     case "newline":
     case "br":
@@ -42,34 +42,34 @@ function text(ast: ASTNode, message: Message): string {
 
     case "codeBlock": {
       const lang = stringOrEmpty(ast.lang);
-      return lang ? `${lang}のコード` : "コード";
+      return lang ? ` ${lang}のコード ` : " コード ";
     }
 
     case "user": {
       const id = stringOrEmpty(ast.id);
       const member = message.guild?.members.cache.get(id);
-      return member?.displayName ?? "不明なユーザー";
+      return member?.displayName ?? " 不明なユーザー ";
     }
     case "channel": {
       const id = stringOrEmpty(ast.id);
       const channel = message.guild?.channels.cache.get(id);
-      return channel?.name ?? "不明なチャンネル";
+      return channel?.name ?? " 不明なチャンネル ";
     }
     case "role": {
       const id = stringOrEmpty(ast.id);
       const role = message.guild?.roles.cache.get(id);
-      return role?.name ?? "不明なロール";
+      return role?.name ?? " 不明なロール ";
     }
     case "emoji": {
       const id = stringOrEmpty(ast.id);
       const emoji = message.guild?.emojis.cache.get(id);
-      return emoji?.name ?? "不明な絵文字";
+      return emoji?.name ?? " 不明な絵文字 ";
     }
     case "everyone": {
-      return "@エブリワン";
+      return " @エブリワン ";
     }
     case "here": {
-      return "@ヒア";
+      return " @ヒア ";
     }
     case "twemoji": {
       // TODO: proper text to read aloud
@@ -88,7 +88,7 @@ function text(ast: ASTNode, message: Message): string {
         }
         return "今";
       } else {
-        return "不明な日付";
+        return " 不明な日付 ";
       }
     }
   }
