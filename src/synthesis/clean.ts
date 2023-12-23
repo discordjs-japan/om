@@ -36,10 +36,16 @@ function text(ast: ASTNode, guild: Guild | null): string {
       const url = stringOrEmpty(ast.url);
       const discordUrl = parseDiscordUrl(url);
       if (!discordUrl) return " URL省略 ";
-      if (guild?.id !== discordUrl.guildId) return " 外部サーバーのURL ";
+      if (guild?.id !== discordUrl.guildId) {
+        return ` 外部サーバーの${
+          discordUrl.messageId ? "メッセージ" : "チャンネル"
+        } `;
+      }
 
       const channel = guild.channels.cache.get(discordUrl.channelId);
-      if (!channel) return " 不明なチャンネル ";
+      if (!channel) {
+        return ` 不明な${discordUrl.messageId ? "メッセージ" : "チャンネル"} `;
+      }
 
       const name = cleanTwemojis(channel.name);
       if (discordUrl.messageId) {
