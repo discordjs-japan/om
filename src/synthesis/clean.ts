@@ -33,7 +33,7 @@ function text(ast: ASTNode, guild: Guild | null): string {
       return stringOrEmpty(ast.content);
 
     case "url": {
-      const url = stringOrEmpty(ast.url);
+      const url = stringOrEmpty(ast.target);
       const discordUrl = parseDiscordUrl(url);
       if (!discordUrl) return " URL省略 ";
       if (guild?.id !== discordUrl.guildId) {
@@ -108,7 +108,7 @@ function text(ast: ASTNode, guild: Guild | null): string {
       const now = dateSegments(Date.now());
       // read only different segments from now
       for (let i = 0; i < full.length; i++) {
-        if (full[i] !== now[i]) return full.slice(i, -1).join("");
+        if (full[i] !== now[i]) return full.slice(i).join("");
       }
 
       return "今";
@@ -146,20 +146,23 @@ interface DiscordUrl {
 }
 
 function parseDiscordUrl(url: string): DiscordUrl | undefined {
-  const { protocol, host, pathname } = new URL(url);
-  if (protocol !== "https:") return;
-  if (!["discord.com", "canary.discord.com"].includes(host)) return;
+  try {
+    const { protocol, host, pathname } = new URL(url);
+    if (protocol !== "https:") return;
+    if (!["discord.com", "canary.discord.com"].includes(host)) return;
 
-  const [, guildId, channelId, messageId] = pathname.split("/");
-  if (!guildId || !channelId) return;
+    const [, , guildId, channelId, messageId] = pathname.split("/");
+    if (!guildId || !channelId) return;
 
-  return { guildId, channelId, messageId };
+    return { guildId, channelId, messageId };
+    // eslint-disable-next-line no-empty
+  } catch {}
 }
 
-const twemojiParser = parserFor({
-  twemoji: rules.twemoji,
-  text: rules.text,
-});
+const twemojiParser = parserFor(
+  { twemoji: rules.twemoji, text: rules.text },
+  { inline: true },
+);
 
 function cleanTwemojis(s: string) {
   const ast = twemojiParser(s);
@@ -168,5 +171,7 @@ function cleanTwemojis(s: string) {
 
 function dateSegments(date: number | Date) {
   const matches = dateTimeFormat.format(date).matchAll(/\d+[^\d]+(?=[\d ])/g);
-  return Array.from(matches, ({ 0: segment }) => segment);
+  return Array.from(matches, ({ 0: segment }) =>
+    segment.replace(/^0(\d)/, "$1"),
+  );
 }
