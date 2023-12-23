@@ -3,6 +3,7 @@ import EventEmitter from "events";
 import { StreamType, createAudioResource } from "@discordjs/voice";
 import { Message } from "discord.js";
 import { AltJTalkConfig } from "node-altjtalk-binding";
+import { cleanMarkdown } from "./clean";
 import { Result, Task } from "./common";
 import { createSynthesisOption } from "./options";
 import SynthesizedSoundStream from "./stream";
@@ -34,10 +35,9 @@ export default class WorkerSynthesizer
   }
 
   public dispatchSynthesis(message: Message) {
+    const cleanText = cleanMarkdown(message);
     const inputText =
-      message.cleanContent.length > 200
-        ? `${message.cleanContent.slice(0, 196)} 以下略`
-        : message.cleanContent;
+      cleanText.length > 200 ? `${cleanText.slice(0, 196)} 以下略` : cleanText;
     const option = createSynthesisOption(message);
 
     this.workerPool.dispatchTask(
