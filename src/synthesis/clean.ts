@@ -63,7 +63,7 @@ function text(ast: ASTNode, message: Message): string {
     case "emoji": {
       const id = stringOrEmpty(ast.id);
       const emoji = message.guild?.emojis.cache.get(id);
-      return emoji?.toString() ?? "不明な絵文字";
+      return emoji?.name ?? "不明な絵文字";
     }
     case "everyone": {
       return "@エブリワン";
