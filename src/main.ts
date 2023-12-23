@@ -1,8 +1,10 @@
+import { once } from "events";
 import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
 import * as join from "./commands/join";
 import * as leave from "./commands/leave";
 import * as skip from "./commands/skip";
 import { ReplyableError } from "./error";
+import Pipeline from "./pipeline";
 import { version } from "./version";
 
 const client = new Client({
@@ -32,6 +34,19 @@ client.on(Events.InteractionCreate, async (interaction) => {
     if (!(e instanceof ReplyableError)) console.error(e);
     await interaction.reply(ReplyableError.from(e).toReply());
   }
+});
+
+client.on(Events.VoiceStateUpdate, async (_, n) => {
+  const pipeline = Pipeline.get(n.guild.id);
+
+  if (!pipeline) return;
+  if (pipeline.channel.members.size > 1) return;
+
+  setImmediate(() => pipeline.connection.destroy());
+  await once(pipeline, "destroy");
+  await pipeline.channel.send(
+    "ボイスチャンネルに誰もいなくなったため退出しました。",
+  );
 });
 
 client.once(Events.ClientReady, async (client) => {
