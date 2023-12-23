@@ -13,7 +13,9 @@
     "lint:fix": "eslint src --fix",
     "format:check": "prettier --check src",
     "format:write": "prettier --write src",
-    "prepare": "husky install || [ \"$NODE_ENV\" = \"production\" ]"
+    "prepare": "husky install || [ \"$NODE_ENV\" = \"production\" ]",
+    "test": "vitest",
+    "test:ci": "vitest run"
   },
   "author": "Discord.js Japan User Group (discordjs-japan.org)",
   "license": "MIT",
@@ -31,7 +33,8 @@
     "lint-staged": "15.2.0",
     "prettier": "3.1.1",
     "ts-node": "10.9.2",
-    "typescript": "5.3.3"
+    "typescript": "5.3.3",
+    "vitest": "1.1.0"
   },
   "dependencies": {
     "@discordjs/opus": "0.9.0",
