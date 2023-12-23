@@ -96,18 +96,16 @@ function text(ast: ASTNode, guild: Guild | null): string {
     case "timestamp": {
       const timestamp = stringOrEmpty(ast.timestamp);
       const date = Number(timestamp) * 1000;
-      if (Number.isInteger(date) && date >= 0) {
-        const full = dateTimeFormat.format(date).replace(/\s+日本標準時/, "");
-        const now = dateTimeFormat
-          .format(Date.now())
-          .replace(/\s+日本標準時/, "");
-        for (let i = 0; i < full.length; i++) {
-          if (full[i] !== now[i]) return full.slice(i);
-        }
-        return "今";
-      } else {
-        return " 不明な日付 ";
+      if (!Number.isInteger(date) || date < 0) return " 不明な日付 ";
+
+      const full = dateSegments(date);
+      const now = dateSegments(Date.now());
+      // read only different segments from now
+      for (let i = 0; i < full.length; i++) {
+        if (full[i] !== now[i]) return full.slice(i, -1).join("");
       }
+
+      return "今";
     }
   }
 
@@ -160,4 +158,9 @@ const twemojiParser = parserFor({
 function cleanTwemojis(s: string) {
   const ast = twemojiParser(s);
   return text(ast, null); // should be only twemoji and text, so no problem with null
+}
+
+function dateSegments(date: number | Date) {
+  const matches = dateTimeFormat.format(date).matchAll(/\d+[^\d]+(?=[\d ])/g);
+  return Array.from(matches, ({ 0: segment }) => segment);
 }
