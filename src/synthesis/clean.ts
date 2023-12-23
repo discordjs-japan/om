@@ -77,7 +77,7 @@ function text(ast: ASTNode, message: Message): string {
     }
     case "timestamp": {
       const timestamp = stringOrEmpty(ast.timestamp);
-      const date = Number(timestamp);
+      const date = Number(timestamp) * 1000;
       if (Number.isInteger(date) && date >= 0) {
         const full = dateTimeFormat.format(date).replace(/\s+日本標準時/, "");
         const now = dateTimeFormat
