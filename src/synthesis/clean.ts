@@ -1,6 +1,6 @@
 import { parse, rules } from "discord-markdown-parser";
 import type { Guild, Message } from "discord.js";
-import { parserFor } from "simple-markdown";
+import SimpleMarkdown from "simple-markdown";
 import type { SingleASTNode, ASTNode } from "simple-markdown";
 
 export function cleanMarkdown(message: Message) {
@@ -160,7 +160,7 @@ function parseDiscordUrl(url: string): DiscordUrl | undefined {
   } catch {}
 }
 
-const twemojiParser = parserFor(
+const twemojiParser = SimpleMarkdown.parserFor(
   { twemoji: rules.twemoji, text: rules.text },
   { inline: true },
 );
