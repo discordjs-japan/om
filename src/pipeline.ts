@@ -120,16 +120,17 @@ export default class Pipeline extends EventEmitter {
     // then this.player#stateChange will be emitted
   }
 
-  isDestroyed() {
+  isDisconnected() {
     return (
       !this.connection ||
+      this.connection.state.status === VoiceConnectionStatus.Disconnected ||
       this.connection.state.status === VoiceConnectionStatus.Destroyed
     );
   }
 
-  async disconnect() {
+  async disconnect(signal?: AbortSignal) {
     setImmediate(() => this.connection?.disconnect());
-    await once(this, "disconnect");
+    await once(this, "disconnect", { signal });
   }
 }
 

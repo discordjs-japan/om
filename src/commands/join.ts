@@ -57,7 +57,8 @@ export async function handler(
   await Promise.all([
     interaction.deferReply(),
     pipeline.ready(signal).catch((err) => {
-      if (!pipeline.isDestroyed()) pipeline.disconnect().catch(console.error);
+      if (!pipeline.isDisconnected())
+        pipeline.disconnect().catch(console.error);
       if (!signal.aborted) throw err;
     }),
   ]);
