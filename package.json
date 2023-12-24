@@ -11,9 +11,11 @@
     "tsc:check": "tsc --noEmit",
     "lint:check": "eslint src",
     "lint:fix": "eslint src --fix",
-    "format:check": "prettier --check src",
-    "format:write": "prettier --write src",
-    "prepare": "simple-git-hooks || [ \"$NODE_ENV\" = \"production\" ]"
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
+    "prepare": "husky install || [ \"$NODE_ENV\" = \"production\" ]",
+    "test": "vitest",
+    "test:ci": "vitest run"
   },
   "author": "Discord.js Japan User Group (discordjs-japan.org)",
   "license": "MIT",
@@ -27,17 +29,20 @@
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-import": "2.29.1",
+    "husky": "8.0.3",
     "lint-staged": "15.2.0",
     "prettier": "3.1.1",
-    "simple-git-hooks": "2.9.0",
     "ts-node": "10.9.2",
-    "typescript": "5.3.3"
+    "typescript": "5.3.3",
+    "vitest": "1.1.0"
   },
   "dependencies": {
     "@discordjs/opus": "github:femshima/opus#v0.9.0",
     "@discordjs/voice": "0.16.1",
+    "discord-markdown-parser": "1.1.0",
     "discord.js": "14.14.1",
     "node-altjtalk-binding": "https://github.com/femshima/node-altjtalk-binding/releases/download/v0.1.6/node.tar.gz",
+    "simple-markdown": "0.7.3",
     "sodium-native": "4.0.4"
   }
 }

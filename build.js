@@ -5,7 +5,7 @@ import packageJson from "./package.json" assert { type: "json" };
 await build({
   entryPoints: [
     { in: "src/main.ts", out: "main" },
-    { in: "src/synthesis/task.ts", out: "task" }
+    { in: "src/synthesis/task.ts", out: "task" },
   ],
   outdir: "dist",
   bundle: true,

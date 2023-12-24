@@ -6,8 +6,8 @@ import { ReplyableError } from "../error";
 import Pipeline from "../pipeline";
 
 export const definition = {
-  name: "leave",
-  description: "現在参加しているボイスチャンネルから退出します。",
+  name: "skip",
+  description: "現在読み上げ中のメッセージの読み上げを中止します。",
 } satisfies RESTPostAPIChatInputApplicationCommandsJSONBody;
 
 export async function handler(
@@ -17,6 +17,9 @@ export async function handler(
   if (!pipeline) {
     throw new ReplyableError("ボイスチャンネルに参加していません。");
   }
-  await Promise.all([interaction.deferReply(), pipeline.disconnect()]);
-  await interaction.editReply("退出しました。");
+  pipeline.skip();
+  await interaction.reply({
+    content: "読み上げを中止しました。",
+    ephemeral: true,
+  });
 }

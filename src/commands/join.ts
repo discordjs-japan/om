@@ -1,5 +1,3 @@
-import { once } from "events";
-import { VoiceConnectionStatus } from "@discordjs/voice";
 import {
   ApplicationCommandOptionType,
   type ChatInputCommandInteraction,
@@ -45,6 +43,12 @@ export async function handler(
     throw new ReplyableError("すでにボイスチャンネルに接続しています。");
   }
   const pipeline = new Pipeline(channel);
+  if (pipeline.isBotOnly()) {
+    throw new ReplyableError(
+      "無人のボイスチャンネルに接続することはできません。",
+    );
+  }
+  pipeline.init();
   const abortController = new AbortController();
   const signal = abortController.signal;
   setTimeout(() => {
@@ -52,19 +56,10 @@ export async function handler(
   }, 15_000);
   await Promise.all([
     interaction.deferReply(),
-    once(pipeline, "ready", {
-      signal,
-    }).catch((err) => {
-      if (
-        pipeline.connection.state.status !== VoiceConnectionStatus.Destroyed
-      ) {
-        pipeline.connection.destroy();
-      }
-      if (signal.aborted) {
-        return;
-      } else {
-        throw err;
-      }
+    pipeline.ready(signal).catch((err) => {
+      if (!pipeline.isDisconnected())
+        pipeline.disconnect().catch(console.error);
+      if (!signal.aborted) throw err;
     }),
   ]);
 

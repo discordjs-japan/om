@@ -3,15 +3,19 @@
 FROM node:20.10.0-bookworm AS deps
 ARG NODE_ENV=production
 WORKDIR /app
+RUN npm config set cache /.npm
 COPY ./package*.json ./
-RUN npm ci
+RUN --mount=type=cache,target=/.npm \
+    npm ci
 
 FROM --platform=$BUILDPLATFORM node:20.10.0-bookworm AS builder
 ARG NODE_ENV=development
 WORKDIR /app
+RUN npm config set cache /.npm
 COPY ./build.js ./
 COPY ./package*.json ./
-RUN npm ci
+RUN --mount=type=cache,target=/.npm \
+    npm ci
 COPY ./src/ ./src/
 RUN npm run build
 

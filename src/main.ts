@@ -1,7 +1,9 @@
 import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
 import * as join from "./commands/join";
 import * as leave from "./commands/leave";
+import * as skip from "./commands/skip";
 import { ReplyableError } from "./error";
+import Pipeline from "./pipeline";
 import { version } from "./version";
 
 const client = new Client({
@@ -22,6 +24,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
         return await join.handler(interaction);
       case "leave":
         return await leave.handler(interaction);
+      case "skip":
+        return await skip.handler(interaction);
       default:
         throw new Error("不明なコマンドです。");
     }
@@ -31,9 +35,25 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
+client.on(Events.VoiceStateUpdate, async (_, n) => {
+  const pipeline = Pipeline.get(n.guild.id);
+
+  if (!pipeline) return;
+  if (!pipeline.isBotOnly()) return;
+
+  await pipeline.disconnect();
+  await pipeline.channel
+    .send("ボイスチャンネルに誰もいなくなったため退出しました。")
+    .catch(console.error);
+});
+
 client.once(Events.ClientReady, async (client) => {
   client.application.commands.cache.clear();
-  await client.application.commands.set([join.definition, leave.definition]);
+  await client.application.commands.set([
+    join.definition,
+    leave.definition,
+    skip.definition,
+  ]);
   client.user.setActivity({
     type: ActivityType.Custom,
     name: `v${version}`,

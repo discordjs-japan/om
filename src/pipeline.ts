@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
-import { EventEmitter } from "events";
+import { EventEmitter, once } from "events";
 import {
   joinVoiceChannel,
   type CreateVoiceConnectionOptions,
@@ -32,30 +32,32 @@ export default class Pipeline extends EventEmitter {
     return Pipeline.#cache.get(guildId) ?? null;
   }
 
-  public readonly connection: VoiceConnection;
-  public readonly player: AudioPlayer;
-  private readonly collector: MessageCollector;
-  private audioQueue: AudioResource[] = [];
+  private connection?: VoiceConnection;
+  private player?: AudioPlayer;
+  private collector?: MessageCollector;
+  private readonly audioQueue: AudioResource[] = [];
 
   constructor(public readonly channel: VoiceBasedChannel) {
     super();
     Pipeline.#cache.set(channel.guild.id, this);
+  }
 
-    this.connection = joinVoiceChannel({
-      channelId: channel.id,
-      guildId: channel.guild.id,
-      adapterCreator: channel.guild.voiceAdapterCreator,
-      selfDeaf: true,
-    });
-    this.player = createAudioPlayer();
-    this.collector = channel.createMessageCollector({
-      filter: (message) => !message.author.bot,
-    });
-
-    this.init();
+  isBotOnly() {
+    return this.channel.members.every((m) => m.user.bot);
   }
 
   init() {
+    this.connection ??= joinVoiceChannel({
+      channelId: this.channel.id,
+      guildId: this.channel.guild.id,
+      adapterCreator: this.channel.guild.voiceAdapterCreator,
+      selfDeaf: true,
+    });
+    this.player ??= createAudioPlayer();
+    this.collector ??= this.channel.createMessageCollector({
+      filter: (message) => !message.author.bot,
+    });
+
     this.connection.subscribe(this.player);
     this.connection.on("stateChange", (_, newState) => {
       switch (newState.status) {
@@ -86,10 +88,12 @@ export default class Pipeline extends EventEmitter {
       this.play();
     });
     this.on("disconnect", () => {
-      this.connection.destroy();
+      this.connection?.destroy();
     });
     this.on("destroy", () => {
-      this.destroy();
+      Pipeline.#cache.delete(this.channel.guild.id);
+      this.player?.stop(true);
+      this.collector?.stop();
     });
     this.on("message", (message) => {
       synthesizer.dispatchSynthesis(message);
@@ -103,18 +107,34 @@ export default class Pipeline extends EventEmitter {
     });
   }
 
+  async ready(signal?: AbortSignal) {
+    await once(this, "ready", { signal });
+  }
+
   play() {
-    if (this.connection.state.status !== VoiceConnectionStatus.Ready) return;
-    if (this.player.state.status !== AudioPlayerStatus.Idle) return;
+    if (this.connection?.state.status !== VoiceConnectionStatus.Ready) return;
+    if (this.player?.state.status !== AudioPlayerStatus.Idle) return;
     const audio = this.audioQueue.shift();
     if (!audio) return;
     this.player.play(audio);
   }
 
-  destroy() {
-    Pipeline.#cache.delete(this.channel.guild.id);
-    this.player.stop(true);
-    this.collector.stop();
+  skip() {
+    this.player?.stop();
+    // then this.player#stateChange will be emitted
+  }
+
+  isDisconnected() {
+    return (
+      !this.connection ||
+      this.connection.state.status === VoiceConnectionStatus.Disconnected ||
+      this.connection.state.status === VoiceConnectionStatus.Destroyed
+    );
+  }
+
+  async disconnect(signal?: AbortSignal) {
+    setImmediate(() => this.connection?.disconnect());
+    await once(this, "disconnect", { signal });
   }
 }
 
@@ -148,6 +168,10 @@ interface PipelineEvents {
 
 declare module "node:events" {
   class EventEmitter {
-    static once(emitter: Pipeline, event: keyof PipelineEvents): Promise<void>;
+    static once(
+      emitter: Pipeline,
+      event: keyof PipelineEvents,
+      options?: { signal?: AbortSignal | undefined },
+    ): Promise<void>;
   }
 }
