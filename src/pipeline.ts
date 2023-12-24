@@ -42,6 +42,10 @@ export default class Pipeline extends EventEmitter {
     Pipeline.#cache.set(channel.guild.id, this);
   }
 
+  isBotOnly() {
+    return this.channel.members.every((m) => m.user.bot);
+  }
+
   init() {
     this.connection ??= joinVoiceChannel({
       channelId: this.channel.id,

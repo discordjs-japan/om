@@ -39,7 +39,7 @@ client.on(Events.VoiceStateUpdate, async (_, n) => {
   const pipeline = Pipeline.get(n.guild.id);
 
   if (!pipeline) return;
-  if (pipeline.channel.members.filter((m) => !m.user.bot).size > 0) return;
+  if (!pipeline.isBotOnly()) return;
 
   await pipeline.disconnect();
   await pipeline.channel
