@@ -1,4 +1,3 @@
-import { once } from "events";
 import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
 import * as join from "./commands/join";
 import * as leave from "./commands/leave";
@@ -40,10 +39,9 @@ client.on(Events.VoiceStateUpdate, async (_, n) => {
   const pipeline = Pipeline.get(n.guild.id);
 
   if (!pipeline) return;
-  if (pipeline.channel.members.filter((m) => !m.user.bot).size > 0) return;
+  if (!pipeline.isBotOnly()) return;
 
-  setImmediate(() => pipeline.connection.destroy());
-  await once(pipeline, "destroy");
+  await pipeline.disconnect();
   await pipeline.channel
     .send("ボイスチャンネルに誰もいなくなったため退出しました。")
     .catch(console.error);

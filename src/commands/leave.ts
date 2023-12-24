@@ -1,4 +1,3 @@
-import { once } from "events";
 import type {
   ChatInputCommandInteraction,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
@@ -18,8 +17,6 @@ export async function handler(
   if (!pipeline) {
     throw new ReplyableError("ボイスチャンネルに参加していません。");
   }
-  // State change to `destoryed` is done synchronously.
-  setImmediate(() => pipeline.connection.destroy());
-  await Promise.all([interaction.deferReply(), once(pipeline, "destroy")]);
+  await Promise.all([interaction.deferReply(), pipeline.disconnect()]);
   await interaction.editReply("退出しました。");
 }
