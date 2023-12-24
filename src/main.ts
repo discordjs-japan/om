@@ -44,9 +44,9 @@ client.on(Events.VoiceStateUpdate, async (_, n) => {
 
   setImmediate(() => pipeline.connection.destroy());
   await once(pipeline, "destroy");
-  await pipeline.channel.send(
-    "ボイスチャンネルに誰もいなくなったため退出しました。",
-  );
+  await pipeline.channel
+    .send("ボイスチャンネルに誰もいなくなったため退出しました。")
+    .catch(console.error);
 });
 
 client.once(Events.ClientReady, async (client) => {
