@@ -44,6 +44,11 @@ export async function handler(
   if (Pipeline.get(channel.guildId) != null) {
     throw new ReplyableError("すでにボイスチャンネルに接続しています。");
   }
+  if (channel.members.filter((m) => !m.user.bot).size === 0) {
+    throw new ReplyableError(
+      "無人のボイスチャンネルに接続することはできません。",
+    );
+  }
   const pipeline = new Pipeline(channel);
   const abortController = new AbortController();
   const signal = abortController.signal;
