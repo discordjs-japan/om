@@ -11,8 +11,8 @@
     "tsc:check": "tsc --noEmit",
     "lint:check": "eslint src",
     "lint:fix": "eslint src --fix",
-    "format:check": "prettier --check src",
-    "format:write": "prettier --write src",
+    "format:check": "prettier --check .",
+    "format:write": "prettier --write .",
     "prepare": "husky install || [ \"$NODE_ENV\" = \"production\" ]",
     "test": "vitest",
     "test:ci": "vitest run"
