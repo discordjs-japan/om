@@ -40,7 +40,7 @@ client.on(Events.VoiceStateUpdate, async (_, n) => {
   const pipeline = Pipeline.get(n.guild.id);
 
   if (!pipeline) return;
-  if (pipeline.channel.members.size > 1) return;
+  if (pipeline.channel.members.filter((m) => !m.user.bot).size > 1) return;
 
   setImmediate(() => pipeline.connection.destroy());
   await once(pipeline, "destroy");
