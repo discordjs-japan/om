@@ -129,7 +129,7 @@ export default class Pipeline extends EventEmitter {
 
   async disconnect() {
     setImmediate(() => this.connection?.disconnect());
-    await once(this, "destroy");
+    await once(this, "disconnect");
   }
 }
 
