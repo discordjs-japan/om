@@ -2,12 +2,12 @@
 import EventEmitter from "events";
 import { StreamType, createAudioResource } from "@discordjs/voice";
 import { Message } from "discord.js";
-import { AltJTalkConfig } from "node-altjtalk-binding";
+import type { AltJTalkConfig } from "node-altjtalk-binding";
 import { cleanMarkdown } from "./clean";
-import { Result, Task } from "./common";
+import type { Result, Task } from "./common";
 import { createSynthesisOption } from "./options";
 import SynthesizedSoundStream from "./stream";
-import { Synthesizer, SynthesizerEvents } from "./synthesizer";
+import type { Synthesizer, SynthesizerEvents } from "./synthesizer";
 import WorkerPool from "./worker-pool";
 
 export default class WorkerSynthesizer

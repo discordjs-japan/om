@@ -1,6 +1,6 @@
 import { parentPort, workerData } from "node:worker_threads";
 import { AltJTalk } from "node-altjtalk-binding";
-import { Result, Task, isAltJTalkConfigValid } from "./common";
+import { type Result, type Task, isAltJTalkConfigValid } from "./common";
 
 if (!isAltJTalkConfigValid(workerData))
   throw new Error("AltJTalk config is invalid.");

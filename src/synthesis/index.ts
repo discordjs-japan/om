@@ -1,4 +1,4 @@
-import { Synthesizer } from "./synthesizer";
+import type { Synthesizer } from "./synthesizer";
 import WorkerSynthesizer from "./worker-synthesizer";
 
 export const synthesizer: Synthesizer = new WorkerSynthesizer(

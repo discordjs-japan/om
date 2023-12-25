@@ -1,4 +1,4 @@
-import { AltJTalkConfig, SynthesisOption } from "node-altjtalk-binding";
+import type { AltJTalkConfig, SynthesisOption } from "node-altjtalk-binding";
 
 export interface Task {
   inputText: string;

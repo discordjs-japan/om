@@ -1,4 +1,4 @@
-import { InteractionReplyOptions } from "discord.js";
+import type { InteractionReplyOptions } from "discord.js";
 
 export class ReplyableError extends Error {
   public static from(e: unknown) {
