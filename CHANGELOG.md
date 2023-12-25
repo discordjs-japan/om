@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.2.0](https://github.com/discordjs-japan/om/compare/v0.1.2...v0.2.0) (2023-12-25)
+
+
+### Features
+
+* add skip command ([#81](https://github.com/discordjs-japan/om/issues/81)) ([9ba6333](https://github.com/discordjs-japan/om/commit/9ba633357d477c281703ff3d17693e487238b9d7)), closes [#80](https://github.com/discordjs-japan/om/issues/80)
+* clean text before synthesis ([#87](https://github.com/discordjs-japan/om/issues/87)) ([2044edb](https://github.com/discordjs-japan/om/commit/2044edb34a9cf1dd94b46f5d31438f5933bc8eaf))
+* leave the voice channel when alone ([#91](https://github.com/discordjs-japan/om/issues/91)) ([2c89e64](https://github.com/discordjs-japan/om/commit/2c89e64cc17a9465273ccb4f492d69b512bf0ee3))
+* return varied synthesis options by primitive rng ([#76](https://github.com/discordjs-japan/om/issues/76)) ([386aff8](https://github.com/discordjs-japan/om/commit/386aff81fa35434c3bf27858fc1cb89c3a9e22b7))
+* Show version as an activity ([#75](https://github.com/discordjs-japan/om/issues/75)) ([84ad44e](https://github.com/discordjs-japan/om/commit/84ad44ef8626e74075c48631d33be9a84696770b))
+
+
+### Bug Fixes
+
+* change default dictionary/model path to relative ([#83](https://github.com/discordjs-japan/om/issues/83)) ([c997526](https://github.com/discordjs-japan/om/commit/c9975266824652cf2a222945a4255fc9147a8c6f))
+* default import SimpleMarkdown ([#95](https://github.com/discordjs-japan/om/issues/95)) ([d7a1511](https://github.com/discordjs-japan/om/commit/d7a1511e9001774507071537550a9532bc7b2301))
+* fix the condition to leave the channel ([#97](https://github.com/discordjs-japan/om/issues/97)) ([ea16c35](https://github.com/discordjs-japan/om/commit/ea16c35a8b4158332b62228e2f7c0c408f09220e))
+* reject joining empty channel ([#98](https://github.com/discordjs-japan/om/issues/98)) ([7d17035](https://github.com/discordjs-japan/om/commit/7d170350bbe1560b952404738e1e2e71d7c47835))
+
+
+### Dependencies
+
+* use femshima/opus ([#88](https://github.com/discordjs-japan/om/issues/88)) ([366230c](https://github.com/discordjs-japan/om/commit/366230c6b2cd583ecc66aa41fc8a2925032da36b))
+
 ## [0.1.2](https://github.com/discordjs-japan/om/compare/v0.1.1...v0.1.2) (2023-12-18)
 
 
