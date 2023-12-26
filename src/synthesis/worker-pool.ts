@@ -29,7 +29,7 @@ const kCloseEvent = Symbol("kCloseEvent");
  * - always emit "data" event with `Result` and `Task`
  * - the `Result` and `Task` on "data" event are always paired
  */
-// ownership contract; alive workers must be in one and only one of folloiwing states:
+// ownership contract; alive workers must be in one and only one of following states:
 // - 'waiting': in `freeWorkers` with no "message" event listener
 // - 'paired': passed to `dispatchTask` with no "message" event listener
 // - 'working': in the "message" event listener in `dispatchTask` with exactly one "message" event listener
