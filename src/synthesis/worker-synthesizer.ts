@@ -4,17 +4,22 @@ import { StreamType, createAudioResource } from "@discordjs/voice";
 import { Message } from "discord.js";
 import type { AltJTalkConfig } from "node-altjtalk-binding";
 import { cleanMarkdown } from "./clean";
-import type { Result, Task } from "./common";
+import type { Result, Payload } from "./common";
 import { createSynthesisOption } from "./options";
 import SynthesizedSoundStream from "./stream";
 import type { Synthesizer, SynthesizerEvents } from "./synthesizer";
 import WorkerPool from "./worker-pool";
 
+interface Task {
+  payload: Payload;
+  message: Message;
+}
+
 export default class WorkerSynthesizer
   extends EventEmitter
   implements Synthesizer
 {
-  workerPool: WorkerPool<Task, Result, AltJTalkConfig, Message>;
+  workerPool: WorkerPool<Task, Result, AltJTalkConfig>;
 
   constructor(dictionary: string, model: string) {
     super();
@@ -26,7 +31,7 @@ export default class WorkerSynthesizer
       },
       process.env.NUM_THREADS ? Number(process.env.NUM_THREADS) : 1,
     );
-    this.workerPool.on("data", ({ data }: Result, message) => {
+    this.workerPool.on("data", ({ data }, { message }) => {
       const resource = createAudioResource(new SynthesizedSoundStream(data), {
         inputType: StreamType.Raw,
       });
@@ -39,17 +44,12 @@ export default class WorkerSynthesizer
     const inputText =
       cleanText.length > 200 ? `${cleanText.slice(0, 196)} 以下略` : cleanText;
     const option = createSynthesisOption(message);
+    option.samplingFrequency = 48000;
 
-    this.workerPool.dispatchTask(
-      {
-        inputText,
-        option: {
-          ...option,
-          samplingFrequency: 48000,
-        },
-      },
+    this.workerPool.queueTask({
+      payload: { inputText, option },
       message,
-    );
+    });
   }
 }
 
