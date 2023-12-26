@@ -78,8 +78,8 @@ export default class WorkerPool<
     });
     this.once(kCloseEvent, terminate);
 
-    // worker state: (new) -> 'waiting'
-    this.freeWorkers.push(worker);
+    // worker state: (new) -> 'freed'
+    this.emit(kWorkerFreedEvent, worker);
   }
 
   protected listen() {
