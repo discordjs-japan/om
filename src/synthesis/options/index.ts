@@ -1,5 +1,5 @@
-import { Message } from "discord.js";
-import { SynthesisOption } from "node-altjtalk-binding";
+import type { Message } from "discord.js";
+import type { SynthesisOption } from "node-altjtalk-binding";
 import SeededRng from "./seeded-rng";
 
 export function createSynthesisOption(message: Message): SynthesisOption {
