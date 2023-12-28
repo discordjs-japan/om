@@ -52,8 +52,8 @@ export default class WorkerPool<
     protected numThreads: number,
   ) {
     super();
-    this.prepare();
     this.listen();
+    this.prepare();
   }
 
   protected prepare() {
