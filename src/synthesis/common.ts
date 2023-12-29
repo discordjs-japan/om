@@ -1,6 +1,6 @@
 import type { AltJTalkConfig, SynthesisOption } from "node-altjtalk-binding";
 
-export interface Task {
+export interface Payload {
   inputText: string;
   option: SynthesisOption;
 }

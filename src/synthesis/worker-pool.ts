@@ -9,120 +9,149 @@ const isTsNode = () => {
   return tsNodeSymbol in process && !!process[tsNodeSymbol];
 };
 
-const kWorkerFreedEvent = Symbol("kWorkerFreedEvent");
+interface BaseTask {
+  payload: unknown;
+}
 
+const kWorkerFreedEvent = Symbol("kWorkerFreedEvent");
+const kTaskQueuedEvent = Symbol("kTaskQueuedEvent");
+const kCloseEvent = Symbol("kCloseEvent");
+
+/**
+ * requirement for worker:
+ * - worker must accept a `Task["payload"]` on "message" event
+ * - once worker receives a "message" event, it must perform one and only one of the following:
+ *   - postMessage a `Result`
+ *   - emit an "error" event
+ *
+ * this class ensures:
+ * - always postMessage a `Task["payload"]` on "message" event
+ * - always emit "data" event with `Result` and `Task`
+ * - the `Result` and `Task` on "data" event are always paired
+ */
+// ownership contract; alive workers must be in one and only one of following states:
+// - 'waiting': in `freeWorkers` with no "message" event listener
+// - 'paired': passed to `dispatchTask` with no "message" event listener
+// - 'working': in the "message" event listener in `dispatchTask` with exactly one "message" event listener
+// - 'freed': passed to `kWorkerFreedEvent` with no "message" event listener
 export default class WorkerPool<
-  Task,
+  Task extends BaseTask,
   Result,
   WorkerData,
-  TaskProperty extends object,
 > extends EventEmitter {
-  private workers: Worker[];
-  private freeWorkers: Worker[];
-  private workerInfo = new Map<number, TaskProperty>();
-  private tasks: { task: Task; prop: TaskProperty }[];
+  protected static kWorkerFreedEvent = kWorkerFreedEvent;
+  protected static kTaskQueuedEvent = kTaskQueuedEvent;
+  protected static kCloseEvent = kCloseEvent;
+
+  private freeWorkers: Worker[] = [];
+  private taskQueue: Task[] = [];
 
   constructor(
     protected workerPath: string | URL,
     protected workerData: WorkerData,
-    numThreads: number,
+    protected numThreads: number,
   ) {
     super();
-    this.workers = [];
-    this.freeWorkers = [];
-    this.tasks = [];
-
-    for (let i = 0; i < numThreads; i++) this.addNewWorker();
-
-    // Any time the kWorkerFreedEvent is emitted, dispatch
-    // the next task pending in the queue, if any.
-    this.on(kWorkerFreedEvent, () => {
-      const nextTask = this.tasks.shift();
-      if (nextTask) {
-        const { task, prop } = nextTask;
-        this.dispatchTask(task, prop);
-      }
-    });
+    this.listen();
+    this.prepare();
   }
 
-  protected addNewWorker() {
+  protected prepare() {
+    for (let i = 0; i < this.numThreads; i++) this.addWorker();
+  }
+
+  protected addWorker() {
     const worker = new Worker(this.workerPath, {
       execArgv: isTsNode() ? ["--loader", "ts-node/esm"] : undefined,
       workerData: this.workerData,
     });
-    worker.on("message", (result: Result) => {
-      // In case of success: Call the callback that was passed to `runTask`,
-      // remove the `TaskInfo` associated with the Worker, and mark it as free
-      // again.
-      const prop = this.workerInfo.get(worker.threadId);
-      if (!prop) return;
 
-      this.emit("data", result, prop);
-      this.workerInfo.delete(worker.threadId);
-
-      this.freeWorkers.push(worker);
-      this.emit(kWorkerFreedEvent);
-    });
-    worker.on("error", (err) => {
-      // In case of an uncaught exception: Call the callback that was passed to
-      // `runTask` with the error.
-      this.workerInfo.delete(worker.threadId);
+    const terminate = () => {
+      void worker.terminate().catch((e) => this.emit("error", e));
+    };
+    worker.once("error", (err) => {
       this.emit("error", err);
-      // Remove the worker from the list and start a new Worker to replace the
-      // current one.
-      this.workers.splice(this.workers.indexOf(worker), 1);
-      this.addNewWorker();
+      // worker state: 'working' -> (terminated)
+      terminate();
+      this.off(kCloseEvent, terminate);
+      this.addWorker();
     });
-    this.workers.push(worker);
-    this.freeWorkers.push(worker);
-    this.emit(kWorkerFreedEvent);
+    this.once(kCloseEvent, terminate);
+
+    // worker state: (new) -> 'freed'
+    this.emit(kWorkerFreedEvent, worker);
   }
 
-  public dispatchTask(task: Task, prop: TaskProperty) {
-    const worker = this.freeWorkers.pop();
-    if (!worker) {
-      // No free threads, wait until a worker thread becomes free.
-      this.tasks.push({ task, prop });
-      return;
-    }
-
-    this.workerInfo.set(worker.threadId, prop);
-    worker.postMessage(task);
+  protected listen() {
+    this.on(kWorkerFreedEvent, (worker) => {
+      const task = this.taskQueue.shift();
+      // worker state: 'freed' -> 'paired'
+      if (task) this.dispatchTask(worker, task);
+      // worker state: 'freed' -> 'waiting'
+      else this.freeWorkers.push(worker);
+    });
+    this.on(kTaskQueuedEvent, (task) => {
+      const worker = this.freeWorkers.shift();
+      // worker state: 'waiting' -> 'paired'
+      if (worker) this.dispatchTask(worker, task);
+      else this.taskQueue.push(task);
+    });
   }
 
-  public async close() {
-    for (const worker of this.workers) await worker.terminate();
+  private dispatchTask(worker: Worker, task: Task) {
+    // worker state: 'paired' -> 'working'
+    // the only "message" event listener is on(ce) this `worker`
+    worker.once("message", (result: Result) => {
+      // worker state: 'working' -> 'freed'
+      // the only "message" event listener is now off the `worker`
+      this.emit(kWorkerFreedEvent, worker);
+
+      // this `result` and this `task` are guaranteed to be paired…
+      this.emit("data", result, task);
+    });
+
+    // because the `Result` corresponding to this `task.payload` is
+    // guaranteed to be caught by the only listener above and not by others
+    worker.postMessage(task.payload);
+  }
+
+  public queueTask(task: Task) {
+    this.emit(kTaskQueuedEvent, task);
+  }
+
+  public close() {
+    this.emit(kCloseEvent);
   }
 }
 
 export default interface WorkerPool<
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  Task,
+  Task extends BaseTask,
   Result,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   WorkerData,
-  TaskProperty extends object,
 > {
-  on<K extends keyof WorkerPoolEvents<Result, TaskProperty>>(
+  on<K extends keyof WorkerPoolEvents<Task, Result>>(
     event: K,
-    listener: (...args: WorkerPoolEvents<Result, TaskProperty>[K]) => void,
+    listener: (...args: WorkerPoolEvents<Task, Result>[K]) => void,
   ): this;
-  once<K extends keyof WorkerPoolEvents<Result, TaskProperty>>(
+  once<K extends keyof WorkerPoolEvents<Task, Result>>(
     event: K,
-    listener: (...args: WorkerPoolEvents<Result, TaskProperty>[K]) => void,
+    listener: (...args: WorkerPoolEvents<Task, Result>[K]) => void,
   ): this;
-  off<K extends keyof WorkerPoolEvents<Result, TaskProperty>>(
+  off<K extends keyof WorkerPoolEvents<Task, Result>>(
     event: K,
-    listener: (...args: WorkerPoolEvents<Result, TaskProperty>[K]) => void,
+    listener: (...args: WorkerPoolEvents<Task, Result>[K]) => void,
   ): this;
-  emit<K extends keyof WorkerPoolEvents<Result, TaskProperty>>(
+  emit<K extends keyof WorkerPoolEvents<Task, Result>>(
     event: K,
-    ...args: WorkerPoolEvents<Result, TaskProperty>[K]
+    ...args: WorkerPoolEvents<Task, Result>[K]
   ): boolean;
 }
 
-export interface WorkerPoolEvents<Result, TaskProperty> {
-  data: [result: Result, prop: TaskProperty];
+interface WorkerPoolEvents<Task, Result> {
+  data: [result: Result, task: Task];
   error: [error: unknown];
-  [kWorkerFreedEvent]: [];
+  [kWorkerFreedEvent]: [worker: Worker];
+  [kTaskQueuedEvent]: [task: Task];
+  [kCloseEvent]: [];
 }
