@@ -11,7 +11,8 @@
     ":pathSemanticCommitType(**/Dockerfile, build)",
     ":prHourlyLimitNone",
     ":rebaseStalePrs",
-    ":semanticCommits"
+    ":semanticCommits",
+    "regexManagers:githubActionsVersions"
   ],
   "dependencyDashboardAutoclose": true,
   "prConcurrentLimit": 3,
