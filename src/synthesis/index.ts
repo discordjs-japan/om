@@ -11,7 +11,7 @@ function parseStringArray(arg: string) {
 export const synthesizer: Synthesizer = new WorkerSynthesizer(
   process.env.DICTIONARY ?? "model/naist-jdic",
   process.env.USER_DICTIONARY,
-  process.env.MODEL
-    ? parseStringArray(process.env.MODEL)
+  process.env.MODELS
+    ? parseStringArray(process.env.MODELS)
     : ["model/htsvoice-tohoku-f01/tohoku-f01-neutral.htsvoice"],
 );
