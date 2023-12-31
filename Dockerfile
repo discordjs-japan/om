@@ -46,4 +46,6 @@ COPY --from=builder /app/dist/ ./dist/
 COPY --from=deps /app/node_modules/ ./node_modules/
 COPY --from=model-fetch /app/ ./model/
 COPY --from=user-dictionary /app/ ./model/
+
+ENV USER_DICTIONARY=model/user-dictionary.bin
 CMD ["dist/main.js"]
