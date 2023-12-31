@@ -1,16 +1,11 @@
+import { isStringArray } from "./common";
 import type { Synthesizer } from "./synthesizer";
 import WorkerSynthesizer from "./worker-synthesizer";
 
 function parseStringArray(arg: string) {
   const data: unknown = JSON.parse(arg);
-  if (
-    Array.isArray(data) &&
-    data.every((elem): elem is string => typeof elem === "string")
-  ) {
-    return data;
-  } else {
-    throw new Error(`${arg} is not array of string`);
-  }
+  if (isStringArray(data)) return data;
+  else throw new Error(`${arg} is not array of string`);
 }
 
 export const synthesizer: Synthesizer = new WorkerSynthesizer(
