@@ -4,43 +4,48 @@ interface Parse<T> {
   parse(this: void, value: string): T;
 }
 
-interface Default<T> {
-  default: T;
+interface Optional {
+  handling: "optional";
 }
 
 interface Throw {
-  throw: true;
+  handling: "throw";
+}
+
+interface Default<T> {
+  handling: "default";
+  default: T;
 }
 
 interface Key {
   key: string;
 }
 
+type Config<T extends object, K extends keyof T> = Key &
+  (T extends Required<Pick<T, K>> ? Throw | Default<T[K]> : Optional) &
+  (T[K] extends string | undefined ? { parse?: never } : Parse<Required<T>[K]>);
+
 type ConfigRecord<T extends object> = {
-  [K in keyof T]-?: Key &
-    (undefined extends T[K] ? unknown : Default<Required<T>[K]> | Throw) &
-    (T[K] extends string | undefined
-      ? Partial<Parse<Required<T>[K]>>
-      : Parse<Required<T>[K]>);
+  [K in keyof T]-?: Config<T, K>;
 };
 
 function parse<T extends object>(config: ConfigRecord<T>): T {
   const result = {} as T;
+  const throwing: string[] = [];
   for (const key in config) {
     const c = config[key];
     const value = process.env[c.key];
     if (value === undefined) {
-      // c may have property "default" of value undefined, so we have to check with "in"
-      if ("default" in c) {
-        // c.default has type `T[typeof key]` if it exists.
-        result[key] = c.default as T[typeof key];
-      } else if ("throw" in c) {
-        throw new Error(`Environment variable ${c.key} is not defined.`);
+      switch (c.handling) {
+        case "optional":
+          break;
+        case "throw":
+          throwing.push(c.key);
+          break;
+        case "default":
+          result[key] = c.default as T[typeof key];
+          break;
       }
-      // one of following is true:
-      // - c has property "default"
-      // - c has property "throw"
-      // - the key is optional
     } else {
       if (c.parse) {
         result[key] = c.parse(value);
@@ -50,20 +55,28 @@ function parse<T extends object>(config: ConfigRecord<T>): T {
       }
     }
   }
+  if (throwing.length > 0) {
+    throw new Error(
+      `Environment variables ${throwing.join(", ")} are required.`,
+    );
+  }
   return result;
 }
 
 export const config = parse<AltJTalkConfig>({
   dictionary: {
     key: "DICTIONARY",
+    handling: "default",
     default: "model/naist-jdic",
   },
   userDictionary: {
     key: "USER_DICTIONARY",
+    handling: "optional",
   },
   models: {
     key: "MODELS",
     parse: (value) => value.split(","),
+    handling: "default",
     default: ["model/htsvoice-tohoku-f01/tohoku-f01-neutral.htsvoice"],
   },
 });
@@ -72,6 +85,7 @@ export const { numThreads } = parse({
   numThreads: {
     key: "NUM_THREADS",
     parse: Number,
+    handling: "default",
     default: 1,
   },
 });
