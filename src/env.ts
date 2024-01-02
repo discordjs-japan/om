@@ -21,7 +21,7 @@ type Handling<T> = SelectOneOf<{
 type RI<T, K extends keyof T> = Required<T>[K];
 
 type Config<T extends object, K extends keyof T> = Key &
-  (T[K] extends RI<T, K>
+  (Pick<T, K> extends Required<Pick<T, K>>
     ? Exclude<Handling<RI<T, K>>, { optional: true }>
     : Extract<Handling<RI<T, K>>, { optional: true }>) &
   (string extends RI<T, K> ? Partial<Parse<RI<T, K>>> : Parse<RI<T, K>>);
