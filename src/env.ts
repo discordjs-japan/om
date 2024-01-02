@@ -4,26 +4,27 @@ interface Parse<T> {
   parse(this: void, value: string): T;
 }
 
-interface Optional {
-  handling: "optional";
-}
-
-interface Throw {
-  handling: "throw";
-}
-
-interface Default<T> {
-  handling: "default";
-  default: T;
-}
-
 interface Key {
   key: string;
 }
 
+type SelectOneOf<T, K extends keyof T = keyof T> = K extends keyof T
+  ? { [P in K]-?: T[P] } & { [P in Exclude<keyof T, K>]?: never }
+  : never;
+
+type Handling<T> = SelectOneOf<{
+  default: T;
+  optional: true;
+  throw: true;
+}>;
+
+type RI<T, K extends keyof T> = Required<T>[K];
+
 type Config<T extends object, K extends keyof T> = Key &
-  (T extends Required<Pick<T, K>> ? Throw | Default<T[K]> : Optional) &
-  (T[K] extends string | undefined ? { parse?: never } : Parse<Required<T>[K]>);
+  (T[K] extends RI<T, K>
+    ? Exclude<Handling<RI<T, K>>, { optional: true }>
+    : Extract<Handling<RI<T, K>>, { optional: true }>) &
+  (string extends RI<T, K> ? Partial<Parse<RI<T, K>>> : Parse<RI<T, K>>);
 
 type ConfigRecord<T extends object> = {
   [K in keyof T]-?: Config<T, K>;
@@ -36,15 +37,12 @@ function parse<T extends object>(config: ConfigRecord<T>): T {
     const c = config[key];
     const value = process.env[c.key];
     if (value === undefined) {
-      switch (c.handling) {
-        case "optional":
-          break;
-        case "throw":
-          throwing.push(c.key);
-          break;
-        case "default":
-          result[key] = c.default as T[typeof key];
-          break;
+      if (c.optional) {
+        continue;
+      } else if (c.throw) {
+        throwing.push(c.key);
+      } else {
+        result[key] = c.default;
       }
     } else {
       if (c.parse) {
@@ -66,17 +64,15 @@ function parse<T extends object>(config: ConfigRecord<T>): T {
 export const config = parse<AltJTalkConfig>({
   dictionary: {
     key: "DICTIONARY",
-    handling: "default",
     default: "model/naist-jdic",
   },
   userDictionary: {
     key: "USER_DICTIONARY",
-    handling: "optional",
+    optional: true,
   },
   models: {
     key: "MODELS",
     parse: (value) => value.split(","),
-    handling: "default",
     default: ["model/htsvoice-tohoku-f01/tohoku-f01-neutral.htsvoice"],
   },
 });
@@ -85,7 +81,6 @@ export const { numThreads } = parse({
   numThreads: {
     key: "NUM_THREADS",
     parse: Number,
-    handling: "default",
     default: 1,
   },
 });
