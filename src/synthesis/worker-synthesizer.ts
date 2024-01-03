@@ -21,20 +21,12 @@ export default class WorkerSynthesizer
 {
   workerPool: WorkerPool<Task, Result, AltJTalkConfig>;
 
-  constructor(
-    dictionary: string,
-    userDictionary: string | undefined,
-    models: string[],
-  ) {
+  constructor(config: AltJTalkConfig, numThreads: number) {
     super();
     this.workerPool = new WorkerPool(
       new URL("task", import.meta.url),
-      {
-        dictionary,
-        userDictionary,
-        models,
-      },
-      process.env.NUM_THREADS ? Number(process.env.NUM_THREADS) : 1,
+      config,
+      numThreads,
     );
     this.workerPool.on("data", ({ data }, { message }) => {
       const resource = createAudioResource(new SynthesizedSoundStream(data), {

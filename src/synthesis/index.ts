@@ -1,17 +1,8 @@
-import { isStringArray } from "./common";
+import { config, numThreads } from "../env";
 import type { Synthesizer } from "./synthesizer";
 import WorkerSynthesizer from "./worker-synthesizer";
 
-function parseStringArray(arg: string) {
-  const data: unknown = JSON.parse(arg);
-  if (isStringArray(data)) return data;
-  else throw new Error(`${arg} is not array of string`);
-}
-
 export const synthesizer: Synthesizer = new WorkerSynthesizer(
-  process.env.DICTIONARY ?? "model/naist-jdic",
-  process.env.USER_DICTIONARY,
-  process.env.MODELS
-    ? parseStringArray(process.env.MODELS)
-    : ["model/htsvoice-tohoku-f01/tohoku-f01-neutral.htsvoice"],
+  config,
+  numThreads,
 );
