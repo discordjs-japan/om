@@ -17,6 +17,7 @@ export function isAltJTalkConfigValid(arg: unknown): arg is AltJTalkConfig {
     "models" in arg &&
     typeof arg.dictionary === "string" &&
     Array.isArray(arg.models) &&
-    arg.models.every((s) => typeof s === "string")
+    arg.models.every((s) => typeof s === "string") &&
+    (!("userDictionary" in arg) || typeof arg.userDictionary === "string")
   );
 }
