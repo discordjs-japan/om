@@ -64,7 +64,7 @@ function parse<T extends object>(config: ConfigRecord<T>): T {
 export const config = parse<AltJTalkConfig>({
   dictionary: {
     key: "DICTIONARY",
-    default: "model/naist-jdic",
+    throw: true,
   },
   userDictionary: {
     key: "USER_DICTIONARY",
@@ -73,7 +73,7 @@ export const config = parse<AltJTalkConfig>({
   models: {
     key: "MODELS",
     parse: (value) => value.split(","),
-    default: ["model/htsvoice-tohoku-f01/tohoku-f01-neutral.htsvoice"],
+    throw: true,
   },
 });
 
