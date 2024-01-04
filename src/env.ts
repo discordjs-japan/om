@@ -83,4 +83,8 @@ export const { numThreads } = parse({
     parse: Number,
     default: 1,
   },
+  token: {
+    key: "DISCORD_TOKEN",
+    throw: true,
+  },
 });
