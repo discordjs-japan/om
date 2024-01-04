@@ -23,8 +23,10 @@ docker run --rm -d --env-file .env ghcr.io/discordjs-japan/om:latest
 - [`.node-version`](./.node-version)で指定されているバージョンのNode.jsをインストールする
 - 依存関係 (`node_modules`) をインストールする
   - Dockerfileの`deps`ステージに対応します．
+  - `dependencies`をインストールすることが必要です．
 - ソースコードをJavaScriptにコンパイルする
   - Dockerfileの`builder`ステージに対応します．
+  - コンパイルには`devDependencies`がインストールされていることが必要です．
 - 読み上げ用の辞書をダウンロードする
   - Dockerfileの`dictionary`ステージに対応します．
   - ダウンロードした辞書のパスを起動時に環境変数`DICTIONARY`で指定する必要があります．
