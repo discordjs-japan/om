@@ -4,6 +4,8 @@ Discord.js Japan User Group向けの読み上げボットです．
 
 ## 使い方
 
+### [Dockerfile](./Dockerfile)で定義したイメージを使う
+
 まず，`.env.example`を参考に`.env`ファイルを作成します．
 `DISCORD_TOKEN=`の後に続けて，[Discord Developer Portal](https://discord.com/developers/applications)
 から取得したトークンを記述してください．
@@ -13,6 +15,37 @@ Discord.js Japan User Group向けの読み上げボットです．
 ```bash
 docker run --rm -d --env-file .env ghcr.io/discordjs-japan/om:latest
 ```
+
+### 手動で準備する
+
+このボットを起動するには，以下のような準備が必要です．具体的な手順については，[Dockerfile](./Dockerfile)を参考にしてください．
+
+- [`.node-version`](./.node-version)で指定されているバージョンのNode.jsをインストールする
+- 依存関係 (`node_modules`) をインストールする
+  - Dockerfileの`deps`ステージに対応します．
+- ソースコードをJavaScriptにコンパイルする
+  - Dockerfileの`builder`ステージに対応します．
+- 読み上げ用の辞書をダウンロードする
+  - Dockerfileの`dictionary`ステージに対応します．
+  - ダウンロードした辞書のパスを起動時に環境変数`DICTIONARY`で指定する必要があります．
+- 音声合成用のモデルをダウンロードする
+  - Dockerfileの`models`ステージに対応します．
+  - ダウンロードしたモデルのパスを起動時に環境変数`MODELS`で指定する必要があります．複数指定する場合は`,`で区切ってください．
+
+環境変数の一覧はこちらです：
+
+- `DICTIONARY`：読み上げ用の辞書のパス
+  - 必ず指定してください．
+- `USER_DICTIONARY`：ユーザー定義の辞書のパス
+  - 指定しなくても動作します．
+- `MODELS`：音声合成用のモデルのパス
+  - 必ず指定してください．
+  - 複数指定する場合は`,`で区切ってください．
+- `DISCORD_TOKEN`：Discord Developer Portalから取得したトークン
+  - 必ず指定してください．
+- `NUM_THREADS`：音声合成を行うスレッド数
+  - 指定しなくても動作します．
+  - デフォルトは1です．
 
 ## Copyright Notice
 
