@@ -33,12 +33,15 @@ docker run --rm -d --env-file .env ghcr.io/discordjs-japan/om:latest
 - 音声合成用のモデルをダウンロードする
   - Dockerfileの`models`ステージに対応します．
   - ダウンロードしたモデルのパスを起動時に環境変数`MODELS`で指定する必要があります．複数指定する場合は`,`で区切ってください．
+- ユーザー辞書をビルドする（任意）
+  - Dockerfileの`user-dictionary`ステージに対応します．
+  - ビルドした辞書のパスを起動時に環境変数`USER_DICTIONARY`で指定する必要があります．
 
 環境変数の一覧はこちらです：
 
 - `DICTIONARY`：読み上げ用の辞書のパス
   - 必ず指定してください．
-- `USER_DICTIONARY`：ユーザー定義の辞書のパス
+- `USER_DICTIONARY`：ビルドしたユーザー辞書のパス
   - 指定しなくても動作します．
 - `MODELS`：音声合成用のモデルのパス
   - 必ず指定してください．
