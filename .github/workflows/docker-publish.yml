@@ -24,7 +24,6 @@ jobs:
     outputs:
       image_tags: ${{ steps.metadata.outputs.tags }}
     permissions:
-      contents: read
       packages: write
 
     steps:
