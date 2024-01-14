@@ -56,7 +56,9 @@ export default class Pipeline extends EventEmitter {
     this.player ??= createAudioPlayer();
     this.collector ??= this.channel.createMessageCollector({
       filter: (message) =>
-        !message.author.bot && !message.content.startsWith(";"),
+        !message.author.bot &&
+        !message.content.startsWith("(") &&
+        !message.content.startsWith("（"),
     });
 
     this.connection.subscribe(this.player);
