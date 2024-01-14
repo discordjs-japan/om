@@ -67,6 +67,9 @@ test("cleanMarkdown works fine with url", () => {
   expect(cleanMarkdown(mockMessage("https://www.example.com"))).toBe(
     " URL省略 ",
   );
+  expect(
+    cleanMarkdown(mockMessage("https://discord.com/developers/docs/intro")),
+  ).toBe(" URL省略 ");
   expect(cleanMarkdown(mockMessage("https://discord.com/channels/0/0"))).toBe(
     " 外部サーバーのチャンネル ",
   );

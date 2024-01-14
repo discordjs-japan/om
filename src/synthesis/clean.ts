@@ -172,8 +172,8 @@ function parseDiscordUrl(url: string): DiscordUrl | undefined {
     if (protocol !== "https:") return;
     if (!["discord.com", "canary.discord.com"].includes(host)) return;
 
-    const [, , guildId, channelId, messageId] = pathname.split("/");
-    if (!guildId || !channelId) return;
+    const [, channels, guildId, channelId, messageId] = pathname.split("/");
+    if (channels !== "channels" || !guildId || !channelId) return;
 
     return { guildId, channelId, messageId };
     // eslint-disable-next-line no-empty
