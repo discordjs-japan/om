@@ -4,9 +4,9 @@ export function ignoreParenContent(content: string) {
 
   for (const char of content) {
     if (char === "(" || char === "（") depth++;
+    if (depth === 0) result += char;
     if (char === ")" || char === "）") depth--;
     if (depth < 0) depth = 0;
-    if (depth === 0) result += char;
   }
 
   return result;
