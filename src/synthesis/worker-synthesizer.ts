@@ -5,6 +5,7 @@ import { Message } from "discord.js";
 import type { AltJTalkConfig } from "node-altjtalk-binding";
 import { cleanMarkdown } from "./clean";
 import type { Result, Payload } from "./common";
+import { ignoreParenContent } from "./ignore";
 import { createSynthesisOption } from "./options";
 import SynthesizedSoundStream from "./stream";
 import type { Synthesizer, SynthesizerEvents } from "./synthesizer";
@@ -38,8 +39,11 @@ export default class WorkerSynthesizer
 
   public dispatchSynthesis(message: Message) {
     const cleanText = cleanMarkdown(message);
+    const ignoredText = ignoreParenContent(cleanText);
     const inputText =
-      cleanText.length > 200 ? `${cleanText.slice(0, 196)} 以下略` : cleanText;
+      ignoredText.length > 200
+        ? `${ignoredText.slice(0, 196)} 以下略`
+        : ignoredText;
     const option = createSynthesisOption(message);
     option.samplingFrequency = 48000;
 
