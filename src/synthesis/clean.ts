@@ -1,10 +1,26 @@
-import { parse, rules } from "discord-markdown-parser";
+import { rulesExtended } from "discord-markdown-parser";
 import type { Guild, Message } from "discord.js";
 import SimpleMarkdown from "simple-markdown";
-import type { SingleASTNode, ASTNode } from "simple-markdown";
+import type { SingleASTNode, ASTNode, Capture } from "simple-markdown";
+
+const parser = SimpleMarkdown.parserFor(
+  {
+    ...rulesExtended,
+    command: {
+      order: rulesExtended.strong.order,
+      match: (source: string) => /^<\/([\w-]+):(\d{17,20})>/.exec(source),
+      parse: (capture: Capture) => ({
+        name: capture[1],
+        id: capture[2],
+        type: "command",
+      }),
+    },
+  },
+  { inline: true },
+);
 
 export function cleanMarkdown(message: Message) {
-  const ast = parse(message.content, "extended");
+  const ast = parser(message.content);
   return text(ast, message.guild);
 }
 
@@ -90,6 +106,10 @@ function text(ast: ASTNode, guild: Guild | null): string {
       const emoji = guild?.emojis.cache.get(id);
       return emoji?.name ?? " 不明な絵文字 ";
     }
+    case "command": {
+      const name = stringOrEmpty(ast.name);
+      return ` ${name}コマンド `;
+    }
     case "everyone": {
       return " @エブリワン ";
     }
@@ -161,7 +181,7 @@ function parseDiscordUrl(url: string): DiscordUrl | undefined {
 }
 
 const twemojiParser = SimpleMarkdown.parserFor(
-  { twemoji: rules.twemoji, text: rules.text },
+  { twemoji: rulesExtended.twemoji, text: rulesExtended.text },
   { inline: true },
 );
 
