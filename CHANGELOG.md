@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.3.0](https://github.com/discordjs-japan/om/compare/v0.2.0...v0.3.0) (2024-01-14)
+
+
+### Features
+
+* Centralized env ([#119](https://github.com/discordjs-japan/om/issues/119)) ([403d56c](https://github.com/discordjs-japan/om/commit/403d56c7d0f63530582586120ca6c05cd6ab9e4c))
+* clean command mention ([#144](https://github.com/discordjs-japan/om/issues/144)) ([b074470](https://github.com/discordjs-japan/om/commit/b074470fa8bb6fe38b94fd21d5ffc93b8e00bdd0)), closes [#143](https://github.com/discordjs-japan/om/issues/143)
+* ignore paren content ([#148](https://github.com/discordjs-japan/om/issues/148)) ([cc83229](https://github.com/discordjs-japan/om/commit/cc832293a07fc9c4f8ad44ea88aa5e1f4492045d))
+* user dictionary ([#115](https://github.com/discordjs-japan/om/issues/115)) ([0f016a9](https://github.com/discordjs-japan/om/commit/0f016a90cf12e8bd6ce3ed16491cd9f72c521e2b))
+* Well documented env ([#120](https://github.com/discordjs-japan/om/issues/120)) ([e0691ba](https://github.com/discordjs-japan/om/commit/e0691ba9dde1b2d90fd4690727ee5034b4a49be9))
+
+
+### Bug Fixes
+
+* just omit discord non-channel url ([#149](https://github.com/discordjs-japan/om/issues/149)) ([7d225f8](https://github.com/discordjs-japan/om/commit/7d225f8cacad0c1044ecc529acff73354be81227)), closes [#147](https://github.com/discordjs-japan/om/issues/147)
+
+
+### Dependencies
+
+* update dependency sodium-native to v4.0.5 ([#132](https://github.com/discordjs-japan/om/issues/132)) ([abc557c](https://github.com/discordjs-japan/om/commit/abc557c67a39d1bdb15b30aba1bf623bc9652196))
+* Update node-altjtalk-binding to v0.2.0 ([#114](https://github.com/discordjs-japan/om/issues/114)) ([9f2b5c9](https://github.com/discordjs-japan/om/commit/9f2b5c93273e717fbde21625ac6986b2aaf578c7))
+
 ## [0.2.0](https://github.com/discordjs-japan/om/compare/v0.1.2...v0.2.0) (2023-12-25)
 
 
