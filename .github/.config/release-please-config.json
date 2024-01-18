@@ -68,7 +68,7 @@
       "release-type": "node",
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": false,
-      "draft": false,
+      "draft": true,
       "prerelease": false,
       "include-component-in-tag": false,
       "pull-request-title-pattern": "release: v${version}"
