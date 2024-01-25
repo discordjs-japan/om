@@ -23,7 +23,7 @@
     "@types/node": "20.11.6",
     "@typescript-eslint/eslint-plugin": "6.19.1",
     "@typescript-eslint/parser": "6.19.1",
-    "dotenv": "16.4.0",
+    "dotenv": "16.4.1",
     "esbuild": "0.19.12",
     "esbuild-plugin-version-injector": "1.2.1",
     "eslint": "8.56.0",
