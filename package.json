@@ -30,7 +30,7 @@
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-import": "2.29.1",
     "husky": "8.0.3",
-    "lint-staged": "15.2.0",
+    "lint-staged": "15.2.1",
     "prettier": "3.2.2",
     "ts-node": "10.9.2",
     "typescript": "5.3.3",
