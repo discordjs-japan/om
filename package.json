@@ -13,7 +13,7 @@
     "lint:fix": "eslint . --fix",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
-    "prepare": "husky install || [ \"$NODE_ENV\" = \"production\" ]",
+    "prepare": "node .husky/install.mjs",
     "test": "vitest",
     "test:ci": "vitest run"
   },
