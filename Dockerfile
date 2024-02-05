@@ -4,6 +4,7 @@ FROM node:20.11.0-bookworm@sha256:fd0115473b293460df5b217ea73ff216928f2b0bb7650c
 ARG NODE_ENV=production
 WORKDIR /app
 RUN npm config set cache /.npm
+COPY ./.husky/install.mjs ./.husky/
 COPY ./package*.json ./
 RUN --mount=type=cache,id=npm-$TARGETPLATFORM,target=/.npm \
     npm ci
@@ -12,6 +13,7 @@ FROM --platform=$BUILDPLATFORM node:20.11.0-bookworm@sha256:fd0115473b293460df5b
 ARG NODE_ENV=development
 WORKDIR /app
 RUN npm config set cache /.npm
+COPY ./.husky/install.mjs ./.husky/
 COPY ./build.js ./
 COPY ./package*.json ./
 RUN --mount=type=cache,id=npm-$TARGETPLATFORM,target=/.npm \
