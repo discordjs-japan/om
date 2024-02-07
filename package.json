@@ -43,6 +43,6 @@
     "discord.js": "14.14.1",
     "node-altjtalk-binding": "https://github.com/femshima/node-altjtalk-binding/releases/download/v0.2.0/node.tar.gz",
     "simple-markdown": "0.7.3",
-    "sodium-native": "4.0.6"
+    "sodium-native": "4.0.7"
   }
 }
