@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1@sha256:ac85f380a63b13dfcefa89046420e1781752bab202122f8f50032edf31be0021
 
-FROM node:20.11.0-bookworm@sha256:7bf4a586b423aac858176b3f683e35f08575c84500fbcfd1d433ad8568972ec6 AS deps
+FROM node:20.11.1-bookworm@sha256:ec75727c9d1c00fb1ab8e67f41d566910ac58df882534aeb2429e2e9dd1560a2 AS deps
 ARG NODE_ENV=production
 WORKDIR /app
 RUN npm config set cache /.npm
@@ -9,7 +9,7 @@ COPY ./package*.json ./
 RUN --mount=type=cache,id=npm-$TARGETPLATFORM,target=/.npm \
     npm ci
 
-FROM --platform=$BUILDPLATFORM node:20.11.0-bookworm@sha256:7bf4a586b423aac858176b3f683e35f08575c84500fbcfd1d433ad8568972ec6 AS builder
+FROM --platform=$BUILDPLATFORM node:20.11.1-bookworm@sha256:ec75727c9d1c00fb1ab8e67f41d566910ac58df882534aeb2429e2e9dd1560a2 AS builder
 ARG NODE_ENV=development
 WORKDIR /app
 RUN npm config set cache /.npm
@@ -21,17 +21,17 @@ RUN --mount=type=cache,id=npm-$TARGETPLATFORM,target=/.npm \
 COPY ./src/ ./src/
 RUN npm run build
 
-FROM --platform=$BUILDPLATFORM node:20.11.0-bookworm@sha256:7bf4a586b423aac858176b3f683e35f08575c84500fbcfd1d433ad8568972ec6 AS dictionary
+FROM --platform=$BUILDPLATFORM node:20.11.1-bookworm@sha256:ec75727c9d1c00fb1ab8e67f41d566910ac58df882534aeb2429e2e9dd1560a2 AS dictionary
 WORKDIR /app
 RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.6.1/naist-jdic-jpreprocess.tar.gz \
     && tar xzf naist-jdic-jpreprocess.tar.gz \
     && rm naist-jdic-jpreprocess.tar.gz
 
-FROM --platform=$BUILDPLATFORM node:20.11.0-bookworm@sha256:7bf4a586b423aac858176b3f683e35f08575c84500fbcfd1d433ad8568972ec6 AS models
+FROM --platform=$BUILDPLATFORM node:20.11.1-bookworm@sha256:ec75727c9d1c00fb1ab8e67f41d566910ac58df882534aeb2429e2e9dd1560a2 AS models
 WORKDIR /app
 RUN git clone --depth 1 https://github.com/icn-lab/htsvoice-tohoku-f01.git
 
-FROM --platform=$BUILDPLATFORM node:20.11.0-bookworm@sha256:7bf4a586b423aac858176b3f683e35f08575c84500fbcfd1d433ad8568972ec6 AS user-dictionary
+FROM --platform=$BUILDPLATFORM node:20.11.1-bookworm@sha256:ec75727c9d1c00fb1ab8e67f41d566910ac58df882534aeb2429e2e9dd1560a2 AS user-dictionary
 WORKDIR /app
 RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.6.3/x86_64-unknown-linux-gnu-.zip \
     && unzip x86_64-unknown-linux-gnu-.zip \
