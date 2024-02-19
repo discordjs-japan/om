@@ -24,7 +24,7 @@
     "@typescript-eslint/eslint-plugin": "7.0.1",
     "@typescript-eslint/parser": "7.0.1",
     "dotenv": "16.4.4",
-    "esbuild": "0.20.0",
+    "esbuild": "0.20.1",
     "esbuild-plugin-version-injector": "1.2.1",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
