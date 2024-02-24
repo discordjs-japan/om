@@ -58,8 +58,10 @@ jobs:
           gh label create 'autorelease: published' --color=EDEDED || true
       - name: Get PR number
         id: pr-number
+        env:
+          HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
-          echo "pr_number=$(printf '${{ github.event.head_commit.message }}' | head -n1 | sed -nE 's/.+\(#([0-9]+)\)$/\1/p')" >> "$GITHUB_OUTPUT"
+          echo "pr_number=$(printf "$HEAD_COMMIT_MESSAGE" | head -n1 | sed -nE 's/.+\(#([0-9]+)\)$/\1/p')" >> "$GITHUB_OUTPUT"
       - name: Change labels on PR
         run: |
           gh pr edit ${{ steps.pr-number.outputs.pr_number }} \
