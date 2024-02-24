@@ -20,21 +20,21 @@
   "author": "Discord.js Japan User Group (discordjs-japan.org)",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "20.11.17",
-    "@typescript-eslint/eslint-plugin": "6.21.0",
-    "@typescript-eslint/parser": "6.21.0",
-    "dotenv": "16.4.2",
-    "esbuild": "0.20.0",
+    "@types/node": "20.11.20",
+    "@typescript-eslint/eslint-plugin": "7.0.2",
+    "@typescript-eslint/parser": "7.0.2",
+    "dotenv": "16.4.5",
+    "esbuild": "0.20.1",
     "esbuild-plugin-version-injector": "1.2.1",
-    "eslint": "8.56.0",
+    "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-import": "2.29.1",
-    "husky": "9.0.10",
+    "husky": "9.0.11",
     "lint-staged": "15.2.2",
     "prettier": "3.2.5",
     "ts-node": "10.9.2",
     "typescript": "5.3.3",
-    "vitest": "1.2.2"
+    "vitest": "1.3.1"
   },
   "dependencies": {
     "@discordjs/opus": "github:femshima/opus#v0.9.0",
@@ -43,6 +43,6 @@
     "discord.js": "14.14.1",
     "node-altjtalk-binding": "https://github.com/femshima/node-altjtalk-binding/releases/download/v0.2.0/node.tar.gz",
     "simple-markdown": "0.7.3",
-    "sodium-native": "4.0.8"
+    "sodium-native": "4.0.10"
   }
 }
