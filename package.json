@@ -20,7 +20,7 @@
   "author": "Discord.js Japan User Group (discordjs-japan.org)",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "20.11.20",
+    "@types/node": "20.11.21",
     "@typescript-eslint/eslint-plugin": "7.1.0",
     "@typescript-eslint/parser": "7.1.0",
     "dotenv": "16.4.5",
