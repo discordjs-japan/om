@@ -21,8 +21,8 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "20.11.25",
-    "@typescript-eslint/eslint-plugin": "7.1.1",
-    "@typescript-eslint/parser": "7.1.1",
+    "@typescript-eslint/eslint-plugin": "7.2.0",
+    "@typescript-eslint/parser": "7.2.0",
     "dotenv": "16.4.5",
     "esbuild": "0.20.1",
     "esbuild-plugin-version-injector": "1.2.1",
