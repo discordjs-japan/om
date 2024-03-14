@@ -2,6 +2,30 @@ import { rulesExtended } from "discord-markdown-parser";
 import type { Guild, Message } from "discord.js";
 import SimpleMarkdown from "simple-markdown";
 import type { SingleASTNode, ASTNode, Capture } from "simple-markdown";
+import { emojiDictionary } from "../env";
+
+interface EmojiDictionaryJson {
+  [emoji: string]: { short_name: string };
+}
+
+async function fetchDictionary() {
+  const response = await fetch(emojiDictionary);
+  if (!response.ok) throw new Error("Failed to fetch emoji dictionary");
+
+  const json = await response.json();
+  if (
+    typeof json !== "object" ||
+    json === null ||
+    !Object.values(json).every(
+      (value: { short_name: string }) => typeof value?.short_name === "string",
+    )
+  )
+    throw new Error("Invalid JSON");
+
+  return json as EmojiDictionaryJson;
+}
+
+const emojis = await fetchDictionary();
 
 const parser = SimpleMarkdown.parserFor(
   {
@@ -117,8 +141,9 @@ function text(ast: ASTNode, guild: Guild | null): string {
       return " @ヒア ";
     }
     case "twemoji": {
-      // TODO: proper text to read aloud
-      return stringOrEmpty(ast.name);
+      const name = stringOrEmpty(ast.name);
+      const emoji = emojis[name];
+      return emoji ? emoji.short_name : name;
     }
     case "timestamp": {
       const timestamp = stringOrEmpty(ast.timestamp);

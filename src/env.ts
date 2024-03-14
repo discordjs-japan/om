@@ -77,7 +77,12 @@ export const config = parse<AltJTalkConfig>({
   },
 });
 
-export const { numThreads } = parse({
+export const { emojiDictionary, numThreads } = parse({
+  emojiDictionary: {
+    key: "EMOJI_DICTIONARY",
+    default:
+      "https://raw.githubusercontent.com/yagays/emoji-ja/master/data/emoji_ja.json",
+  },
   numThreads: {
     key: "NUM_THREADS",
     parse: Number,
