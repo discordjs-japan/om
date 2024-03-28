@@ -1,6 +1,6 @@
 import { build } from "esbuild";
 import { esbuildPluginVersionInjector } from "esbuild-plugin-version-injector";
-import packageJson from "./package.json" assert { type: "json" };
+import packageJson from "./package.json" with { type: "json" };
 
 await build({
   entryPoints: [
