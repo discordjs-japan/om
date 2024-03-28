@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.3.1](https://github.com/discordjs-japan/om/compare/v0.3.0...v0.3.1) (2024-03-28)
+
+
+### Dependencies
+
+* update dependency sodium-native to v4.0.10 ([#224](https://github.com/discordjs-japan/om/issues/224)) ([3fabb38](https://github.com/discordjs-japan/om/commit/3fabb389842379059d44a2d3ad84d83d1870f23c))
+* update dependency sodium-native to v4.0.6 ([#179](https://github.com/discordjs-japan/om/issues/179)) ([1def342](https://github.com/discordjs-japan/om/commit/1def342d46ea50c3add7398b27a3cf94c7068b8d))
+* update dependency sodium-native to v4.0.7 ([#200](https://github.com/discordjs-japan/om/issues/200)) ([5081233](https://github.com/discordjs-japan/om/commit/50812338e95bfdbf57a00676de61941a5ff876b9))
+* update dependency sodium-native to v4.0.8 ([#203](https://github.com/discordjs-japan/om/issues/203)) ([4550799](https://github.com/discordjs-japan/om/commit/45507994da90e88e22dbc6cccd603543bc0982a8))
+* update dependency sodium-native to v4.0.9 ([#218](https://github.com/discordjs-japan/om/issues/218)) ([e694c82](https://github.com/discordjs-japan/om/commit/e694c8212151635bc1dd9890ab53f5c7d455d6d6))
+* update dependency sodium-native to v4.1.0 ([#266](https://github.com/discordjs-japan/om/issues/266)) ([1ea14c5](https://github.com/discordjs-japan/om/commit/1ea14c5430059609f097e5fa69c953584673fd26))
+* update dependency sodium-native to v4.1.1 ([#267](https://github.com/discordjs-japan/om/issues/267)) ([c4fe870](https://github.com/discordjs-japan/om/commit/c4fe8701d69e650f8abaf7829d78f4176427ec2a))
+
 ## [0.3.0](https://github.com/discordjs-japan/om/compare/v0.2.0...v0.3.0) (2024-01-14)
 
 
