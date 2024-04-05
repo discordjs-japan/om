@@ -23,7 +23,7 @@ RUN npm run build
 
 FROM --platform=$BUILDPLATFORM node:20.12.1-bookworm@sha256:378e7b82c3846dd5cf2df24f54f51cf9fa0ca4771963609ff9b60f7ca8bbbd2b AS dictionary
 WORKDIR /app
-RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.6.1/naist-jdic-jpreprocess.tar.gz \
+RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.8.1/naist-jdic-jpreprocess.tar.gz \
     && tar xzf naist-jdic-jpreprocess.tar.gz \
     && rm naist-jdic-jpreprocess.tar.gz
 
@@ -33,7 +33,7 @@ RUN git clone --depth 1 https://github.com/icn-lab/htsvoice-tohoku-f01.git
 
 FROM --platform=$BUILDPLATFORM node:20.12.1-bookworm@sha256:378e7b82c3846dd5cf2df24f54f51cf9fa0ca4771963609ff9b60f7ca8bbbd2b AS user-dictionary
 WORKDIR /app
-RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.6.3/x86_64-unknown-linux-gnu-.zip \
+RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.8.1/x86_64-unknown-linux-gnu-.zip \
     && unzip x86_64-unknown-linux-gnu-.zip \
     && rm x86_64-unknown-linux-gnu-.zip
 COPY ./data/dict.csv ./

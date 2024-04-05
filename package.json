@@ -41,7 +41,7 @@
     "@discordjs/voice": "0.16.1",
     "discord-markdown-parser": "1.1.0",
     "discord.js": "14.14.1",
-    "node-altjtalk-binding": "https://github.com/femshima/node-altjtalk-binding/releases/download/v0.2.0/node.tar.gz",
+    "node-altjtalk-binding": "github:femshima/node-altjtalk-binding#v0.2.1",
     "simple-markdown": "0.7.3",
     "sodium-native": "4.1.1"
   }
