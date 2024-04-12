@@ -4,8 +4,8 @@ FROM node:20.12.2-bookworm@sha256:844b41cf784f66d7920fd673f7af54ca7b81e289985edc
 ARG NODE_ENV=production
 WORKDIR /app
 RUN npm config set cache /.npm
-COPY ./.husky/install.mjs ./.husky/
-COPY ./package*.json ./
+COPY --link ./.husky/install.mjs ./.husky/
+COPY --link ./package*.json ./
 RUN --mount=type=cache,id=npm-$TARGETPLATFORM,target=/.npm \
     npm ci
 
@@ -13,12 +13,12 @@ FROM --platform=$BUILDPLATFORM node:20.12.2-bookworm@sha256:844b41cf784f66d7920f
 ARG NODE_ENV=development
 WORKDIR /app
 RUN npm config set cache /.npm
-COPY ./.husky/install.mjs ./.husky/
-COPY ./build.js ./
-COPY ./package*.json ./
+COPY --link ./.husky/install.mjs ./.husky/
+COPY --link ./build.js ./
+COPY --link ./package*.json ./
 RUN --mount=type=cache,id=npm-$TARGETPLATFORM,target=/.npm \
     npm ci
-COPY ./src/ ./src/
+COPY --link ./src/ ./src/
 RUN npm run build
 
 FROM --platform=$BUILDPLATFORM node:20.12.2-bookworm@sha256:844b41cf784f66d7920fd673f7af54ca7b81e289985edc6cd864e7d05e0d133c AS dictionary
@@ -36,20 +36,20 @@ WORKDIR /app
 RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.8.1/x86_64-unknown-linux-gnu-.zip \
     && unzip x86_64-unknown-linux-gnu-.zip \
     && rm x86_64-unknown-linux-gnu-.zip
-COPY ./data/dict.csv ./
+COPY --link ./data/dict.csv ./
 RUN ./dict_tools build -u lindera dict.csv user-dictionary.bin
 
 FROM gcr.io/distroless/nodejs20-debian12:nonroot@sha256:370f5779aa7dbe05b46741f2b1e5ff4bc760734b74c7df1c93eaf790d8bd51d4 AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-COPY ./package.json ./
-COPY --from=builder /app/dist/ ./dist/
-COPY --from=deps /app/node_modules/ ./node_modules/
-COPY --from=dictionary /app/ ./dictionary/
+COPY --link ./package.json ./
+COPY --link --from=builder /app/dist/ ./dist/
+COPY --link --from=deps /app/node_modules/ ./node_modules/
+COPY --link --from=dictionary /app/ ./dictionary/
 ENV DICTIONARY=dictionary/naist-jdic
-COPY --from=models /app/ ./models/
+COPY --link --from=models /app/ ./models/
 ENV MODELS=models/htsvoice-tohoku-f01/tohoku-f01-neutral.htsvoice
-COPY --from=user-dictionary /app/ ./user-dictionary/
+COPY --link --from=user-dictionary /app/ ./user-dictionary/
 ENV USER_DICTIONARY=user-dictionary/user-dictionary.bin
 
 CMD ["dist/main.js"]
