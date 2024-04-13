@@ -20,20 +20,21 @@
   "author": "Discord.js Japan User Group (discordjs-japan.org)",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "9.0.0",
     "@types/node": "20.12.7",
-    "@typescript-eslint/eslint-plugin": "7.6.0",
-    "@typescript-eslint/parser": "7.6.0",
     "dotenv": "16.4.5",
     "esbuild": "0.20.2",
     "esbuild-plugin-version-injector": "1.2.1",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-import": "2.29.1",
+    "globals": "15.0.0",
     "husky": "9.0.11",
     "lint-staged": "15.2.2",
     "prettier": "3.2.5",
     "ts-node": "10.9.2",
     "typescript": "5.4.5",
+    "typescript-eslint": "7.6.0",
     "vitest": "1.5.0"
   },
   "dependencies": {
