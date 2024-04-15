@@ -33,9 +33,11 @@ RUN git clone --depth 1 https://github.com/icn-lab/htsvoice-tohoku-f01.git
 
 FROM --platform=$BUILDPLATFORM node:20.12.2-bookworm@sha256:844b41cf784f66d7920fd673f7af54ca7b81e289985edc6cd864e7d05e0d133c AS user-dictionary
 WORKDIR /app
-RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.8.1/x86_64-unknown-linux-gnu-.zip \
-    && unzip x86_64-unknown-linux-gnu-.zip \
-    && rm x86_64-unknown-linux-gnu-.zip
+ARG BUILDARCH
+RUN arch=$(node -e "console.log({amd64:'x86_64',arm64:'aarch64'}['$BUILDARCH'.split('/')[0]]??'$BUILDARCH')") \
+    && wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.9.0/"$arch"-unknown-linux-gnu-.zip \
+    && unzip "$arch"-unknown-linux-gnu-.zip \
+    && rm "$arch"-unknown-linux-gnu-.zip
 COPY --link ./data/dict.csv ./
 RUN ./dict_tools build -u lindera dict.csv user-dictionary.bin
 
