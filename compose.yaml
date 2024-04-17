@@ -1,7 +1,6 @@
 services:
   om:
     image: discordjs-japan-om
-    container_name: discordjs-japan-om
     build: .
     env_file: .env
     pull_policy: build
