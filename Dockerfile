@@ -39,7 +39,7 @@ RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.8.1/x86
 COPY --link ./data/dict.csv ./
 RUN ./dict_tools build -u lindera dict.csv user-dictionary.bin
 
-FROM gcr.io/distroless/nodejs20-debian12:nonroot@sha256:370f5779aa7dbe05b46741f2b1e5ff4bc760734b74c7df1c93eaf790d8bd51d4 AS runner
+FROM gcr.io/distroless/nodejs20-debian12:nonroot@sha256:0d5d3edf1d02a4b11290e4ac4a11df2800707f55bea0ca5f3e9c61e0d1e50555 AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --link ./package.json ./
