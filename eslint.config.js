@@ -42,6 +42,12 @@ export default tseslint.config(
           argsIgnorePattern: "^_",
         },
       ],
+      "@typescript-eslint/no-misused-promises": [
+        "off",
+        {
+          checksVoidReturn: { arguments: false },
+        },
+      ],
     },
   },
   { ignores: ["dist/", ".husky/install.mjs"] },
