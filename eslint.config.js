@@ -43,7 +43,7 @@ export default tseslint.config(
         },
       ],
       "@typescript-eslint/no-misused-promises": [
-        "off",
+        "error",
         {
           checksVoidReturn: { arguments: false },
         },
