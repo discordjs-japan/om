@@ -79,10 +79,6 @@ export default class Pipeline extends EventEmitter {
       "collect",
       (message) => void this.emit("message", message),
     );
-    synthesizer.on("synthesis", (resource, message) => {
-      if (message.channelId !== this.channel.id) return;
-      this.emit("synthesis", resource);
-    });
 
     this.on("ready", () => {
       this.play();
@@ -96,7 +92,8 @@ export default class Pipeline extends EventEmitter {
       this.collector?.stop();
     });
     this.on("message", (message) => {
-      synthesizer.dispatchSynthesis(message);
+      const audio = synthesizer.synthesize(message);
+      this.emit("synthesis", audio);
     });
     this.on("synthesis", (audio) => {
       this.audioQueue.push(audio);

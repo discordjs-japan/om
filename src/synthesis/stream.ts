@@ -1,37 +1,39 @@
-import { Readable } from "node:stream";
+import { Readable } from "stream";
+import type { AltJTalk, SynthesisOption } from "node-altjtalk-binding";
 
-export default class SynthesizedSoundStream extends Readable {
-  private pos: number = 0;
-  private buf: Int16Array | null;
-  constructor(buf: Int16Array) {
-    super();
-    this.buf = buf;
-  }
-  _read(size: number = ((48000 * 2 * 2) / 1000) * 20) {
-    if (!this.buf) {
-      throw new Error("Stream ended");
-    }
+export class SpeechStream extends Readable {
+  #frames: Buffer[] = [];
+  #requested: number = 0;
 
-    const offset = this.pos;
-    let end = Math.ceil(size / 4);
-    if (end + offset > this.buf.length) {
-      end = this.buf.length - offset;
-    }
-    const buf = Buffer.alloc(end * 4);
-    const dst = new Int16Array(buf.buffer);
-    for (let i = 0; i < end; ++i) {
-      const elem = this.buf[i + offset];
-      dst[i * 2] = elem;
-      dst[i * 2 + 1] = elem;
-    }
-    this.push(buf);
-    this.pos += end;
-    if (this.pos == this.buf.length) {
-      this.buf = null;
-      this.push(null);
+  constructor(
+    readonly altJtalk: AltJTalk,
+    readonly inputText: string,
+    readonly option: SynthesisOption = {},
+  ) {
+    super({ objectMode: true });
+  }
+
+  _construct(callback: (error?: Error | null | undefined) => void): void {
+    try {
+      this.altJtalk.synthesize(this.inputText, this.option, (err, frame) => {
+        if (err) this.emit("error", err);
+        else {
+          if (this.#requested > 0) {
+            this.push(frame.length > 0 ? frame : null);
+            this.#requested--;
+          } else this.#frames.push(frame);
+        }
+      });
+      callback();
+    } catch (error) {
+      if (error instanceof Error) callback(error);
+      else callback(new Error("An unknown error occurred"));
     }
   }
-  _destroy() {
-    this.buf = null;
+
+  _read() {
+    const frame = this.#frames.shift();
+    if (frame) this.push(frame.length > 0 ? frame : null);
+    else this.#requested++;
   }
 }

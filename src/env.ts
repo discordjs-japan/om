@@ -75,14 +75,14 @@ export const config = parse<AltJTalkConfig>({
     parse: (value) => value.split(","),
     throw: true,
   },
-});
-
-export const { numThreads } = parse({
   numThreads: {
     key: "NUM_THREADS",
     parse: Number,
-    default: 1,
+    optional: true,
   },
+});
+
+parse({
   token: {
     key: "DISCORD_TOKEN",
     throw: true,
