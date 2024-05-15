@@ -12,7 +12,7 @@
     ":prHourlyLimitNone",
     ":rebaseStalePrs",
     ":semanticCommits",
-    "regexManagers:githubActionsVersions"
+    "customManagers:githubActionsVersions"
   ],
   "dependencyDashboardAutoclose": true,
   "prConcurrentLimit": 3,
