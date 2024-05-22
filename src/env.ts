@@ -1,4 +1,4 @@
-import type { AltJTalkConfig } from "node-altjtalk-binding";
+import type { SyrinxConfig } from "@discordjs-japan/om-syrinx";
 
 interface Parse<T> {
   parse(this: void, value: string): T;
@@ -61,7 +61,7 @@ function parse<T extends object>(config: ConfigRecord<T>): T {
   return result;
 }
 
-export const config = parse<AltJTalkConfig>({
+export const config = parse<Omit<SyrinxConfig, "encoder">>({
   dictionary: {
     key: "DICTIONARY",
     throw: true,
@@ -77,14 +77,7 @@ export const config = parse<AltJTalkConfig>({
   },
 });
 
-export const { numThreads } = parse({
-  numThreads: {
-    key: "NUM_THREADS",
-    parse: Number,
-    default: 1,
-  },
-  token: {
-    key: "DISCORD_TOKEN",
-    throw: true,
-  },
+// to make sure that DISCORD_TOKEN exist
+parse({
+  token: { key: "DISCORD_TOKEN", throw: true },
 });

@@ -1,5 +1,5 @@
+import type { SynthesisOption } from "@discordjs-japan/om-syrinx";
 import type { Message } from "discord.js";
-import type { SynthesisOption } from "node-altjtalk-binding";
 import SeededRng from "./seeded-rng";
 
 export function createSynthesisOption(message: Message): SynthesisOption {
