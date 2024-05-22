@@ -3,10 +3,7 @@ import { esbuildPluginVersionInjector } from "esbuild-plugin-version-injector";
 import packageJson from "./package.json" with { type: "json" };
 
 await build({
-  entryPoints: [
-    { in: "src/main.ts", out: "main" },
-    { in: "src/synthesis/task.ts", out: "task" },
-  ],
+  entryPoints: [{ in: "src/main.ts", out: "main" }],
   outdir: "dist",
   bundle: true,
   platform: "node",

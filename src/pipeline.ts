@@ -17,7 +17,7 @@ import {
   MessageCollector,
   type VoiceBasedChannel,
 } from "discord.js";
-import { synthesizer } from "./synthesis";
+import { synthesize } from "./synthesis";
 
 export interface StateOptions
   extends CreateVoiceConnectionOptions,
@@ -79,10 +79,6 @@ export default class Pipeline extends EventEmitter {
       "collect",
       (message) => void this.emit("message", message),
     );
-    synthesizer.on("synthesis", (resource, message) => {
-      if (message.channelId !== this.channel.id) return;
-      this.emit("synthesis", resource);
-    });
 
     this.on("ready", () => {
       this.play();
@@ -96,7 +92,9 @@ export default class Pipeline extends EventEmitter {
       this.collector?.stop();
     });
     this.on("message", (message) => {
-      synthesizer.dispatchSynthesis(message);
+      synthesize(message)
+        .then((audio) => this.emit("synthesis", audio))
+        .catch((e: unknown) => this.emit("error", e));
     });
     this.on("synthesis", (audio) => {
       this.audioQueue.push(audio);
@@ -164,6 +162,7 @@ interface PipelineEvents {
   idle: [];
   message: [message: Message];
   synthesis: [audio: AudioResource];
+  error: [error: unknown];
 }
 
 declare module "node:events" {
