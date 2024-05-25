@@ -102,9 +102,7 @@ function text(ast: ASTNode, guild: Guild | null): string {
       return role ? cleanTwemojis(role.name) : " 不明なロール ";
     }
     case "emoji": {
-      const id = stringOrEmpty(ast.id);
-      const emoji = guild?.emojis.cache.get(id);
-      return emoji?.name ?? " 不明な絵文字 ";
+      return stringOrEmpty(ast.name);
     }
     case "command": {
       const name = stringOrEmpty(ast.name);
