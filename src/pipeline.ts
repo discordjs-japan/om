@@ -35,7 +35,8 @@ export default class Pipeline extends EventEmitter {
   private connection?: VoiceConnection;
   private player?: AudioPlayer;
   private collector?: MessageCollector;
-  private readonly audioQueue: AudioResource[] = [];
+  private readonly audioQueue: AudioResource<{ message: Message }>[] = [];
+  private playing?: AudioResource<{ message: Message }>;
 
   constructor(public readonly channel: VoiceBasedChannel) {
     super();
@@ -114,12 +115,14 @@ export default class Pipeline extends EventEmitter {
     if (this.player?.state.status !== AudioPlayerStatus.Idle) return;
     const audio = this.audioQueue.shift();
     if (!audio) return;
+    this.playing = audio;
     this.player.play(audio);
   }
 
   skip() {
     this.player?.stop();
     // then this.player#stateChange will be emitted
+    return this.playing;
   }
 
   isDisconnected() {
@@ -161,7 +164,7 @@ interface PipelineEvents {
   destroy: [];
   idle: [];
   message: [message: Message];
-  synthesis: [audio: AudioResource];
+  synthesis: [audio: AudioResource<{ message: Message }>];
   error: [error: unknown];
 }
 

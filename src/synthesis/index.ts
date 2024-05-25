@@ -24,5 +24,8 @@ export async function synthesize(message: Message) {
   const stream = syrinx.synthesize(inputText, option);
   await once(stream, "readable");
 
-  return createAudioResource(stream, { inputType: StreamType.Opus });
+  return createAudioResource(stream, {
+    inputType: StreamType.Opus,
+    metadata: { message },
+  });
 }
