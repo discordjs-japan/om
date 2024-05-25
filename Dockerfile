@@ -36,7 +36,7 @@ WORKDIR /app
 COPY --link --from=deps /app/.jpreprocess-version ./
 RUN curl -L "https://github.com/jpreprocess/jpreprocess/releases/download/v$(cat .jpreprocess-version)/jpreprocess-$(uname -m)-unknown-linux-gnu.tgz" | tar xzf -
 COPY --link ./data/dict.csv ./
-RUN ./dict_tools build -u lindera dict.csv user-dictionary.bin
+RUN ./jpreprocess/dict_tools build -u lindera dict.csv user-dictionary.bin
 
 FROM gcr.io/distroless/nodejs20-debian12:nonroot@sha256:cb85e5ffcb65cca33b8bc653edbb036e6818e20e050ce0623262a2d702ba199d AS runner
 WORKDIR /app
