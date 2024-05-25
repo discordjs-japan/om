@@ -2,9 +2,10 @@ import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
 import * as join from "./commands/join";
 import * as leave from "./commands/leave";
 import * as skip from "./commands/skip";
+import * as version from "./commands/version";
 import { ReplyableError } from "./error";
 import Pipeline from "./pipeline";
-import { version } from "./version";
+import { OM_VERSION } from "./version";
 
 const client = new Client({
   intents: [
@@ -20,6 +21,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
   try {
     switch (interaction.commandName) {
+      case "version":
+        return await version.handler(interaction);
       case "join":
         return await join.handler(interaction);
       case "leave":
@@ -50,13 +53,14 @@ client.on(Events.VoiceStateUpdate, async (_, n) => {
 client.once(Events.ClientReady, async (client) => {
   client.application.commands.cache.clear();
   await client.application.commands.set([
+    version.definition,
     join.definition,
     leave.definition,
     skip.definition,
   ]);
   client.user.setActivity({
     type: ActivityType.Custom,
-    name: `v${version}`,
+    name: `v${OM_VERSION}`,
   });
 });
 
