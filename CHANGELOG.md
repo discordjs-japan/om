@@ -34,11 +34,6 @@
 * update dependency sodium-native to v4.1.1 ([#267](https://github.com/discordjs-japan/om/issues/267)) ([c4fe870](https://github.com/discordjs-japan/om/commit/c4fe8701d69e650f8abaf7829d78f4176427ec2a))
 * Use `github:` for node-altjtalk-binding ([#284](https://github.com/discordjs-japan/om/issues/284)) ([5fa030c](https://github.com/discordjs-japan/om/commit/5fa030c81f0f4b219f15f9e055d2bebdacb2af1c))
 
-
-### Reverts
-
-* "build: use JPREPROCESS_VERSION ([#374](https://github.com/discordjs-japan/om/issues/374))" ([#377](https://github.com/discordjs-japan/om/issues/377)) ([053fa0b](https://github.com/discordjs-japan/om/commit/053fa0bd1fd6586ef9b60c32244c3aa3ef685e51))
-
 ## [0.3.0](https://github.com/discordjs-japan/om/compare/v0.2.0...v0.3.0) (2024-01-14)
 
 
