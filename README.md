@@ -48,9 +48,6 @@ docker run --rm -d --env-file .env ghcr.io/discordjs-japan/om:latest
   - 複数指定する場合は`,`で区切ってください．
 - `DISCORD_TOKEN`：Discord Developer Portalから取得したトークン
   - 必ず指定してください．
-- `NUM_THREADS`：音声合成を行うスレッド数
-  - 指定しなくても動作します．
-  - デフォルトは1です．
 
 ## Copyright Notice
 
