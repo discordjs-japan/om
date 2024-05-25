@@ -17,9 +17,13 @@ export async function handler(
   if (!pipeline) {
     throw new ReplyableError("ボイスチャンネルに参加していません。");
   }
-  pipeline.skip();
+  const playing = pipeline.skip();
+  if (!playing) {
+    throw new ReplyableError("読み上げ中のメッセージがありません。");
+  }
+
   await interaction.reply({
     content: "読み上げを中止しました。",
-    ephemeral: true,
+    ephemeral: playing.metadata.message.author.id === interaction.user.id,
   });
 }
