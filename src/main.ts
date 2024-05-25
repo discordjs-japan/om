@@ -34,7 +34,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
   } catch (e) {
     if (!(e instanceof ReplyableError)) console.error(e);
-    await interaction.reply(ReplyableError.from(e).toReply());
+    await interaction[interaction.replied ? "followUp" : "reply"](
+      ReplyableError.from(e).toReply(),
+    );
   }
 });
 
