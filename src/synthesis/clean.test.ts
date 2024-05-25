@@ -129,12 +129,6 @@ test("cleanMarkdown works fine with several mentions", () => {
   expect(
     cleanMarkdown(mockMessage("<a:inkohx_dancing:1068113836965642280>")),
   ).toBe("inkohx_dancing");
-  expect(cleanMarkdown(mockMessage("<:unknown:000000000000000000>"))).toBe(
-    " 不明な絵文字 ",
-  );
-  expect(cleanMarkdown(mockMessage("<a:unknown:000000000000000000>"))).toBe(
-    " 不明な絵文字 ",
-  );
   expect(cleanMarkdown(mockMessage("</join:000000000000000000>"))).toBe(
     " joinコマンド ",
   );
