@@ -8,6 +8,7 @@ COPY --link ./.husky/install.mjs ./.husky/
 COPY --link ./package*.json ./
 RUN --mount=type=cache,id=npm-$TARGETPLATFORM,target=/.npm \
     npm ci
+RUN node -e "console.log(require('@discordjs-japan/om-syrinx').JPREPROCESS_VERSION)" > .jpreprocess-version
 
 FROM --platform=$BUILDPLATFORM node:20.13.1-bookworm@sha256:d6925dc84f8c0d1c1f8df4ea6a9a54e57d430241cb734b1b0c45ed6d26e8e9c0 AS builder
 ARG NODE_ENV=development
@@ -23,7 +24,8 @@ RUN npm run build
 
 FROM --platform=$BUILDPLATFORM node:20.13.1-bookworm@sha256:d6925dc84f8c0d1c1f8df4ea6a9a54e57d430241cb734b1b0c45ed6d26e8e9c0 AS dictionary
 WORKDIR /app
-RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.8.1/naist-jdic-jpreprocess.tar.gz -O - | tar xzf -
+COPY --link --from=deps /app/.jpreprocess-version ./
+RUN wget "https://github.com/jpreprocess/jpreprocess/releases/download/v$(cat .jpreprocess-version)/naist-jdic-jpreprocess.tar.gz" -O - | tar xzf -
 
 FROM --platform=$BUILDPLATFORM node:20.13.1-bookworm@sha256:d6925dc84f8c0d1c1f8df4ea6a9a54e57d430241cb734b1b0c45ed6d26e8e9c0 AS models
 WORKDIR /app
@@ -31,9 +33,8 @@ RUN git clone --depth 1 https://github.com/icn-lab/htsvoice-tohoku-f01.git
 
 FROM --platform=$BUILDPLATFORM node:20.13.1-bookworm@sha256:d6925dc84f8c0d1c1f8df4ea6a9a54e57d430241cb734b1b0c45ed6d26e8e9c0 AS user-dictionary
 WORKDIR /app
-RUN wget https://github.com/jpreprocess/jpreprocess/releases/download/v0.8.1/x86_64-unknown-linux-gnu-.zip \
-    && unzip x86_64-unknown-linux-gnu-.zip \
-    && rm x86_64-unknown-linux-gnu-.zip
+COPY --link --from=deps /app/.jpreprocess-version ./
+RUN wget "https://github.com/jpreprocess/jpreprocess/releases/download/v$(cat .jpreprocess-version)/jpreprocess-x86_64-unknown-linux-gnu.tgz" -O - | tar xzf -
 COPY --link ./data/dict.csv ./
 RUN ./dict_tools build -u lindera dict.csv user-dictionary.bin
 
