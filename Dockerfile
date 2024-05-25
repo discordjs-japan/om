@@ -47,7 +47,7 @@ COPY --link --from=deps /app/node_modules/ ./node_modules/
 COPY --link --from=dictionary /app/ ./dictionary/
 ENV DICTIONARY=dictionary/naist-jdic
 COPY --link --from=models /app/ ./models/
-ENV MODELS=models/htsvoice-tohoku-f01/tohoku-f01-neutral.htsvoice
+ENV MODELS=models/htsvoice-tohoku-f01-master/tohoku-f01-neutral.htsvoice
 COPY --link --from=user-dictionary /app/ ./user-dictionary/
 ENV USER_DICTIONARY=user-dictionary/user-dictionary.bin
 
