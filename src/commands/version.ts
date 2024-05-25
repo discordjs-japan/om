@@ -19,10 +19,10 @@ export async function handler(
 ) {
   await interaction.reply({
     content: `\`\`\`
-om: ${OM_VERSION}
-om-syrinx: ${OM_SYRINX_VERSION}
-jpreprocess: ${JPREPROCESS_VERSION}
-jbonsai: ${JBONSAI_VERSION}
+discordjs-japan/om: ${OM_VERSION}
+discordjs-japan/om-syrinx: ${OM_SYRINX_VERSION}
+jpreprocess/jpreprocess: ${JPREPROCESS_VERSION}
+jpreprocess/jbonsai: ${JBONSAI_VERSION}
 \`\`\``,
     ephemeral: true,
   });
