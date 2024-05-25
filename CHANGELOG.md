@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.4.0](https://github.com/discordjs-japan/om/compare/v0.3.0...v0.4.0) (2024-05-25)
+
+
+### Features
+
+* Add om-related words ([#384](https://github.com/discordjs-japan/om/issues/384)) ([3fa3a0a](https://github.com/discordjs-japan/om/commit/3fa3a0a1d6fbdc833cb3e157b965970982de4961))
+* add version command ([#379](https://github.com/discordjs-japan/om/issues/379)) ([6b45482](https://github.com/discordjs-japan/om/commit/6b45482300509a9466c82e6f5ab398902b223b9a))
+* change message on skip ([#380](https://github.com/discordjs-japan/om/issues/380)) ([2d1693c](https://github.com/discordjs-japan/om/commit/2d1693c7c77ca60c44c0188bf206e48651de3723)), closes [#245](https://github.com/discordjs-japan/om/issues/245)
+* upgrade to om-syrinx ([#369](https://github.com/discordjs-japan/om/issues/369)) ([62ad6c4](https://github.com/discordjs-japan/om/commit/62ad6c48be412f000af8c92bd05325dd5da5b19d))
+
+
+### Bug Fixes
+
+* fix emoji printer ([#387](https://github.com/discordjs-japan/om/issues/387)) ([a391a88](https://github.com/discordjs-japan/om/commit/a391a889ae2590744391b996989bf3b3431f5962))
+* followUp error if replied ([#389](https://github.com/discordjs-japan/om/issues/389)) ([2a0abdc](https://github.com/discordjs-japan/om/commit/2a0abdccfc093e01d9e39acb5f35526e8359a00d))
+* Increase the cost for "om" ([#388](https://github.com/discordjs-japan/om/issues/388)) ([ca2172b](https://github.com/discordjs-japan/om/commit/ca2172bb90a44ed64f82781017b843eed41d6ac0))
+
+
+### Dependencies
+
+* bye discordjs/opus ([#382](https://github.com/discordjs-japan/om/issues/382)) ([09d462c](https://github.com/discordjs-japan/om/commit/09d462ce4641783fa4c59fc8bf20d416c3eac96b))
+* update dependency @discordjs-japan/om-syrinx to v0.4.0 ([#373](https://github.com/discordjs-japan/om/issues/373)) ([cfca563](https://github.com/discordjs-japan/om/commit/cfca563c880cac5fadb33d5bed3891b374714ac3))
+* update dependency @discordjs/voice to v0.17.0 ([#333](https://github.com/discordjs-japan/om/issues/333)) ([1c03f50](https://github.com/discordjs-japan/om/commit/1c03f50d9892e64475707d76b8bb9682b475c6c9))
+* update dependency discord.js to v14.15.1 ([#334](https://github.com/discordjs-japan/om/issues/334)) ([5129d00](https://github.com/discordjs-japan/om/commit/5129d00436be91f494fa8038f3e8acbecbba521a))
+* update dependency discord.js to v14.15.2 ([#336](https://github.com/discordjs-japan/om/issues/336)) ([78434f3](https://github.com/discordjs-japan/om/commit/78434f3e136e2461f3226057b6ca3cca989eaf47))
+* update dependency sodium-native to v4.0.10 ([#224](https://github.com/discordjs-japan/om/issues/224)) ([3fabb38](https://github.com/discordjs-japan/om/commit/3fabb389842379059d44a2d3ad84d83d1870f23c))
+* update dependency sodium-native to v4.0.6 ([#179](https://github.com/discordjs-japan/om/issues/179)) ([1def342](https://github.com/discordjs-japan/om/commit/1def342d46ea50c3add7398b27a3cf94c7068b8d))
+* update dependency sodium-native to v4.0.7 ([#200](https://github.com/discordjs-japan/om/issues/200)) ([5081233](https://github.com/discordjs-japan/om/commit/50812338e95bfdbf57a00676de61941a5ff876b9))
+* update dependency sodium-native to v4.0.8 ([#203](https://github.com/discordjs-japan/om/issues/203)) ([4550799](https://github.com/discordjs-japan/om/commit/45507994da90e88e22dbc6cccd603543bc0982a8))
+* update dependency sodium-native to v4.0.9 ([#218](https://github.com/discordjs-japan/om/issues/218)) ([e694c82](https://github.com/discordjs-japan/om/commit/e694c8212151635bc1dd9890ab53f5c7d455d6d6))
+* update dependency sodium-native to v4.1.0 ([#266](https://github.com/discordjs-japan/om/issues/266)) ([1ea14c5](https://github.com/discordjs-japan/om/commit/1ea14c5430059609f097e5fa69c953584673fd26))
+* update dependency sodium-native to v4.1.1 ([#267](https://github.com/discordjs-japan/om/issues/267)) ([c4fe870](https://github.com/discordjs-japan/om/commit/c4fe8701d69e650f8abaf7829d78f4176427ec2a))
+* Use `github:` for node-altjtalk-binding ([#284](https://github.com/discordjs-japan/om/issues/284)) ([5fa030c](https://github.com/discordjs-japan/om/commit/5fa030c81f0f4b219f15f9e055d2bebdacb2af1c))
+
 ## [0.3.0](https://github.com/discordjs-japan/om/compare/v0.2.0...v0.3.0) (2024-01-14)
 
 
