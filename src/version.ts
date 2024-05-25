@@ -1,1 +1,1 @@
-export const version: string = "[VI]{{inject}}[/VI]";
+export const OM_VERSION: string = "[VI]{{inject}}[/VI]";
