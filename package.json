@@ -1,7 +1,7 @@
 {
   "name": "om",
   "version": "0.3.0",
-  "description": "VOICEVOX TTS Bot for Discord.js Japan User Group",
+  "description": "TTS Bot for Discord.js Japan User Group",
   "type": "module",
   "main": "dist/main.js",
   "scripts": {
