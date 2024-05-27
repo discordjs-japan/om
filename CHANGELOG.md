@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/discordjs-japan/om/compare/v0.4.0...v0.4.1) (2024-05-27)
+
+
+### Dependencies
+
+* update dependency @discordjs-japan/om-syrinx to v0.4.1 ([#393](https://github.com/discordjs-japan/om/issues/393)) ([1654888](https://github.com/discordjs-japan/om/commit/1654888a930d6d8e543f1cf6408273989c5b0525))
+
 ## [0.4.0](https://github.com/discordjs-japan/om/compare/v0.3.0...v0.4.0) (2024-05-25)
 
 
