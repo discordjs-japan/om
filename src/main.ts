@@ -53,6 +53,7 @@ client.on(Events.VoiceStateUpdate, async (_, n) => {
 });
 
 client.once(Events.ClientReady, async (client) => {
+  process.title = "om";
   client.application.commands.cache.clear();
   await client.application.commands.set([
     version.definition,
