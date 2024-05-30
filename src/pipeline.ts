@@ -40,7 +40,6 @@ export default class Pipeline extends EventEmitter {
 
   constructor(public readonly channel: VoiceBasedChannel) {
     super();
-    Pipeline.#cache.set(channel.guild.id, this);
   }
 
   isBotOnly() {
@@ -48,6 +47,7 @@ export default class Pipeline extends EventEmitter {
   }
 
   init() {
+    Pipeline.#cache.set(this.channel.guild.id, this);
     this.connection ??= joinVoiceChannel({
       channelId: this.channel.id,
       guildId: this.channel.guild.id,
