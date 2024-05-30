@@ -7,6 +7,8 @@ import { ReplyableError } from "./error";
 import Pipeline from "./pipeline";
 import { OM_VERSION } from "./version";
 
+process.title = "discordjs-japan/om";
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
