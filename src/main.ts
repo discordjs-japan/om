@@ -7,6 +7,8 @@ import { ReplyableError } from "./error";
 import Pipeline from "./pipeline";
 import { OM_VERSION } from "./version";
 
+process.title = "discordjs-japan/om";
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -53,7 +55,6 @@ client.on(Events.VoiceStateUpdate, async (_, n) => {
 });
 
 client.once(Events.ClientReady, async (client) => {
-  process.title = "discordbot-om";
   client.application.commands.cache.clear();
   await client.application.commands.set([
     version.definition,
