@@ -95,8 +95,9 @@ export default class Pipeline extends EventEmitter {
     this.on("message", (message) => {
       synthesize(message)
         .then((audio) => {
-          if (!audio) return;
-          this.emit("synthesis", audio);
+          if (audio != null) {
+            this.emit("synthesis", audio);
+          }
         })
         .catch((e: unknown) => this.emit("error", e));
     });
