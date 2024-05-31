@@ -102,6 +102,7 @@ export default class Pipeline extends EventEmitter {
       this.play();
     });
     this.on("idle", () => {
+      delete this.playing;
       this.play();
     });
   }
