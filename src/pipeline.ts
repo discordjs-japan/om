@@ -71,9 +71,7 @@ export default class Pipeline extends EventEmitter {
       }
     });
     this.connection.receiver.speaking.on("end", () => {
-      setImmediate(() => {
-        this.play();
-      });
+      setImmediate(() => this.play());
     });
     this.player.on("stateChange", (_, newState) => {
       switch (newState.status) {
