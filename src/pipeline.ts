@@ -138,9 +138,9 @@ export default class Pipeline extends EventEmitter {
     );
   }
 
-  isHumanSpeaking(user?: string) {
+  isHumanSpeaking(exclude?: string) {
     return new Collection(this.connection?.receiver.speaking.users)
-      .filter((epoch, id) => id !== user)
+      .filter((epoch, id) => id !== exclude)
       .some(
         (epoch, id) => this.channel.client.users.cache.get(id)?.bot === false,
       );
