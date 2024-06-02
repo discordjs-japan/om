@@ -70,6 +70,9 @@ export default class Pipeline extends EventEmitter {
           return this.emit("destroy");
       }
     });
+    this.connection.receiver.speaking.on("end", () => {
+	this.play();
+    });
     this.player.on("stateChange", (_, newState) => {
       switch (newState.status) {
         case AudioPlayerStatus.Idle:
@@ -114,6 +117,7 @@ export default class Pipeline extends EventEmitter {
   play() {
     if (this.connection?.state.status !== VoiceConnectionStatus.Ready) return;
     if (this.player?.state.status !== AudioPlayerStatus.Idle) return;
+    if (this.isHumanSpeaking()) return;
     const audio = this.audioQueue.shift();
     if (!audio) return;
     this.playing = audio;
@@ -132,6 +136,10 @@ export default class Pipeline extends EventEmitter {
       this.connection.state.status === VoiceConnectionStatus.Disconnected ||
       this.connection.state.status === VoiceConnectionStatus.Destroyed
     );
+  }
+
+  isHumanSpeaking() {
+    return new Collection(this.connection.receiver.speaking.users).filter((epoch,id)=>id != user).some((epoch,id)=>!this.channel.client.users.cache.get(id).bot;
   }
 
   async disconnect(signal?: AbortSignal) {
