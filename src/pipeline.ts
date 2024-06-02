@@ -70,8 +70,10 @@ export default class Pipeline extends EventEmitter {
           return this.emit("destroy");
       }
     });
-    this.connection.receiver.speaking.on("end", (user) => {
-      this.play(user);
+    this.connection.receiver.speaking.on("end", () => {
+      setImmediate(() => {
+        this.play();
+      });
     });
     this.player.on("stateChange", (_, newState) => {
       switch (newState.status) {
@@ -114,10 +116,10 @@ export default class Pipeline extends EventEmitter {
     await once(this, "ready", { signal });
   }
 
-  play(user?: string) {
+  play() {
     if (this.connection?.state.status !== VoiceConnectionStatus.Ready) return;
     if (this.player?.state.status !== AudioPlayerStatus.Idle) return;
-    if (this.isHumanSpeaking(user)) return;
+    if (this.isHumanSpeaking()) return;
     const audio = this.audioQueue.shift();
     if (!audio) return;
     this.playing = audio;
@@ -138,12 +140,10 @@ export default class Pipeline extends EventEmitter {
     );
   }
 
-  isHumanSpeaking(exclude?: string) {
-    return new Collection(this.connection?.receiver.speaking.users)
-      .filter((epoch, id) => id !== exclude)
-      .some(
-        (epoch, id) => this.channel.client.users.cache.get(id)?.bot === false,
-      );
+  isHumanSpeaking() {
+    return new Collection(this.connection?.receiver.speaking.users).some(
+      (epoch, id) => this.channel.client.users.cache.get(id)?.bot === false,
+    );
   }
 
   async disconnect(signal?: AbortSignal) {
