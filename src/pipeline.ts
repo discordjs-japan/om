@@ -139,7 +139,7 @@ export default class Pipeline extends EventEmitter {
   }
 
   isHumanSpeaking() {
-    return new Collection(this.connection.receiver.speaking.users).filter((epoch,id)=>id != user).some((epoch,id)=>!this.channel.client.users.cache.get(id).bot;
+    return new Collection(this.connection.receiver.speaking.users).filter((epoch,id)=>id != user).some((epoch,id)=>!this.channel.client.users.cache.get(id).bot);
   }
 
   async disconnect(signal?: AbortSignal) {
