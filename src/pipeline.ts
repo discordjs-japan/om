@@ -188,4 +188,3 @@ declare module "node:events" {
     ): Promise<void>;
   }
 }
-
