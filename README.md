@@ -29,7 +29,7 @@ docker run --rm -d --env-file .env ghcr.io/discordjs-japan/om:latest
   - コンパイルには`devDependencies`がインストールされていることが必要です．
 - 読み上げ用の辞書をダウンロードする
   - Dockerfileの`dictionary`ステージに対応します．
-  - ダウンロードした辞書のパスを起動時に環境変数`DICTIONARY`で指定する必要があります．
+  - ダウンロードした辞書ディレクトリのパスを起動時に環境変数`DICTIONARY`で指定する必要があります．
 - 音声合成用のモデルをダウンロードする
   - Dockerfileの`models`ステージに対応します．
   - ダウンロードしたモデルのパスを起動時に環境変数`MODELS`で指定する必要があります．複数指定する場合は`,`で区切ってください．
