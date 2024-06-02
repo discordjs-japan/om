@@ -117,7 +117,7 @@ export default class Pipeline extends EventEmitter {
   play(user?: string) {
     if (this.connection?.state.status !== VoiceConnectionStatus.Ready) return;
     if (this.player?.state.status !== AudioPlayerStatus.Idle) return;
-    if (this.isHumanSpeaking(user)) return;
+    if (this.isHumanSpeaking(this.connection, user)) return;
     const audio = this.audioQueue.shift();
     if (!audio) return;
     this.playing = audio;
@@ -138,9 +138,9 @@ export default class Pipeline extends EventEmitter {
     );
   }
 
-  isHumanSpeaking(user?: string) {
-    return new Collection(this.connection!.receiver.speaking.users)
-      .filter((epoch, id) => id != user)
+  isHumanSpeaking(connection: VoiceConnection, user?: string) {
+    return new Collection(connection.receiver.speaking.users)
+      .filter((epoch, id) => id !== user)
       .some((epoch, id) => !this.channel.client.users.cache.get(id)!.bot);
   }
 
@@ -188,3 +188,4 @@ declare module "node:events" {
     ): Promise<void>;
   }
 }
+
