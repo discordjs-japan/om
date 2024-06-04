@@ -39,7 +39,7 @@ docker run --rm -d --env-file .env ghcr.io/discordjs-japan/om:latest
 
 環境変数の一覧はこちらです：
 
-- `DICTIONARY`：読み上げ用の辞書のパス
+- `DICTIONARY`：読み上げ用の辞書ディレクトリのパス
   - 必ず指定してください．
 - `USER_DICTIONARY`：ビルドしたユーザー辞書のパス
   - 指定しなくても動作します．
