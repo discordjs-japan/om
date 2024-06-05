@@ -20,6 +20,9 @@ COPY --link ./package*.json ./
 RUN --mount=type=cache,id=npm-$TARGETPLATFORM,target=/.npm \
     npm ci
 COPY --link ./src/ ./src/
+RUN --mount=type=bind,source=./.git/,target=./.git/ \
+    GIT_DERIVED_VERSION=$(git describe --tags)$(git diff --quiet HEAD -- ./src/ || echo ' - changed') \
+    && npm pkg set "version=${GIT_DERIVED_VERSION#v}"
 RUN npm run build
 
 FROM --platform=$BUILDPLATFORM node:20.14.0-bookworm@sha256:ab71b9da5ba19445dc5bb76bf99c218941db2c4d70ff4de4e0d9ec90920bfe3f AS dictionary
