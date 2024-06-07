@@ -6,6 +6,7 @@ WORKDIR /app
 RUN npm config set cache /.npm
 COPY --link ./.husky/install.mjs ./.husky/
 COPY --link ./package*.json ./
+ARG TARGETPLATFORM
 RUN --mount=type=cache,id=npm-$TARGETPLATFORM,target=/.npm \
     npm ci
 RUN node -e "console.log(require('@discordjs-japan/om-syrinx').JPREPROCESS_VERSION)" > .jpreprocess-version
@@ -17,7 +18,8 @@ RUN npm config set cache /.npm
 COPY --link ./.husky/install.mjs ./.husky/
 COPY --link ./build.js ./
 COPY --link ./package*.json ./
-RUN --mount=type=cache,id=npm-$TARGETPLATFORM,target=/.npm \
+ARG BUILDPLATFORM
+RUN --mount=type=cache,id=npm-$BUILDPLATFORM,target=/.npm \
     npm ci
 COPY --link ./src/ ./src/
 RUN npm run build
