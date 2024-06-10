@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.0](https://github.com/discordjs-japan/om/compare/v0.4.1...v0.5.0) (2024-06-10)
+
+
+### Features
+
+* assign process.title ([#403](https://github.com/discordjs-japan/om/issues/403)) ([3a4740d](https://github.com/discordjs-japan/om/commit/3a4740db0feea50e01e02de0c934f115d8cf77d8))
+* Don't start speaking when humans are speaking ([#412](https://github.com/discordjs-japan/om/issues/412)) ([cd96f31](https://github.com/discordjs-japan/om/commit/cd96f3190bd6fcc14bffbcbbf9e3cca50bfd7b87))
+
+
+### Bug Fixes
+
+* delete Pipeline#playing when idle ([#407](https://github.com/discordjs-japan/om/issues/407)) ([6474ad4](https://github.com/discordjs-japan/om/commit/6474ad4106ebdec389b0471b8f320018c64c4a3c))
+* fix timing to cache Pipeline ([#405](https://github.com/discordjs-japan/om/issues/405)) ([d78bd9c](https://github.com/discordjs-japan/om/commit/d78bd9c0498ae453e980eef3e3332c580ca4b615))
+* skip playing if there is no readable content ([#408](https://github.com/discordjs-japan/om/issues/408)) ([bbce63a](https://github.com/discordjs-japan/om/commit/bbce63a551f575310e38624b7eb8a87bbf0e19fe))
+
+
+### Dependencies
+
+* update dependency discord.js to v14.15.3 ([#415](https://github.com/discordjs-japan/om/issues/415)) ([b00e51a](https://github.com/discordjs-japan/om/commit/b00e51a216cb22f1ba9abdb409418a51fec18e86))
+
 ## [0.4.1](https://github.com/discordjs-japan/om/compare/v0.4.0...v0.4.1) (2024-05-27)
 
 
