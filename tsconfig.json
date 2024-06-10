@@ -13,7 +13,12 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "esbuild-plugin-metadata-injector/placeholder": [
+        "./esbuild-plugin-metadata-injector/placeholder"
+      ]
+    }
   },
   "include": ["src/**/*"]
 }
