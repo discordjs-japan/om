@@ -1,11 +1,11 @@
 import { ActivityType, Client, Events, GatewayIntentBits } from "discord.js";
+import { PACKAGE_VERSION } from "esbuild-plugin-metadata-injector/placeholder";
 import * as join from "./commands/join";
 import * as leave from "./commands/leave";
 import * as skip from "./commands/skip";
 import * as version from "./commands/version";
 import { ReplyableError } from "./error";
 import Pipeline from "./pipeline";
-import { OM_VERSION } from "./version";
 
 process.title = "discordjs-japan/om";
 
@@ -64,7 +64,7 @@ client.once(Events.ClientReady, async (client) => {
   ]);
   client.user.setActivity({
     type: ActivityType.Custom,
-    name: `v${OM_VERSION}`,
+    name: `v${PACKAGE_VERSION}`,
   });
 });
 

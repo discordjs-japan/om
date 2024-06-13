@@ -22,7 +22,9 @@ ARG BUILDPLATFORM
 RUN --mount=type=cache,id=npm-$BUILDPLATFORM,target=/.npm \
     npm ci
 COPY --link ./src/ ./src/
-RUN npm run build
+COPY --link ./esbuild-plugin-metadata-injector/ ./esbuild-plugin-metadata-injector/
+COPY --link ./tsconfig.json ./
+RUN --mount=type=bind,source=./.git/,target=./.git/ npm run build
 
 FROM --platform=$BUILDPLATFORM node:20.14.0-bookworm@sha256:ab71b9da5ba19445dc5bb76bf99c218941db2c4d70ff4de4e0d9ec90920bfe3f AS dictionary
 WORKDIR /app

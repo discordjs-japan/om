@@ -7,7 +7,10 @@ import type {
   ChatInputCommandInteraction,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from "discord.js";
-import { OM_VERSION } from "../version";
+import {
+  PACKAGE_VERSION,
+  GIT_DESCRIBE,
+} from "esbuild-plugin-metadata-injector/placeholder";
 
 export const definition = {
   name: "version",
@@ -19,7 +22,7 @@ export async function handler(
 ) {
   await interaction.reply({
     content: `\`\`\`
-discordjs-japan/om: ${OM_VERSION}
+discordjs-japan/om: ${PACKAGE_VERSION} (${GIT_DESCRIBE})
 discordjs-japan/om-syrinx: ${OM_SYRINX_VERSION}
 jpreprocess/jpreprocess: ${JPREPROCESS_VERSION}
 jpreprocess/jbonsai: ${JBONSAI_VERSION}

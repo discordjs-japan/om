@@ -1,5 +1,7 @@
+// @ts-check
+
 import { build } from "esbuild";
-import { esbuildPluginVersionInjector } from "esbuild-plugin-version-injector";
+import esbuildPluginMetadataInjector from "./esbuild-plugin-metadata-injector/plugin.js";
 import packageJson from "./package.json" with { type: "json" };
 
 await build({
@@ -9,6 +11,6 @@ await build({
   platform: "node",
   format: "esm",
   external: Object.keys(packageJson.dependencies),
-  plugins: [esbuildPluginVersionInjector()],
+  plugins: [esbuildPluginMetadataInjector()],
   minify: true,
 });
