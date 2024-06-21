@@ -17,11 +17,22 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm install
-      - name: Check types
+      - id: types
+        name: Check types
         run: npm run tsc:check
-      - name: Check lint rules
+        continue-on-error: true
+      - id: lint
+        name: Check lint rules
         run: npm run lint:check
-      - name: Check format
+        continue-on-error: true
+      - id: format
+        name: Check format
         run: npm run format:check
-      - name: Test
+        continue-on-error: true
+      - id: test
+        name: Test
         run: npm run test:ci
+        continue-on-error: true
+      - name: "Fail this job if any step has failed"
+        if: contains(steps.*.outcome, 'failure')
+        run: exit 1
