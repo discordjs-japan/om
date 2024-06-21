@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import { EventEmitter, once } from "events";
 import {
   joinVoiceChannel,
@@ -25,7 +24,7 @@ export interface StateOptions
   channelId: string;
 }
 
-export default class Pipeline extends EventEmitter {
+export default class Pipeline extends EventEmitter<PipelineEventsMap> {
   static #cache = new Collection<string, Pipeline>();
 
   static get(guildId: string): Pipeline | null {
@@ -155,26 +154,7 @@ export default class Pipeline extends EventEmitter {
   }
 }
 
-export default interface Pipeline {
-  on<K extends keyof PipelineEvents>(
-    event: K,
-    listener: (...args: PipelineEvents[K]) => void,
-  ): this;
-  once<K extends keyof PipelineEvents>(
-    event: K,
-    listener: (...args: PipelineEvents[K]) => void,
-  ): this;
-  off<K extends keyof PipelineEvents>(
-    event: K,
-    listener: (...args: PipelineEvents[K]) => void,
-  ): this;
-  emit<K extends keyof PipelineEvents>(
-    event: K,
-    ...args: PipelineEvents[K]
-  ): boolean;
-}
-
-interface PipelineEvents {
+interface PipelineEventsMap {
   ready: [];
   disconnect: [];
   destroy: [];
@@ -182,14 +162,4 @@ interface PipelineEvents {
   message: [message: Message];
   synthesis: [audio: AudioResource<{ message: Message }>];
   error: [error: unknown];
-}
-
-declare module "node:events" {
-  class EventEmitter {
-    static once(
-      emitter: Pipeline,
-      event: keyof PipelineEvents,
-      options?: { signal?: AbortSignal | undefined },
-    ): Promise<void>;
-  }
 }
