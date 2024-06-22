@@ -17,11 +17,5 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm install
-      - name: Check types
-        run: npm run tsc:check
-      - name: Check lint rules
-        run: npm run lint:check
-      - name: Check format
-        run: npm run format:check
-      - name: Test
-        run: npm run test:ci
+      - name: Check all
+        run: npm run check
