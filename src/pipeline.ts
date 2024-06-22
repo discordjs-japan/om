@@ -1,4 +1,8 @@
-import { EventEmitter, once } from "events";
+// do not 'import { EventEmitter } from "events"';
+// it would also refer to 'declare module "node:events" { /* snip */ } in discord.js
+// and cause 'EventEmitter to be non-generic.
+// pay attention to https://github.com/discordjs/discord.js/pull/10360
+import EventEmitter from "events";
 import {
   joinVoiceChannel,
   type CreateVoiceConnectionOptions,
@@ -115,7 +119,7 @@ export default class Pipeline extends EventEmitter<PipelineEventsMap> {
   }
 
   async ready(signal?: AbortSignal) {
-    await once(this, "ready", { signal });
+    await Pipeline.once(this, "ready", { signal });
   }
 
   play() {
@@ -150,7 +154,7 @@ export default class Pipeline extends EventEmitter<PipelineEventsMap> {
 
   async disconnect(signal?: AbortSignal) {
     setImmediate(() => this.connection?.disconnect());
-    await once(this, "disconnect", { signal });
+    await Pipeline.once(this, "disconnect", { signal });
   }
 }
 
