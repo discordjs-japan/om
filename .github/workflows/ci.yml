@@ -22,17 +22,17 @@ jobs:
         run: npm run tsc:check
         continue-on-error: true
       - id: lint
+        if: ${{ success() || contains(fromJson('["success", "failure"]'), steps.types.outcome) }}
         name: Check lint rules
         run: npm run lint:check
         continue-on-error: true
       - id: format
+        if: ${{ success() || contains(fromJson('["success", "failure"]'), steps.lint.outcome) }}
         name: Check format
         run: npm run format:check
         continue-on-error: true
       - id: test
+        if: ${{ success() || contains(fromJson('["success", "failure"]'), steps.format.outcome) }}
         name: Test
         run: npm run test:ci
         continue-on-error: true
-      - name: "Fail this job if any step has failed"
-        if: contains(steps.*.outcome, 'failure')
-        run: exit 1
