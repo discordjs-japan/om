@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/discordjs-japan/om/compare/v0.5.0...v0.5.1) (2024-07-02)
+
+
+### Bug Fixes
+
+* use built-in EventEmitter typing ([#453](https://github.com/discordjs-japan/om/issues/453)) ([3212a2b](https://github.com/discordjs-japan/om/commit/3212a2b4a0855fc8a5d05df1b07eed0a4afd9d21))
+
 ## [0.5.0](https://github.com/discordjs-japan/om/compare/v0.4.1...v0.5.0) (2024-06-10)
 
 
