@@ -27,7 +27,7 @@
     "@types/eslint-config-prettier": "6.11.3",
     "@types/node": "20.14.6",
     "dotenv": "16.4.5",
-    "esbuild": "0.23.0",
+    "esbuild": "0.23.1",
     "esbuild-plugin-version-injector": "1.2.1",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
