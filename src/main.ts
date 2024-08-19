@@ -16,6 +16,14 @@ const client = new Client({
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.MessageContent,
   ],
+  presence: {
+    activities: [
+      {
+        type: ActivityType.Custom,
+        name: `v${OM_VERSION}`,
+      },
+    ],
+  },
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
@@ -62,10 +70,6 @@ client.once(Events.ClientReady, async (client) => {
     leave.definition,
     skip.definition,
   ]);
-  client.user.setActivity({
-    type: ActivityType.Custom,
-    name: `v${OM_VERSION}`,
-  });
 });
 
 function shutdown() {
