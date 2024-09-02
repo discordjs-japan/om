@@ -63,7 +63,8 @@ jobs:
           EOF
           EOS
 
-      - name: Build and push Docker image
+      - id: build-push
+        name: Build and push Docker image
         uses: docker/build-push-action@5cd11c3a4ced054e52742c5fd54dca954e0edd85 # v6.7.0
         with:
           context: .
@@ -73,3 +74,15 @@ jobs:
           labels: ${{ steps.labels.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - if: ${{ github.event_name != 'pull_request' }}
+        name: Display image digest
+        run: |
+          name=$(cut --delimiter=',' --fields=1 <<< "$NAME")
+
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "$name@$DIGEST" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+        env:
+          NAME: ${{ fromJson(steps.build-push.outputs.metadata)['image.name'] }}
+          DIGEST: ${{ fromJson(steps.build-push.outputs.metadata)['containerimage.digest'] }}
