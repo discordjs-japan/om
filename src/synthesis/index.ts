@@ -1,4 +1,4 @@
-import { Readable } from "node:stream";
+import { once } from "node:events";
 import { StreamType, createAudioResource } from "@discordjs/voice";
 import { EncoderType, Syrinx } from "@discordjs-japan/om-syrinx";
 import type { Message } from "discord.js";
@@ -22,10 +22,7 @@ export async function synthesize(message: Message) {
   const option = createSynthesisOption(message);
 
   const stream = syrinx.synthesize(inputText, option);
-  // HACK: while `EventEmitter.once` or `once` from "node:events" somehow does not accept `Readable` type,
-  // `Readable.once` does accept it because it refers to 'declare module "node:events" { /* snip */ }' in discord.js.
-  // pay attention to https://github.com/discordjs/discord.js/pull/10360
-  await Readable.once(stream, "readable");
+  await once(stream, "readable");
 
   if (stream.readableLength === 0) return null;
   return createAudioResource(stream, {
