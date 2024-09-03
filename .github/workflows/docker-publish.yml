@@ -77,12 +77,12 @@ jobs:
 
       - if: ${{ github.event_name != 'pull_request' }}
         name: Display image digest
+        env:
+          NAME: ${{ fromJson(steps.build-push.outputs.metadata)['image.name'] }}
+          DIGEST: ${{ fromJson(steps.build-push.outputs.metadata)['containerimage.digest'] }}
         run: |
           name=$(cut --delimiter=',' --fields=1 <<< "$NAME")
 
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "$name@$DIGEST" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-        env:
-          NAME: ${{ fromJson(steps.build-push.outputs.metadata)['image.name'] }}
-          DIGEST: ${{ fromJson(steps.build-push.outputs.metadata)['containerimage.digest'] }}
