@@ -11,7 +11,7 @@ export default tseslint.config(
   ...tseslint.configs.recommendedTypeChecked,
   {
     plugins: {
-      importx: eslintPluginImportX,
+      "import-x": eslintPluginImportX,
     },
     languageOptions: {
       parserOptions: {
@@ -24,7 +24,7 @@ export default tseslint.config(
       },
     },
     rules: {
-      "importx/order": [
+      "import-x/order": [
         "error",
         {
           alphabetize: { order: "asc" },
