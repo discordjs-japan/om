@@ -2,8 +2,7 @@
 
 import eslint from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
-// @ts-expect-error `eslint-plugin-import` is not typed
-import eslintPluginImport from "eslint-plugin-import";
+import eslintPluginImportX from "eslint-plugin-import-x";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -12,8 +11,7 @@ export default tseslint.config(
   ...tseslint.configs.recommendedTypeChecked,
   {
     plugins: {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- `eslint-plugin-import` is not typed
-      import: eslintPluginImport,
+      "import-x": eslintPluginImportX,
     },
     languageOptions: {
       parserOptions: {
@@ -26,7 +24,7 @@ export default tseslint.config(
       },
     },
     rules: {
-      "import/order": [
+      "import-x/order": [
         "error",
         {
           alphabetize: { order: "asc" },
