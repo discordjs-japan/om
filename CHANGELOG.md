@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.5.1](https://github.com/discordjs-japan/om/compare/v0.5.0...v0.5.1) (2024-10-09)
+
+
+### Bug Fixes
+
+* set activity with ClientOptions ([#520](https://github.com/discordjs-japan/om/issues/520)) ([85fa8cf](https://github.com/discordjs-japan/om/commit/85fa8cf9f319c5db16d212b02987fcd051cf19fa))
+* use built-in EventEmitter typing ([#453](https://github.com/discordjs-japan/om/issues/453)) ([3212a2b](https://github.com/discordjs-japan/om/commit/3212a2b4a0855fc8a5d05df1b07eed0a4afd9d21))
+
+
+### Dependencies
+
+* update dependency discord.js to v14.16.1 ([#535](https://github.com/discordjs-japan/om/issues/535)) ([0b26f26](https://github.com/discordjs-japan/om/commit/0b26f26d27bad9b102b4459b335314ed25132fd6))
+* update dependency discord.js to v14.16.2 ([#548](https://github.com/discordjs-japan/om/issues/548)) ([19caa61](https://github.com/discordjs-japan/om/commit/19caa61f1a0b3089d8d4fad96001982fca5cb48f))
+* update dependency sodium-native to v4.2.0 ([#553](https://github.com/discordjs-japan/om/issues/553)) ([f93cab0](https://github.com/discordjs-japan/om/commit/f93cab09c01bba5648d26eed063d1711034e40c8))
+* update dependency sodium-native to v4.2.1 ([#582](https://github.com/discordjs-japan/om/issues/582)) ([206a1a2](https://github.com/discordjs-japan/om/commit/206a1a2ae47b88720a8755b4bc7473d0134702f7))
+
+
+### Reverts
+
+* "resolve type issues" ([#536](https://github.com/discordjs-japan/om/issues/536)) ([cabc723](https://github.com/discordjs-japan/om/commit/cabc7238ebefa6c1037da9980ea3bb75cefb08ae))
+
 ## [0.5.0](https://github.com/discordjs-japan/om/compare/v0.4.1...v0.5.0) (2024-06-10)
 
 
