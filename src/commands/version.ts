@@ -3,15 +3,17 @@ import {
   JPREPROCESS_VERSION,
   OM_SYRINX_VERSION,
 } from "@discordjs-japan/om-syrinx";
-import type {
-  ChatInputCommandInteraction,
-  RESTPostAPIChatInputApplicationCommandsJSONBody,
+import {
+  InteractionContextType,
+  type ChatInputCommandInteraction,
+  type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from "discord.js";
 import { OM_VERSION } from "../version";
 
 export const definition = {
   name: "version",
   description: "バージョン情報を表示します。",
+  contexts: [InteractionContextType.Guild],
 } satisfies RESTPostAPIChatInputApplicationCommandsJSONBody;
 
 export async function handler(
