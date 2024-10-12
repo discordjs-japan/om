@@ -1,6 +1,7 @@
-import type {
-  ChatInputCommandInteraction,
-  RESTPostAPIChatInputApplicationCommandsJSONBody,
+import {
+  InteractionContextType,
+  type ChatInputCommandInteraction,
+  type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from "discord.js";
 import { ReplyableError } from "../error";
 import Pipeline from "../pipeline";
@@ -8,6 +9,7 @@ import Pipeline from "../pipeline";
 export const definition = {
   name: "leave",
   description: "現在参加しているボイスチャンネルから退出します。",
+  contexts: [InteractionContextType.Guild],
 } satisfies RESTPostAPIChatInputApplicationCommandsJSONBody;
 
 export async function handler(

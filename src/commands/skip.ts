@@ -1,6 +1,7 @@
-import type {
-  ChatInputCommandInteraction,
-  RESTPostAPIChatInputApplicationCommandsJSONBody,
+import {
+  InteractionContextType,
+  type ChatInputCommandInteraction,
+  type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from "discord.js";
 import { ReplyableError } from "../error";
 import Pipeline from "../pipeline";
@@ -8,6 +9,7 @@ import Pipeline from "../pipeline";
 export const definition = {
   name: "skip",
   description: "現在読み上げ中のメッセージの読み上げを中止します。",
+  contexts: [InteractionContextType.Guild],
 } satisfies RESTPostAPIChatInputApplicationCommandsJSONBody;
 
 export async function handler(
