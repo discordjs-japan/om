@@ -9,7 +9,6 @@ import {
   createAudioPlayer,
   AudioResource,
   AudioPlayerStatus,
-  type DiscordGatewayAdapterCreator,
 } from "@discordjs/voice";
 import {
   Collection,
@@ -51,10 +50,7 @@ export default class Pipeline extends EventEmitter<PipelineEventsMap> {
     this.connection ??= joinVoiceChannel({
       channelId: this.channel.id,
       guildId: this.channel.guild.id,
-      // HACK: voiceAdapterCreator as DiscordGatewayAdapterCreator
-      // This is due to different versions of `discord-api-types`.
-      adapterCreator: this.channel.guild
-        .voiceAdapterCreator as DiscordGatewayAdapterCreator,
+      adapterCreator: this.channel.guild.voiceAdapterCreator,
       selfDeaf: true,
     });
     this.player ??= createAudioPlayer();
