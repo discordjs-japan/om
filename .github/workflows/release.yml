@@ -21,8 +21,8 @@ jobs:
       - uses: googleapis/release-please-action@7987652d64b4581673a76e33ad5e98e3dd56832f # v4.1.3
         id: release-please
         with:
-          config-file: .github/.config/release-please-config.json
-          manifest-file: .release-please-manifest.json
+          config-file: .release-please/release-please-config.json
+          manifest-file: .release-please/.release-please-manifest.json
           skip-github-pull-request: ${{ startsWith(github.event.head_commit.message, 'release:') && github.event.head_commit.author.name == env.RELEASE_PLEASE_AUTHOR }}
 
   docker-publish:
