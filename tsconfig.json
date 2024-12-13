@@ -1,7 +1,4 @@
 {
-  "ts-node": {
-    "experimentalSpecifierResolution": "node"
-  },
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
