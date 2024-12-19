@@ -4,3 +4,5 @@
 
 /*.config.* -linguist-detectable
 /build.js -linguist-detectable
+
+tsconfig.*.json linguist-language=JSON-with-Comments
