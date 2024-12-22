@@ -3,4 +3,4 @@
 /.husky/install.mjs linguist-vendored
 
 /*.config.* -linguist-detectable
-/build.js -linguist-detectable
+/scripts/** -linguist-detectable
