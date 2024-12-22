@@ -1,6 +1,6 @@
 * text=auto eol=lf
 
-.husky/install.mjs linguist-vendored
+/.husky/install.mjs linguist-vendored
 
 /*.config.* -linguist-detectable
 /build.js -linguist-detectable
