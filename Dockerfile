@@ -9,7 +9,7 @@ COPY --link ./package*.json ./
 ARG TARGETPLATFORM
 RUN --mount=type=cache,id=npm-$TARGETPLATFORM,target=/.npm \
     npm ci
-RUN node -e "console.log(require('@discordjs-japan/om-syrinx').JPREPROCESS_VERSION)" > .jpreprocess-version
+RUN node --print "require('@discordjs-japan/om-syrinx').JPREPROCESS_VERSION" > .jpreprocess-version
 
 FROM --platform=$BUILDPLATFORM node:22.12.0-bookworm@sha256:35a5dd72bcac4bce43266408b58a02be6ff0b6098ffa6f5435aeea980a8951d7 AS builder
 ARG NODE_ENV=development
