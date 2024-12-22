@@ -1,8 +1,8 @@
 * text=auto eol=lf
 
-.husky/install.mjs linguist-vendored
+/.husky/install.mjs linguist-vendored
 
 /*.config.* -linguist-detectable
-/build.js -linguist-detectable
+/scripts/** -linguist-detectable
 
 tsconfig.*.json linguist-language=JSON-with-Comments
