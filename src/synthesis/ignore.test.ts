@@ -1,10 +1,11 @@
-import { test, expect } from "vitest";
+import assert from "node:assert";
+import test from "node:test";
 import { ignoreParenContent } from "./ignore";
 
-test("ignoreParenContent works fine", () => {
-  expect(ignoreParenContent("hello (world)")).toBe("hello ");
-  expect(ignoreParenContent("hello (world(foo))")).toBe("hello ");
-  expect(ignoreParenContent("（hello) (world）")).toBe(" ");
-  expect(ignoreParenContent("（hello (world")).toBe("");
-  expect(ignoreParenContent("（hello\nworld）")).toBe("");
+void test("ignoreParenContent works fine", () => {
+  assert.strictEqual(ignoreParenContent("hello (world)"), "hello ");
+  assert.strictEqual(ignoreParenContent("hello (world(foo))"), "hello ");
+  assert.strictEqual(ignoreParenContent("（hello) (world）"), " ");
+  assert.strictEqual(ignoreParenContent("（hello (world"), "");
+  assert.strictEqual(ignoreParenContent("（hello\nworld）"), "");
 });
