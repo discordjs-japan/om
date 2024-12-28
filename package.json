@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/main.js",
   "scripts": {
-    "dev": "node --import=tsx --require dotenv/config src/main.ts",
+    "dev": "node --import=tsx --env-file=.env src/main.ts",
     "build": "node scripts/build.js",
     "start": "node dist/main.js",
     "check": "run-s -c *:check",
@@ -26,7 +26,6 @@
     "@types/eslint__js": "8.42.3",
     "@types/eslint-config-prettier": "6.11.3",
     "@types/node": "22.10.2",
-    "dotenv": "16.4.7",
     "esbuild": "0.24.2",
     "esbuild-plugin-version-injector": "1.2.1",
     "eslint": "9.17.0",
