@@ -2,7 +2,7 @@
 
 Discord.js Japan User Group向けの読み上げボットです．
 
-## 使い方
+## 実行方法
 
 ### [Dockerfile](./Dockerfile)で定義したイメージを使う
 
