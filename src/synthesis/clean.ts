@@ -168,7 +168,10 @@ function parseDiscordUrl(url: string): DiscordUrl | undefined {
   try {
     const { protocol, host, pathname } = new URL(url);
     if (protocol !== "https:") return;
-    if (!["discord.com", "canary.discord.com"].includes(host)) return;
+    if (
+      !["discord.com", "ptb.discord.com", "canary.discord.com"].includes(host)
+    )
+      return;
 
     const [, channels, guildId, channelId, messageId] = pathname.split("/");
     if (channels !== "channels" || !guildId || !channelId) return;
