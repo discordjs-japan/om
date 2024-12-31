@@ -16,7 +16,7 @@ jobs:
           node-version-file: ".node-version"
           cache: npm
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Check all
         run: npm run check
       - name: Run tests
