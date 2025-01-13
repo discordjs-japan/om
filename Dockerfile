@@ -40,7 +40,7 @@ RUN curl -L "https://github.com/jpreprocess/jpreprocess/releases/download/v$(cat
 COPY --link ./data/dict.csv ./
 RUN ./jpreprocess/dict_tools build -u lindera dict.csv user-dictionary.bin
 
-FROM gcr.io/distroless/nodejs22-debian12:nonroot@sha256:29bde22862eec02ba0a99812acfe769932e7ad20e0db2c847d94263f15bfd4f4 AS runner
+FROM gcr.io/distroless/nodejs22-debian12:nonroot@sha256:06298f87531dfff6dd2bc6b573095162d25f7e5583abbc865bfcdf45a4fbee16 AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --link ./package.json ./
