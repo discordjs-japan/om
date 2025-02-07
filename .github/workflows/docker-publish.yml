@@ -28,7 +28,7 @@ jobs:
     steps:
       - id: lowercase
         run: |
-          registory_image='ghcr.io/${{ env.IMAGE_NAME }}'
+          registory_image='ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}'
           echo "REGISTRY_IMAGE=${registory_image@L}" >> $GITHUB_OUTPUT
 
   meta:
