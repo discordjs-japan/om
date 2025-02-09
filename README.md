@@ -1,8 +1,8 @@
 # om
 
-Discord.js Japan User Group向けの読み上げボットです．
+Discord.js Japan User Groupのための読み上げボットです．
 
-## 使い方
+## 実行方法
 
 ### [Dockerfile](./Dockerfile)で定義したイメージを使う
 
@@ -12,9 +12,13 @@ Discord.js Japan User Group向けの読み上げボットです．
 
 次のコマンドを実行すると，ボットが起動します（Dockerがインストールされていることが必要です）．
 
+<!-- x-release-please-start-version -->
+
 ```bash
-docker run --rm -d --env-file .env ghcr.io/discordjs-japan/om:latest
+docker run --rm -d --env-file .env ghcr.io/discordjs-japan/om:0.5.1
 ```
+
+<!-- x-release-please-end -->
 
 ### 手動で準備する
 

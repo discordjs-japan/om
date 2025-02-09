@@ -8,7 +8,8 @@ const parser = SimpleMarkdown.parserFor(
     ...rulesExtended,
     command: {
       order: rulesExtended.strong.order,
-      match: (source: string) => /^<\/([\w-]+):(\d{17,20})>/.exec(source),
+      match: (source: string) =>
+        /^<\/([\w-]+(?: [\w-]+)?(?: [\w-]+)?):(\d{17,20})>/.exec(source),
       parse: (capture: Capture) => ({
         name: capture[1],
         id: capture[2],
@@ -168,7 +169,10 @@ function parseDiscordUrl(url: string): DiscordUrl | undefined {
   try {
     const { protocol, host, pathname } = new URL(url);
     if (protocol !== "https:") return;
-    if (!["discord.com", "canary.discord.com"].includes(host)) return;
+    if (
+      !["discord.com", "ptb.discord.com", "canary.discord.com"].includes(host)
+    )
+      return;
 
     const [, channels, guildId, channelId, messageId] = pathname.split("/");
     if (channels !== "channels" || !guildId || !channelId) return;

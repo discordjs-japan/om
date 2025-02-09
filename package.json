@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/main.js",
   "scripts": {
-    "dev": "node --import=tsx --require dotenv/config src/main.ts",
+    "dev": "node --import=tsx --env-file=.env src/main.ts",
     "build": "node scripts/build.js",
     "start": "node dist/main.js",
     "check": "run-s -c *:check",
@@ -16,37 +16,35 @@
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "node .husky/install.mjs",
-    "test": "vitest",
-    "test:ci": "vitest run"
+    "test": "node --import=tsx --test --watch src/**/*.test.ts",
+    "test:ci": "node --import=tsx --test src/**/*.test.ts"
   },
   "author": "Discord.js Japan User Group (discordjs-japan.org)",
   "license": "MIT",
   "devDependencies": {
-    "@eslint/js": "9.17.0",
+    "@eslint/js": "9.20.0",
     "@types/eslint__js": "8.42.3",
     "@types/eslint-config-prettier": "6.11.3",
-    "@types/node": "22.10.2",
-    "dotenv": "16.4.7",
-    "esbuild": "0.24.2",
+    "@types/node": "22.13.1",
+    "esbuild": "0.25.0",
     "esbuild-plugin-version-injector": "1.2.1",
-    "eslint": "9.17.0",
-    "eslint-config-prettier": "9.1.0",
+    "eslint": "9.20.0",
+    "eslint-config-prettier": "10.0.1",
     "eslint-plugin-import-x": "4.6.1",
     "globals": "15.14.0",
     "husky": "9.1.7",
-    "lint-staged": "15.2.11",
+    "lint-staged": "15.4.3",
     "npm-run-all2": "7.0.2",
     "prettier": "3.4.2",
     "tsx": "4.19.2",
-    "typescript": "5.7.2",
-    "typescript-eslint": "8.18.1",
-    "vitest": "2.1.8"
+    "typescript": "5.7.3",
+    "typescript-eslint": "8.23.0"
   },
   "dependencies": {
     "@discordjs-japan/om-syrinx": "github:discordjs-japan/om-syrinx#v0.4.1",
     "@discordjs/voice": "0.18.0",
     "discord-markdown-parser": "1.1.0",
-    "discord.js": "14.16.3",
+    "discord.js": "14.17.3",
     "simple-markdown": "0.7.3"
   }
 }

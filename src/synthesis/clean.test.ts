@@ -1,5 +1,6 @@
+import assert from "node:assert";
+import test from "node:test";
 import { Collection, type Guild, type Message } from "discord.js";
-import { test, expect, vi } from "vitest";
 import { cleanMarkdown } from "./clean";
 
 type PartialRecursive<T> = {
@@ -24,162 +25,205 @@ function mockMessage(content: string) {
   return { content, guild } as Message;
 }
 
-test("cleanMarkdown works fine with simple rules", () => {
-  expect(cleanMarkdown(mockMessage("[link text](https://example.com)"))).toBe(
+void test("cleanMarkdown works fine with simple rules", () => {
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("[link text](https://example.com)")),
     "link text",
   );
-  expect(cleanMarkdown(mockMessage("> blockquote"))).toBe("blockquote");
-  expect(cleanMarkdown(mockMessage("*em*"))).toBe("em");
-  expect(cleanMarkdown(mockMessage("**strong**"))).toBe("strong");
-  expect(cleanMarkdown(mockMessage("__underline__"))).toBe("underline");
-  expect(cleanMarkdown(mockMessage("~~strikethrough~~"))).toBe("strikethrough");
+  assert.strictEqual(cleanMarkdown(mockMessage("> blockquote")), "blockquote");
+  assert.strictEqual(cleanMarkdown(mockMessage("*em*")), "em");
+  assert.strictEqual(cleanMarkdown(mockMessage("**strong**")), "strong");
+  assert.strictEqual(cleanMarkdown(mockMessage("__underline__")), "underline");
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("~~strikethrough~~")),
+    "strikethrough",
+  );
 
-  expect(cleanMarkdown(mockMessage("text"))).toBe("text");
-  expect(cleanMarkdown(mockMessage("\\\\escape"))).toBe("\\escape");
-  expect(cleanMarkdown(mockMessage("`inlineCode`"))).toBe("inlineCode");
+  assert.strictEqual(cleanMarkdown(mockMessage("text")), "text");
+  assert.strictEqual(cleanMarkdown(mockMessage("\\\\escape")), "\\escape");
+  assert.strictEqual(cleanMarkdown(mockMessage("`inlineCode`")), "inlineCode");
 
-  expect(cleanMarkdown(mockMessage("<https://example.com>"))).toBe(" URL省略 ");
-  expect(cleanMarkdown(mockMessage("||spoiler||"))).toBe(" 伏字 ");
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("<https://example.com>")),
+    " URL省略 ",
+  );
+  assert.strictEqual(cleanMarkdown(mockMessage("||spoiler||")), " 伏字 ");
 
-  expect(cleanMarkdown(mockMessage("\n"))).toBe("\n");
-  expect(cleanMarkdown(mockMessage("\r"))).toBe("\n");
-  expect(cleanMarkdown(mockMessage("\r\n"))).toBe("\n");
+  assert.strictEqual(cleanMarkdown(mockMessage("\n")), "\n");
+  assert.strictEqual(cleanMarkdown(mockMessage("\r")), "\n");
+  assert.strictEqual(cleanMarkdown(mockMessage("\r\n")), "\n");
 
-  expect(
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage(`\
 \`\`\`
 hello world!
 \`\`\``),
     ),
-  ).toBe(" コード ");
-  expect(
+    " コード ",
+  );
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage(`\
 \`\`\`js
 console.log("hello world!");
 \`\`\``),
     ),
-  ).toBe(" jsのコード ");
+    " jsのコード ",
+  );
 });
 
-test("cleanMarkdown works fine with url", () => {
-  expect(cleanMarkdown(mockMessage("https://www.example.com"))).toBe(
+void test("cleanMarkdown works fine with url", () => {
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("https://www.example.com")),
     " URL省略 ",
   );
-  expect(
+  assert.strictEqual(
     cleanMarkdown(mockMessage("https://discord.com/developers/docs/intro")),
-  ).toBe(" URL省略 ");
-  expect(cleanMarkdown(mockMessage("https://discord.com/channels/0/0"))).toBe(
+    " URL省略 ",
+  );
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("https://discord.com/channels/0/0")),
     " 外部サーバーのチャンネル ",
   );
-  expect(cleanMarkdown(mockMessage("https://discord.com/channels/0/0/0"))).toBe(
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("https://ptb.discord.com/channels/0/0")),
+    " 外部サーバーのチャンネル ",
+  );
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("https://canary.discord.com/channels/0/0")),
+    " 外部サーバーのチャンネル ",
+  );
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("https://discord.com/channels/0/0/0")),
     " 外部サーバーのメッセージ ",
   );
-  expect(
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage("https://discord.com/channels/391390986770710528/0"),
     ),
-  ).toBe(" 不明なチャンネル ");
-  expect(
+    " 不明なチャンネル ",
+  );
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage("https://discord.com/channels/391390986770710528/0/0"),
     ),
-  ).toBe(" 不明なメッセージ ");
-  expect(
+    " 不明なメッセージ ",
+  );
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage(
         "https://discord.com/channels/391390986770710528/391394853268750337",
       ),
     ),
-  ).toBe("雑談");
+    "雑談",
+  );
   // Discord creates URL a message mention even if unknown message id is given.
-  expect(
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage(
         "https://discord.com/channels/391390986770710528/391394853268750337/0",
       ),
     ),
-  ).toBe("雑談のメッセージ");
-  expect(
+    "雑談のメッセージ",
+  );
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage(
         "https://discord.com/channels/391390986770710528/391394853268750337/392587826186944512",
       ),
     ),
-  ).toBe("雑談のメッセージ");
+    "雑談のメッセージ",
+  );
 });
 
-test("cleanMarkdown works fine with several mentions", () => {
-  expect(cleanMarkdown(mockMessage("<@!351992405831974915>")).trim()).toBe(
+void test("cleanMarkdown works fine with several mentions", () => {
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("<@!351992405831974915>")).trim(),
     "InkoHX",
   );
-  expect(cleanMarkdown(mockMessage("<@!00000000000000000>"))).toBe(
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("<@!00000000000000000>")),
     " 不明なユーザー ",
   );
-  expect(cleanMarkdown(mockMessage("<@&705393852147826730>"))).toBe(
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("<@&705393852147826730>")),
     "MAID[メイド]",
   );
-  expect(cleanMarkdown(mockMessage("<@&00000000000000000>"))).toBe(
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("<@&00000000000000000>")),
     " 不明なロール ",
   );
-  expect(
+  assert.strictEqual(
     cleanMarkdown(mockMessage("<:inkohx_dancing:1068113836965642280>")),
-  ).toBe("inkohx_dancing");
-  expect(
+    "inkohx_dancing",
+  );
+  assert.strictEqual(
     cleanMarkdown(mockMessage("<a:inkohx_dancing:1068113836965642280>")),
-  ).toBe("inkohx_dancing");
-  expect(cleanMarkdown(mockMessage("</join:000000000000000000>"))).toBe(
+    "inkohx_dancing",
+  );
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("</join:000000000000000000>")),
     " joinコマンド ",
   );
-  expect(cleanMarkdown(mockMessage("@everyone"))).toBe(" @エブリワン ");
-  expect(cleanMarkdown(mockMessage("@here"))).toBe(" @ヒア ");
+  assert.strictEqual(cleanMarkdown(mockMessage("@everyone")), " @エブリワン ");
+  assert.strictEqual(cleanMarkdown(mockMessage("@here")), " @ヒア ");
 });
 
-test("cleanMarkdown works fine with twemoji", () => {
-  expect(cleanMarkdown(mockMessage("👍"))).toBe("👍");
+void test("cleanMarkdown works fine with twemoji", () => {
+  assert.strictEqual(cleanMarkdown(mockMessage("👍")), "👍");
 });
 
 function timestamp(s: string) {
   return Math.floor(Date.parse(s) / 1000);
 }
 
-test("cleanMarkdown works fine with timestamp", () => {
-  vi.setSystemTime(new Date("2017-12-16T21:48:02.939+0900"));
+void test("cleanMarkdown works fine with timestamp", () => {
+  test.mock.timers.enable({
+    apis: ["Date"],
+    now: new Date("2017-12-16T21:48:02.939+0900"),
+  });
 
-  expect(
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage(`<t:${timestamp("2017-12-16T21:48:02.000+0900")}>`),
     ),
-  ).toBe("今");
-  expect(
+    "今",
+  );
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage(`<t:${timestamp("2017-12-16T21:48:04.000+0900")}>`),
     ),
-  ).toBe("4秒"); // ほんまか？
-  expect(
+    "4秒",
+  ); // ほんまか？
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage(`<t:${timestamp("2017-12-16T21:49:00.000+0900")}>`),
     ),
-  ).toBe("49分0秒");
-  expect(
+    "49分0秒",
+  );
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage(`<t:${timestamp("2017-12-16T22:00:00.000+0900")}>`),
     ),
-  ).toBe("22時0分0秒");
-  expect(
+    "22時0分0秒",
+  );
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage(`<t:${timestamp("2017-12-17T00:00:00.000+0900")}>`),
     ),
-  ).toBe("17日日曜日 0時0分0秒");
-  expect(
+    "17日日曜日 0時0分0秒",
+  );
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage(`<t:${timestamp("2017-11-01T00:00:00.000+0900")}>`),
     ),
-  ).toBe("11月1日水曜日 0時0分0秒");
-  expect(
+    "11月1日水曜日 0時0分0秒",
+  );
+  assert.strictEqual(
     cleanMarkdown(
       mockMessage(`<t:${timestamp("2018-01-01T00:00:00.000+0900")}>`),
     ),
-  ).toBe("2018年1月1日月曜日 0時0分0秒");
+    "2018年1月1日月曜日 0時0分0秒",
+  );
 });
