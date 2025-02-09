@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.5.2](https://github.com/discordjs-japan/om/compare/v0.5.1...v0.5.2) (2025-02-09)
+
+
+### Bug Fixes
+
+* [#708](https://github.com/discordjs-japan/om/issues/708) ([f40ceb0](https://github.com/discordjs-japan/om/commit/f40ceb07dec359c71fb64a835c0e18b6fc26162f))
+* update discord url validation to include ptb.discord.com ([#709](https://github.com/discordjs-japan/om/issues/709)) ([f40ceb0](https://github.com/discordjs-japan/om/commit/f40ceb07dec359c71fb64a835c0e18b6fc26162f)), closes [#708](https://github.com/discordjs-japan/om/issues/708)
+* update regex to allow spaces in slash command name ([#716](https://github.com/discordjs-japan/om/issues/716)) ([060134d](https://github.com/discordjs-japan/om/commit/060134d96d57c1a4db6afb750795d5583608d662)), closes [#567](https://github.com/discordjs-japan/om/issues/567)
+
+
+### Dependencies
+
+* lock file maintenance ([#755](https://github.com/discordjs-japan/om/issues/755)) ([1bb8d7c](https://github.com/discordjs-japan/om/commit/1bb8d7c11ed1c1ad59b7013dee732caedee22dd3))
+* update dependency discord.js to v14.17.2 ([#720](https://github.com/discordjs-japan/om/issues/720)) ([024d392](https://github.com/discordjs-japan/om/commit/024d392d59e4bebc021c879dc1c613c1ca0684ec))
+* update dependency discord.js to v14.17.3 ([#726](https://github.com/discordjs-japan/om/issues/726)) ([9a8bd3a](https://github.com/discordjs-japan/om/commit/9a8bd3a9a8fe844f4f3fa74bb4fcaf6db3e2ff00))
+
 ## [0.5.1](https://github.com/discordjs-japan/om/compare/v0.5.0...v0.5.1) (2024-11-18)
 
 
