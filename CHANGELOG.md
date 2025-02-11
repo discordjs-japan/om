@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.3](https://github.com/discordjs-japan/om/compare/v0.5.2...v0.5.3) (2025-02-11)
+
+
+### Dependencies
+
+* update dependency discord.js to v14.18.0 ([#773](https://github.com/discordjs-japan/om/issues/773)) ([87442dd](https://github.com/discordjs-japan/om/commit/87442dd98fbe168d2a0d9d1b7233077c59431c90))
+
 ## [0.5.2](https://github.com/discordjs-japan/om/compare/v0.5.1...v0.5.2) (2025-02-09)
 
 
