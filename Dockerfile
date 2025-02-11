@@ -53,4 +53,4 @@ ENV MODELS=models/htsvoice-tohoku-f01-master/tohoku-f01-neutral.htsvoice
 COPY --link --from=user-dictionary /app/ ./user-dictionary/
 ENV USER_DICTIONARY=user-dictionary/user-dictionary.bin
 
-CMD ["dist/main.js"]
+CMD ["--enable-source-maps", "dist/main.js"]
