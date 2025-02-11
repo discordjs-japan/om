@@ -10,4 +10,5 @@ await build({
   packages: "external",
   plugins: [esbuildPluginVersionInjector()],
   minify: true,
+  sourcemap: true,
 });
