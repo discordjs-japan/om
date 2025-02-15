@@ -195,7 +195,7 @@ function cleanTwemojis(s: string) {
 function dateSegments(date: number | Date) {
   const segments = dateTimeFormat
     .formatToParts(date)
-    .reduce((accumulator, { type, value }) => {
+    .reduce<string[]>((accumulator, { type, value }) => {
       switch (type) {
         case "year":
         case "month":
