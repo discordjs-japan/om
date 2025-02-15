@@ -170,7 +170,14 @@ function parseDiscordUrl(url: string): DiscordUrl | undefined {
     const { protocol, host, pathname } = new URL(url);
     if (protocol !== "https:") return;
     if (
-      !["discord.com", "ptb.discord.com", "canary.discord.com"].includes(host)
+      ![
+        "discord.com",
+        "ptb.discord.com",
+        "canary.discord.com",
+        "discordapp.com",
+        "ptb.discordapp.com",
+        "canary.discordapp.com",
+      ].includes(host)
     )
       return;
 
