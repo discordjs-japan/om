@@ -122,7 +122,8 @@ function text(ast: ASTNode, guild: Guild | null): string {
     case "timestamp": {
       const timestamp = stringOrEmpty(ast.timestamp);
       const date = Number(timestamp) * 1000;
-      if (!Number.isInteger(date) || date < 0) return " 不明な日付 ";
+      if (!Number.isInteger(date) || Math.abs(date) > 8640000000000000)
+        return " 不明な日付 ";
 
       const full = dateSegments(date);
       const now = dateSegments(Date.now());
