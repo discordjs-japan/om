@@ -95,6 +95,18 @@ void test("cleanMarkdown works fine with url", () => {
     " 外部サーバーのチャンネル ",
   );
   assert.strictEqual(
+    cleanMarkdown(mockMessage("https://discordapp.com/channels/0/0")),
+    " 外部サーバーのチャンネル ",
+  );
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("https://ptb.discordapp.com/channels/0/0")),
+    " 外部サーバーのチャンネル ",
+  );
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("https://canary.discordapp.com/channels/0/0")),
+    " 外部サーバーのチャンネル ",
+  );
+  assert.strictEqual(
     cleanMarkdown(mockMessage("https://discord.com/channels/0/0/0")),
     " 外部サーバーのメッセージ ",
   );
