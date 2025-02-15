@@ -219,7 +219,7 @@ function dateSegments(date: number | Date) {
           break;
       }
       return accumulator;
-    }, [] as string[]);
+    }, []);
   segments[segments.length - 1] = segments[segments.length - 1].trimEnd();
   return segments;
 }
