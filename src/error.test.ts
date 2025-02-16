@@ -1,5 +1,6 @@
 import assert from "node:assert";
 import test from "node:test";
+import { MessageFlags } from "discord.js";
 import { ReplyableError } from "./error";
 
 void test("ReplyableError works fine", () => {
@@ -7,7 +8,7 @@ void test("ReplyableError works fine", () => {
   assert.strictEqual(error.message, "This is a replyable error");
   assert.deepStrictEqual(error.toReply(), {
     content: "This is a replyable error",
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral,
   });
 });
 
