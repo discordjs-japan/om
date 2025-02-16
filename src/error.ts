@@ -1,4 +1,4 @@
-import type { InteractionReplyOptions } from "discord.js";
+import { MessageFlags, type InteractionReplyOptions } from "discord.js";
 
 export class ReplyableError extends Error {
   public static from(e: unknown) {
@@ -14,7 +14,7 @@ export class ReplyableError extends Error {
   public toReply(): InteractionReplyOptions {
     return {
       content: this.message,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     };
   }
 }

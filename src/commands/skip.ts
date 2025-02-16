@@ -1,5 +1,6 @@
 import {
   InteractionContextType,
+  MessageFlags,
   type ChatInputCommandInteraction,
   type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from "discord.js";
@@ -26,6 +27,9 @@ export async function handler(
 
   await interaction.reply({
     content: "読み上げを中止しました。",
-    ephemeral: playing.metadata.message.author.id === interaction.user.id,
+    flags:
+      playing.metadata.message.author.id === interaction.user.id
+        ? MessageFlags.Ephemeral
+        : undefined,
   });
 }
