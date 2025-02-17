@@ -201,8 +201,33 @@ function cleanTwemojis(s: string) {
 }
 
 function dateSegments(date: number | Date) {
-  const matches = dateTimeFormat.format(date).matchAll(/\d+[^\d]+(?=[\d ])/g);
-  return Array.from(matches, ({ 0: segment }) =>
-    segment.replace(/^0(\d)/, "$1"),
-  );
+  const segments = dateTimeFormat
+    .formatToParts(date)
+    .reduce<string[]>((accumulator, { type, value }) => {
+      switch (type) {
+        case "year":
+        case "month":
+        case "day":
+        case "hour":
+        case "minute":
+        case "second": {
+          // remove leading 0
+          const val = +value;
+          accumulator.push(Number.isNaN(val) ? value : `${val}`);
+          break;
+        }
+        case "weekday":
+        case "literal":
+          if (accumulator.length === 0) {
+            accumulator.push(value);
+          } else {
+            // string-concatenatation
+            accumulator[accumulator.length - 1] += value;
+          }
+          break;
+      }
+      return accumulator;
+    }, []);
+  segments[segments.length - 1] = segments[segments.length - 1].trimEnd();
+  return segments;
 }
