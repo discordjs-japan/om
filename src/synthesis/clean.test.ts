@@ -226,4 +226,16 @@ void test("cleanMarkdown works fine with timestamp", () => {
     ),
     "2018年1月1日月曜日 0時0分0秒",
   );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(`<t:${timestamp("+010000-01-01T08:59:00.000+0900")}>`),
+    ),
+    "10000年1月1日土曜日 8時59分0秒",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(`<t:${timestamp("+275760-09-13T09:00:00.000+0900")}>`),
+    ),
+    "275760年9月13日土曜日 9時0分0秒",
+  );
 });
