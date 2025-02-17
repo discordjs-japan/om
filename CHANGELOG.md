@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.6.0](https://github.com/discordjs-japan/om/compare/v0.5.3...v0.6.0) (2025-02-17)
+
+
+### Features
+
+* add logging by pino ([#780](https://github.com/discordjs-japan/om/issues/780)) ([8e7be2e](https://github.com/discordjs-japan/om/commit/8e7be2efd8d81a5bec5c463846e2cb21e3fd3bed))
+* Source map support ([#777](https://github.com/discordjs-japan/om/issues/777)) ([5e63b0c](https://github.com/discordjs-japan/om/commit/5e63b0c4f9a1b7e5014d7331cd87f6be2f1dc0d5))
+
+
+### Bug Fixes
+
+* add *.discordapp.com to allowed host list ([#789](https://github.com/discordjs-japan/om/issues/789)) ([5608a13](https://github.com/discordjs-japan/om/commit/5608a137c017c5b1555b11a123d7b5e228e17369))
+* fix a bug of dateSegments() ([#788](https://github.com/discordjs-japan/om/issues/788)) ([3f1678c](https://github.com/discordjs-japan/om/commit/3f1678c27459d1b0bb58bf6e31a51c8805a07dd0))
+* fix validation of date timestamp ([#787](https://github.com/discordjs-japan/om/issues/787)) ([2f7efb4](https://github.com/discordjs-japan/om/commit/2f7efb42b153dbb79426091681044f74c02ccd3b))
+
+
+### Dependencies
+
+* lock file maintenance ([#793](https://github.com/discordjs-japan/om/issues/793)) ([46813cb](https://github.com/discordjs-japan/om/commit/46813cbba9e5da33bbca5ceafb425946243282ec))
+* update dependency @discordjs-japan/om-syrinx to v0.4.3 ([#792](https://github.com/discordjs-japan/om/issues/792)) ([157d75c](https://github.com/discordjs-japan/om/commit/157d75c59186513d133a32d326e3aa655122c31d))
+
 ## [0.5.3](https://github.com/discordjs-japan/om/compare/v0.5.2...v0.5.3) (2025-02-11)
 
 
