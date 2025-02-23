@@ -16,6 +16,17 @@ const parser = SimpleMarkdown.parserFor(
         type: "command",
       }),
     },
+    attachmentLink: {
+      order: rulesExtended.url.order - 0.5,
+      match: (source: string) =>
+        /^https:\/\/(?:(?:media|images)\.discordapp\.net|cdn\.discordapp\.com)\/(?:attachments|ephemeral-attachments)\/\d+\/\d+\/([\w.-]*[\w-])(?:\?[\w?&=-]*)?/.exec(
+          source,
+        ),
+      parse: (capture: Capture) => ({
+        filename: capture[1],
+        type: "attachmentLink",
+      }),
+    },
   },
   { inline: true },
 );
@@ -134,6 +145,9 @@ function text(ast: ASTNode, guild: Guild | null): string {
 
       return "今";
     }
+
+    case "attachmentLink":
+      return stringOrEmpty(ast.filename);
   }
 
   return "";

@@ -147,6 +147,46 @@ void test("cleanMarkdown works fine with url", () => {
     ),
     "雑談のメッセージ",
   );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(
+        "https://media.discordapp.net/attachments/1234567890123456789/1234567890123456789/123.jpg",
+      ),
+    ),
+    "123.jpg",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(
+        "https://images.discordapp.net/attachments/1234567890123456789/1234567890123456789/123.jpg",
+      ),
+    ),
+    "123.jpg",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(
+        "https://cdn.discordapp.com/attachments/1234567890123456789/1234567890123456789/123.jpg",
+      ),
+    ),
+    "123.jpg",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(
+        "https://media.discordapp.net/ephemeral-attachments/1234567890123456789/1234567890123456789/123.jpg",
+      ),
+    ),
+    "123.jpg",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(
+        "https://media.discordapp.net/attachments/1234567890123456789/1234567890123456789/123.jpg?ex=12345678&is=1234abcd&hm=0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqr",
+      ),
+    ),
+    "123.jpg",
+  );
 });
 
 void test("cleanMarkdown works fine with several mentions", () => {
