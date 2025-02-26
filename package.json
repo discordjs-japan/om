@@ -29,7 +29,7 @@
     "esbuild-plugin-pino": "2.2.1",
     "esbuild-plugin-version-injector": "1.2.1",
     "eslint": "9.21.0",
-    "eslint-config-prettier": "10.0.1",
+    "eslint-config-prettier": "10.0.2",
     "eslint-plugin-import-x": "4.6.1",
     "globals": "16.0.0",
     "husky": "9.1.7",
