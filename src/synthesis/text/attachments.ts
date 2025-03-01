@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 import type { Attachment, Message } from "discord.js";
 
 export function getSuffixFromAttachments(message: Message) {
