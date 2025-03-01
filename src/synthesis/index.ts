@@ -3,9 +3,8 @@ import { StreamType, createAudioResource } from "@discordjs/voice";
 import { EncoderType, Syrinx } from "@discordjs-japan/om-syrinx";
 import type { Message } from "discord.js";
 import { config } from "../env";
-import { cleanMarkdown } from "./clean";
-import { ignoreParenContent } from "./ignore";
 import { createSynthesisOption } from "./options";
+import { getInputText } from "./text";
 
 const syrinx = Syrinx.fromConfig({
   ...config,
@@ -13,12 +12,7 @@ const syrinx = Syrinx.fromConfig({
 });
 
 export async function synthesize(message: Message) {
-  const cleanText = cleanMarkdown(message);
-  const ignoredText = ignoreParenContent(cleanText);
-  const inputText =
-    ignoredText.length > 200
-      ? `${ignoredText.slice(0, 196)} 以下略`
-      : ignoredText;
+  const inputText = getInputText(message);
   const option = createSynthesisOption(message);
 
   const stream = syrinx.synthesize(inputText, option);
