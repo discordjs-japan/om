@@ -78,6 +78,24 @@ void test("getSuffixFromAttachments handles multiple attachments correctly", () 
     ),
     "2つの画像 2つのpdfファイル",
   );
+
+  assert.strictEqual(
+    getSuffixFromAttachments(
+      mockMessage([
+        { name: "doc.pdf" },
+        { name: "doc2.pdf" },
+        { name: "doc3.pdf" },
+        { name: "doc4.pdf" },
+        { name: "doc5.pdf" },
+        { name: "doc6.pdf" },
+        { name: "doc7.pdf" },
+        { name: "doc8.pdf" },
+        { name: "doc9.pdf" },
+        { name: "doc10.pdf" },
+      ]),
+    ),
+    "10個のpdfファイル",
+  );
 });
 
 void test("getSuffixFromAttachments handles empty attachments", () => {
