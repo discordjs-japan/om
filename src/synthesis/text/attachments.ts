@@ -14,7 +14,8 @@ export function getSuffixFromAttachments(message: Message) {
     .map(([type, count]) => {
       const read = SPECIAL_ATTACHMENT_TYPE_READ[type] ?? `${type}ファイル`;
       if (count === 1) return read;
-      else return `${count}つの${read}`;
+      else if (count < 10) return `${count}つの${read}`;
+      else return `${count}個の${read}`;
     })
     .join(" ");
 }
