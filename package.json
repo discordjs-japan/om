@@ -47,10 +47,5 @@
     "discord.js": "14.18.0",
     "pino": "9.6.0",
     "simple-markdown": "0.7.3"
-  },
-  "overrides": {
-    "esbuild-plugin-pino": {
-      "esbuild": ">=0.12.0"
-    }
   }
 }
