@@ -2,6 +2,7 @@ import { rulesExtended } from "discord-markdown-parser";
 import type { Guild, Message } from "discord.js";
 import SimpleMarkdown from "simple-markdown";
 import type { SingleASTNode, ASTNode, Capture } from "simple-markdown";
+import { resolveChannel } from "./resolve";
 
 const parser = SimpleMarkdown.parserFor(
   {
@@ -65,22 +66,19 @@ function text(ast: ASTNode, guild: Guild | null): string {
       const url = stringOrEmpty(ast.target);
       const discordUrl = parseDiscordUrl(url);
       if (!discordUrl) return " URL省略 ";
-      if (guild?.id !== discordUrl.guildId) {
-        return ` 外部サーバーの${
-          discordUrl.messageId ? "メッセージ" : "チャンネル"
-        } `;
-      }
 
-      const channel = guild.channels.cache.get(discordUrl.channelId);
-      if (!channel) {
-        return ` 不明な${discordUrl.messageId ? "メッセージ" : "チャンネル"} `;
-      }
-
-      const name = cleanTwemojis(channel.name);
-      if (discordUrl.messageId) {
-        return `${name}のメッセージ`;
-      } else {
-        return name;
+      const resolution = resolveChannel(discordUrl, guild);
+      switch (resolution.type) {
+        case "external":
+          return ` 外部サーバーの${discordUrl.messageId ? "メッセージ" : "チャンネル"} `;
+        case "unknown":
+          return ` 不明な${discordUrl.messageId ? "メッセージ" : "チャンネル"} `;
+        case "resolved": {
+          const name = cleanTwemojis(resolution.channel.name);
+          return discordUrl.messageId ? `${name}のメッセージ` : name;
+        }
+        default:
+          return resolution satisfies never;
       }
     }
     case "autolink":
@@ -209,7 +207,7 @@ const twemojiParser = SimpleMarkdown.parserFor(
   { inline: true },
 );
 
-function cleanTwemojis(s: string) {
+export function cleanTwemojis(s: string) {
   const ast = twemojiParser(s);
   return text(ast, null); // should be only twemoji and text, so no problem with null
 }
