@@ -32,6 +32,7 @@ export async function handler(
 ) {
   const channel =
     interaction.options.getChannel<AllowedChannelType>("channel") ??
+    (interaction.channel?.isVoiceBased() ? interaction.channel : null) ??
     interaction.member.voice.channel;
   if (!channel) {
     throw new ReplyableError(
