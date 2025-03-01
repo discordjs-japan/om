@@ -24,7 +24,7 @@
   "devDependencies": {
     "@eslint/js": "9.21.0",
     "@types/eslint-config-prettier": "6.11.3",
-    "@types/node": "22.13.7",
+    "@types/node": "22.13.8",
     "esbuild": "0.25.0",
     "esbuild-plugin-pino": "2.2.2",
     "esbuild-plugin-version-injector": "1.2.1",
