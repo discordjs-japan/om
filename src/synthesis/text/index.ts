@@ -1,4 +1,5 @@
 import { MessageReferenceType, type Message } from "discord.js";
+import { getSuffixFromAttachments } from "./attachments";
 import { cleanMarkdown, cleanTwemojis } from "./clean";
 import { ignoreParenContent } from "./ignore";
 
@@ -24,6 +25,7 @@ function truncateText(text: string) {
 export function getInputText(message: Message) {
   const prefix = getPrefixFromReference(message);
   const cleanText = cleanMarkdown(message);
-  const ignoredText = ignoreParenContent(`${prefix} ${cleanText}`);
+  const suffix = getSuffixFromAttachments(message);
+  const ignoredText = ignoreParenContent(`${prefix} ${cleanText} ${suffix}`);
   return truncateText(ignoredText);
 }
