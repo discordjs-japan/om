@@ -5,6 +5,7 @@ import {
 } from "@discordjs-japan/om-syrinx";
 import {
   InteractionContextType,
+  MessageFlags,
   type ChatInputCommandInteraction,
   type RESTPostAPIChatInputApplicationCommandsJSONBody,
 } from "discord.js";
@@ -26,6 +27,6 @@ discordjs-japan/om-syrinx: ${OM_SYRINX_VERSION}
 jpreprocess/jpreprocess: ${JPREPROCESS_VERSION}
 jpreprocess/jbonsai: ${JBONSAI_VERSION}
 \`\`\``,
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral,
   });
 }

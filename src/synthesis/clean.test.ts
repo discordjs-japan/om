@@ -95,6 +95,18 @@ void test("cleanMarkdown works fine with url", () => {
     " 外部サーバーのチャンネル ",
   );
   assert.strictEqual(
+    cleanMarkdown(mockMessage("https://discordapp.com/channels/0/0")),
+    " 外部サーバーのチャンネル ",
+  );
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("https://ptb.discordapp.com/channels/0/0")),
+    " 外部サーバーのチャンネル ",
+  );
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("https://canary.discordapp.com/channels/0/0")),
+    " 外部サーバーのチャンネル ",
+  );
+  assert.strictEqual(
     cleanMarkdown(mockMessage("https://discord.com/channels/0/0/0")),
     " 外部サーバーのメッセージ ",
   );
@@ -134,6 +146,46 @@ void test("cleanMarkdown works fine with url", () => {
       ),
     ),
     "雑談のメッセージ",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(
+        "https://media.discordapp.net/attachments/1234567890123456789/1234567890123456789/123.jpg",
+      ),
+    ),
+    "123.jpg",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(
+        "https://images.discordapp.net/attachments/1234567890123456789/1234567890123456789/123.jpg",
+      ),
+    ),
+    "123.jpg",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(
+        "https://cdn.discordapp.com/attachments/1234567890123456789/1234567890123456789/123.jpg",
+      ),
+    ),
+    "123.jpg",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(
+        "https://media.discordapp.net/ephemeral-attachments/1234567890123456789/1234567890123456789/123.jpg",
+      ),
+    ),
+    "123.jpg",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(
+        "https://media.discordapp.net/attachments/1234567890123456789/1234567890123456789/123.jpg?ex=12345678&is=1234abcd&hm=0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqr",
+      ),
+    ),
+    "123.jpg",
   );
 });
 
@@ -225,5 +277,17 @@ void test("cleanMarkdown works fine with timestamp", () => {
       mockMessage(`<t:${timestamp("2018-01-01T00:00:00.000+0900")}>`),
     ),
     "2018年1月1日月曜日 0時0分0秒",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(`<t:${timestamp("+010000-01-01T08:59:00.000+0900")}>`),
+    ),
+    "10000年1月1日土曜日 8時59分0秒",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(`<t:${timestamp("+275760-09-13T09:00:00.000+0900")}>`),
+    ),
+    "275760年9月13日土曜日 9時0分0秒",
   );
 });

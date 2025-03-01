@@ -16,6 +16,17 @@ const parser = SimpleMarkdown.parserFor(
         type: "command",
       }),
     },
+    attachmentLink: {
+      order: rulesExtended.url.order - 0.5,
+      match: (source: string) =>
+        /^https:\/\/(?:(?:media|images)\.discordapp\.net|cdn\.discordapp\.com)\/(?:attachments|ephemeral-attachments)\/\d+\/\d+\/([\w.-]*[\w-])(?:\?[\w?&=-]*)?/.exec(
+          source,
+        ),
+      parse: (capture: Capture) => ({
+        filename: capture[1],
+        type: "attachmentLink",
+      }),
+    },
   },
   { inline: true },
 );
@@ -122,7 +133,8 @@ function text(ast: ASTNode, guild: Guild | null): string {
     case "timestamp": {
       const timestamp = stringOrEmpty(ast.timestamp);
       const date = Number(timestamp) * 1000;
-      if (!Number.isInteger(date) || date < 0) return " 不明な日付 ";
+      if (!Number.isInteger(date) || Math.abs(date) > 8640000000000000)
+        return " 不明な日付 ";
 
       const full = dateSegments(date);
       const now = dateSegments(Date.now());
@@ -133,6 +145,9 @@ function text(ast: ASTNode, guild: Guild | null): string {
 
       return "今";
     }
+
+    case "attachmentLink":
+      return stringOrEmpty(ast.filename);
   }
 
   return "";
@@ -170,7 +185,14 @@ function parseDiscordUrl(url: string): DiscordUrl | undefined {
     const { protocol, host, pathname } = new URL(url);
     if (protocol !== "https:") return;
     if (
-      !["discord.com", "ptb.discord.com", "canary.discord.com"].includes(host)
+      ![
+        "discord.com",
+        "ptb.discord.com",
+        "canary.discord.com",
+        "discordapp.com",
+        "ptb.discordapp.com",
+        "canary.discordapp.com",
+      ].includes(host)
     )
       return;
 
@@ -193,8 +215,33 @@ function cleanTwemojis(s: string) {
 }
 
 function dateSegments(date: number | Date) {
-  const matches = dateTimeFormat.format(date).matchAll(/\d+[^\d]+(?=[\d ])/g);
-  return Array.from(matches, ({ 0: segment }) =>
-    segment.replace(/^0(\d)/, "$1"),
-  );
+  const segments = dateTimeFormat
+    .formatToParts(date)
+    .reduce<string[]>((accumulator, { type, value }) => {
+      switch (type) {
+        case "year":
+        case "month":
+        case "day":
+        case "hour":
+        case "minute":
+        case "second": {
+          // remove leading 0
+          const val = +value;
+          accumulator.push(Number.isNaN(val) ? value : `${val}`);
+          break;
+        }
+        case "weekday":
+        case "literal":
+          if (accumulator.length === 0) {
+            accumulator.push(value);
+          } else {
+            // string-concatenatation
+            accumulator[accumulator.length - 1] += value;
+          }
+          break;
+      }
+      return accumulator;
+    }, []);
+  segments[segments.length - 1] = segments[segments.length - 1].trimEnd();
+  return segments;
 }
