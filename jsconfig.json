@@ -1,0 +1,12 @@
+{
+  "extends": "@tsconfig/node22",
+  "compilerOptions": {
+    "module": "Preserve",
+    "moduleResolution": "Node",
+    "types": ["node"],
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "checkJs": true
+  },
+  "include": ["scripts/**/*", "./*.config.js"]
+}

@@ -1,5 +1,3 @@
-// @ts-check
-
 import eslint from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginImportX from "eslint-plugin-import-x";
@@ -17,7 +15,7 @@ export default tseslint.config(
       parserOptions: {
         sourceType: "module",
         ecmaVersion: "latest",
-        project: ["tsconfig.json", "tsconfig.*.json"],
+        project: ["tsconfig.json", "jsconfig.json"],
       },
       globals: {
         ...globals.node,
