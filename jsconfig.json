@@ -8,6 +8,5 @@
     "verbatimModuleSyntax": true,
     "checkJs": true
   },
-  "include": ["scripts/**/*", "*.config.js"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["scripts/**/*", "./*.config.js"]
 }
