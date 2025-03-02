@@ -209,7 +209,7 @@ const twemojiParser = SimpleMarkdown.parserFor(
   { inline: true },
 );
 
-function cleanTwemojis(s: string) {
+export function cleanTwemojis(s: string) {
   const ast = twemojiParser(s);
   return text(ast, null); // should be only twemoji and text, so no problem with null
 }
