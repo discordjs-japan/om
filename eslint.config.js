@@ -1,5 +1,5 @@
 import eslint from "@eslint/js";
-import eslintConfigPrettier from "eslint-config-prettier";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
 import eslintPluginImportX from "eslint-plugin-import-x";
 import globals from "globals";
 import tseslint from "typescript-eslint";
