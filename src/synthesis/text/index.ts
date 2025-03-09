@@ -7,7 +7,11 @@ function getPrefixFromReference(message: Message) {
   switch (message.reference?.type) {
     case MessageReferenceType.Default: {
       if (!message.mentions.repliedUser) return "";
-      return cleanTwemojis(message.mentions.repliedUser.displayName);
+      // The message_reference does not contain member information, so it may not be resolvable
+      const member =
+        message.guild?.members.resolve(message.mentions.repliedUser) ??
+        message.mentions.repliedUser;
+      return cleanTwemojis(member.displayName);
     }
 
     case MessageReferenceType.Forward:
