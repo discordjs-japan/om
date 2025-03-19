@@ -15,7 +15,7 @@ env:
   IMAGE_NAME: om
   # バージョン指定
   # renovate: datasource=github-releases depName=docker/buildx
-  BUILDX_VERSION: v0.21.3
+  BUILDX_VERSION: v0.22.0
 
 jobs:
   env:
