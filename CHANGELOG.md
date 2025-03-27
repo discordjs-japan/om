@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.7.0](https://github.com/discordjs-japan/om/compare/v0.6.0...v0.7.0) (2025-03-27)
+
+
+### Features
+
+* improve join command to use interaction channel as default ([#823](https://github.com/discordjs-japan/om/issues/823)) ([be14467](https://github.com/discordjs-japan/om/commit/be14467ecc41a133456128b34a091017ff7b4768))
+* Process MessageReference and Attachments ([#827](https://github.com/discordjs-japan/om/issues/827)) ([c42a255](https://github.com/discordjs-japan/om/commit/c42a2559feb7c04cbe2a589dfdb257dea2d435cd)), closes [#715](https://github.com/discordjs-japan/om/issues/715)
+* support attachment links ([#795](https://github.com/discordjs-japan/om/issues/795)) ([8ee7c6e](https://github.com/discordjs-japan/om/commit/8ee7c6e013f54d43225c292444b385cd71f0f623))
+
+
+### Bug Fixes
+
+* resolve user display name from guild member in message reference ([#845](https://github.com/discordjs-japan/om/issues/845)) ([72b40d0](https://github.com/discordjs-japan/om/commit/72b40d0e400a3df0e34fe9a3469c981035925f80)), closes [#837](https://github.com/discordjs-japan/om/issues/837)
+
+
+### Dependencies
+
+* lock file maintenance ([#808](https://github.com/discordjs-japan/om/issues/808)) ([5bbd715](https://github.com/discordjs-japan/om/commit/5bbd71564b423d175b01c9ee55eca868d390c917))
+
 ## [0.6.0](https://github.com/discordjs-japan/om/compare/v0.5.3...v0.6.0) (2025-02-17)
 
 
