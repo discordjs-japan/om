@@ -22,7 +22,7 @@
   "author": "Discord.js Japan User Group (discordjs-japan.org)",
   "license": "MIT",
   "devDependencies": {
-    "@eslint/js": "9.25.1",
+    "@eslint/js": "9.26.0",
     "@tsconfig/node22": "22.0.1",
     "@types/node": "22.15.3",
     "@types/punycode": "2.1.4",
