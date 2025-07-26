@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.17.1@sha256:38387523653efa0039f8e1c89bb74a30504e76ee9f565e25c9a09841f9427b05
 
-FROM node:22.17.1-bookworm@sha256:ec09419096c9cb8ff4c6fcf9c7b63332bbecab56d4cb6dcc83d98c180a7cdddf AS deps
+FROM node:22.17.1-bookworm@sha256:37ff334612f77d8f999c10af8797727b731629c26f2e83caa6af390998bdc49c AS deps
 ARG NODE_ENV=production
 WORKDIR /app
 RUN npm config set cache /.npm
@@ -11,7 +11,7 @@ RUN --mount=type=cache,id=npm-$TARGETPLATFORM,target=/.npm \
     npm ci
 RUN node --print "require('@discordjs-japan/om-syrinx').JPREPROCESS_VERSION" > .jpreprocess-version
 
-FROM --platform=$BUILDPLATFORM node:22.17.1-bookworm@sha256:ec09419096c9cb8ff4c6fcf9c7b63332bbecab56d4cb6dcc83d98c180a7cdddf AS builder
+FROM --platform=$BUILDPLATFORM node:22.17.1-bookworm@sha256:37ff334612f77d8f999c10af8797727b731629c26f2e83caa6af390998bdc49c AS builder
 ARG NODE_ENV=development
 WORKDIR /app
 RUN npm config set cache /.npm
@@ -24,16 +24,16 @@ RUN --mount=type=cache,id=npm-$BUILDPLATFORM,target=/.npm \
 COPY --link ./src/ ./src/
 RUN npm run build
 
-FROM --platform=$BUILDPLATFORM node:22.17.1-bookworm@sha256:ec09419096c9cb8ff4c6fcf9c7b63332bbecab56d4cb6dcc83d98c180a7cdddf AS dictionary
+FROM --platform=$BUILDPLATFORM node:22.17.1-bookworm@sha256:37ff334612f77d8f999c10af8797727b731629c26f2e83caa6af390998bdc49c AS dictionary
 WORKDIR /app
 COPY --link --from=deps /app/.jpreprocess-version ./
 RUN curl -L "https://github.com/jpreprocess/jpreprocess/releases/download/v$(cat .jpreprocess-version)/naist-jdic-jpreprocess.tar.gz" | tar xzf -
 
-FROM --platform=$BUILDPLATFORM node:22.17.1-bookworm@sha256:ec09419096c9cb8ff4c6fcf9c7b63332bbecab56d4cb6dcc83d98c180a7cdddf AS models
+FROM --platform=$BUILDPLATFORM node:22.17.1-bookworm@sha256:37ff334612f77d8f999c10af8797727b731629c26f2e83caa6af390998bdc49c AS models
 WORKDIR /app
 RUN curl -L "https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.tar.gz" | tar xzf -
 
-FROM --platform=$BUILDPLATFORM node:22.17.1-bookworm@sha256:ec09419096c9cb8ff4c6fcf9c7b63332bbecab56d4cb6dcc83d98c180a7cdddf AS user-dictionary
+FROM --platform=$BUILDPLATFORM node:22.17.1-bookworm@sha256:37ff334612f77d8f999c10af8797727b731629c26f2e83caa6af390998bdc49c AS user-dictionary
 WORKDIR /app
 COPY --link --from=deps /app/.jpreprocess-version ./
 RUN curl -L "https://github.com/jpreprocess/jpreprocess/releases/download/v$(cat .jpreprocess-version)/jpreprocess-$(uname -m)-unknown-linux-gnu.tgz" | tar xzf -
