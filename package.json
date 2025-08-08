@@ -46,7 +46,7 @@
     "@discordjs/voice": "0.18.0",
     "discord-markdown-parser": "1.1.0",
     "discord.js": "14.21.0",
-    "pino": "9.7.0",
+    "pino": "9.8.0",
     "simple-markdown": "0.7.3"
   }
 }
