@@ -24,7 +24,7 @@
   "devDependencies": {
     "@eslint/js": "9.33.0",
     "@tsconfig/node22": "22.0.2",
-    "@types/node": "22.17.1",
+    "@types/node": "22.17.2",
     "@types/punycode": "2.1.4",
     "esbuild": "0.25.0",
     "esbuild-plugin-pino": "2.2.2",
