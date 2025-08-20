@@ -63,6 +63,8 @@ jobs:
   docker-publish:
     permissions:
       packages: write
+      id-token: write
+      attestations: write
     needs: [env, meta]
     strategy:
       fail-fast: false
@@ -112,6 +114,14 @@ jobs:
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "$name@$DIGEST" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - if: ${{ github.event_name != 'pull_request' }}
+        name: Attest Build Provenance
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
+        with:
+          subject-name: ${{ needs.env.outputs.REGISTRY_IMAGE }}
+          subject-digest: ${{ steps.build-push.outputs.digest }}
+          push-to-registry: ${{ fromJson(needs.env.outputs.PUSH) }}
 
       - id: export-digest
         if: ${{ fromJson(needs.env.outputs.PUSH) }}
