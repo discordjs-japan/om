@@ -117,10 +117,11 @@ jobs:
 
       - if: ${{ github.event_name != 'pull_request' }}
         name: Attest Build Provenance
-        uses: actions/attest-build-provenance@1c608d11d69870c2092266b3f9a6f3abbf17002c # v1.4.3
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
         with:
           subject-name: ${{ needs.env.outputs.REGISTRY_IMAGE }}
           subject-digest: ${{ steps.build-push.outputs.digest }}
+          push-to-registry: ${{ fromJson(needs.env.outputs.PUSH) }}
 
       - id: export-digest
         if: ${{ fromJson(needs.env.outputs.PUSH) }}
@@ -147,8 +148,6 @@ jobs:
   merge:
     permissions:
       packages: write
-      id-token: write
-      attestations: write
     needs: [env, meta, docker-publish]
     if: ${{ fromJson(needs.env.outputs.PUSH) }}
     runs-on: ubuntu-latest
