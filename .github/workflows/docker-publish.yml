@@ -181,4 +181,3 @@ jobs:
         with:
           subject-name: ${{ needs.env.outputs.REGISTRY_IMAGE }}
           subject-digest: ${{ fromJson(steps.get-image-digest.outputs.digest) }}
-          push-to-registry: true
