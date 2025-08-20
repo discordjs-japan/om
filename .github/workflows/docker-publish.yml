@@ -174,7 +174,7 @@ jobs:
       - id: get-image-digest
         name: Get image digest
         run: |
-          echo digest=$(docker buildx imagetools inspect ghcr.io/discordjs-japan/om:edge --format='{{json .Manifest.Digest}}') >> $GITHUB_OUTPUT
+          echo digest=$(docker buildx imagetools inspect ${{ needs.env.outputs.REGISTRY_IMAGE }}:${{ needs.meta.outputs.version }} --format='{{json .Manifest.Digest}}') >> $GITHUB_OUTPUT
 
       - name: Attest Build Provenance
         uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
