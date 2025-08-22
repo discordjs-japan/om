@@ -30,6 +30,8 @@ jobs:
     if: ${{ needs.release-please.outputs.release_created }}
     permissions:
       packages: write
+      id-token: write
+      attestations: write
     uses: ./.github/workflows/docker-publish.yml
     with:
       tag-name: ${{ needs.release-please.outputs.tag_name }}
