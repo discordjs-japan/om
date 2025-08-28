@@ -177,7 +177,7 @@ jobs:
           echo digest=$(docker buildx imagetools inspect ${{ needs.env.outputs.REGISTRY_IMAGE }}:${{ needs.meta.outputs.version }} --format='{{json .Manifest.Digest}}') >> $GITHUB_OUTPUT
 
       - name: Attest Build Provenance
-        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.0.0
         with:
           subject-name: ${{ needs.env.outputs.REGISTRY_IMAGE }}
           subject-digest: ${{ fromJson(steps.get-image-digest.outputs.digest) }}
