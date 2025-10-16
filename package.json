@@ -39,7 +39,7 @@
     "prettier": "3.6.2",
     "tsx": "4.20.6",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.46.0"
+    "typescript-eslint": "8.46.1"
   },
   "dependencies": {
     "@discordjs-japan/om-syrinx": "github:discordjs-japan/om-syrinx#v0.4.3",
