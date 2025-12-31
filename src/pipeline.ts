@@ -21,8 +21,7 @@ import { logger } from "./logger";
 import { synthesize } from "./synthesis";
 
 export interface StateOptions
-  extends CreateVoiceConnectionOptions,
-    JoinVoiceChannelOptions {
+  extends CreateVoiceConnectionOptions, JoinVoiceChannelOptions {
   channelId: string;
 }
 
