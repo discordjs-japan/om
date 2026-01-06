@@ -1,5 +1,58 @@
 # Changelog
 
+## [0.7.0](https://github.com/discordjs-japan/om/compare/v0.6.0...v0.7.0) (2026-01-06)
+
+
+### Features
+
+* improve join command to use interaction channel as default ([#823](https://github.com/discordjs-japan/om/issues/823)) ([be14467](https://github.com/discordjs-japan/om/commit/be14467ecc41a133456128b34a091017ff7b4768))
+* Process MessageReference and Attachments ([#827](https://github.com/discordjs-japan/om/issues/827)) ([c42a255](https://github.com/discordjs-japan/om/commit/c42a2559feb7c04cbe2a589dfdb257dea2d435cd)), closes [#715](https://github.com/discordjs-japan/om/issues/715)
+* support attachment links ([#795](https://github.com/discordjs-japan/om/issues/795)) ([8ee7c6e](https://github.com/discordjs-japan/om/commit/8ee7c6e013f54d43225c292444b385cd71f0f623))
+
+
+### Bug Fixes
+
+* resolve user display name from guild member in message reference ([#845](https://github.com/discordjs-japan/om/issues/845)) ([72b40d0](https://github.com/discordjs-japan/om/commit/72b40d0e400a3df0e34fe9a3469c981035925f80)), closes [#837](https://github.com/discordjs-japan/om/issues/837)
+
+
+### Dependencies
+
+* @discordjs-japan/om-syrinx@0.5.0 ([#1114](https://github.com/discordjs-japan/om/issues/1114)) ([a487f67](https://github.com/discordjs-japan/om/commit/a487f67b875db7c78286e4ba534eeada9b06822a))
+* lock file maintenance ([#1003](https://github.com/discordjs-japan/om/issues/1003)) ([97d6cae](https://github.com/discordjs-japan/om/commit/97d6caea25f4eb9991016a4f67905d3ef93cf6d8))
+* lock file maintenance ([#1009](https://github.com/discordjs-japan/om/issues/1009)) ([749e0f6](https://github.com/discordjs-japan/om/commit/749e0f6d08b12803b0d39b421d39421b28310084))
+* lock file maintenance ([#808](https://github.com/discordjs-japan/om/issues/808)) ([5bbd715](https://github.com/discordjs-japan/om/commit/5bbd71564b423d175b01c9ee55eca868d390c917))
+* lock file maintenance ([#887](https://github.com/discordjs-japan/om/issues/887)) ([ca41cc7](https://github.com/discordjs-japan/om/commit/ca41cc7e64a38323f4e0899bac0b235da2fbd02c))
+* lock file maintenance ([#931](https://github.com/discordjs-japan/om/issues/931)) ([9b455c1](https://github.com/discordjs-japan/om/commit/9b455c1f3494c21a64d1710900fb79df2347202f))
+* lock file maintenance ([#942](https://github.com/discordjs-japan/om/issues/942)) ([ee63b75](https://github.com/discordjs-japan/om/commit/ee63b750258fe2c84d5d32824aff8c44f0094a82))
+* lock file maintenance ([#985](https://github.com/discordjs-japan/om/issues/985)) ([f9de8f4](https://github.com/discordjs-japan/om/commit/f9de8f4194a458c99afd660663ce7ace6e109214))
+* lock file maintenance ([#998](https://github.com/discordjs-japan/om/issues/998)) ([264f027](https://github.com/discordjs-japan/om/commit/264f0272fde53ff3e851cbbb2c34c6113ac99150))
+* update dependency @discordjs/voice to v0.19.0 ([#1046](https://github.com/discordjs-japan/om/issues/1046)) ([b8e2996](https://github.com/discordjs-japan/om/commit/b8e29967a05aa560c7a405b0fd353c035be49afd))
+* update dependency @discordjs/voice to v0.19.0 ([#1049](https://github.com/discordjs-japan/om/issues/1049)) ([d9f9367](https://github.com/discordjs-japan/om/commit/d9f9367a4904b2812f99161a74d75482fdac0701))
+* update dependency @snazzah/davey to v0.1.7 ([#1105](https://github.com/discordjs-japan/om/issues/1105)) ([2bb1ef5](https://github.com/discordjs-japan/om/commit/2bb1ef5dedddebe13a58282bfb7d3cba30f487de))
+* update dependency @snazzah/davey to v0.1.9 ([#1151](https://github.com/discordjs-japan/om/issues/1151)) ([94b1e16](https://github.com/discordjs-japan/om/commit/94b1e163e57309b9c0ec5ea240271b4cbc565807))
+* update dependency discord.js to v14.19.1 ([#911](https://github.com/discordjs-japan/om/issues/911)) ([74f8bb3](https://github.com/discordjs-japan/om/commit/74f8bb38de0e1b74928f818eaf7dca1bcd9ac574))
+* update dependency discord.js to v14.19.2 ([#914](https://github.com/discordjs-japan/om/issues/914)) ([fe23b1e](https://github.com/discordjs-japan/om/commit/fe23b1e99eb3bc487e783fbb0a1a49f975815a61))
+* update dependency discord.js to v14.19.3 ([#919](https://github.com/discordjs-japan/om/issues/919)) ([65a2253](https://github.com/discordjs-japan/om/commit/65a22538c93aa980a6572a684e37e9184bd0514f))
+* update dependency discord.js to v14.20.0 ([#981](https://github.com/discordjs-japan/om/issues/981)) ([f68355d](https://github.com/discordjs-japan/om/commit/f68355d662a525c324dab04a978a6b56cbf91f1f))
+* update dependency discord.js to v14.21.0 ([#992](https://github.com/discordjs-japan/om/issues/992)) ([0d9d428](https://github.com/discordjs-japan/om/commit/0d9d42842402dbe4494a49beaf74eab44c3c3815))
+* update dependency discord.js to v14.22.1 ([#1062](https://github.com/discordjs-japan/om/issues/1062)) ([1b3a6cc](https://github.com/discordjs-japan/om/commit/1b3a6ccdabd05247698ad409af78016382a0e9eb))
+* update dependency discord.js to v14.23.2 ([#1098](https://github.com/discordjs-japan/om/issues/1098)) ([63291f5](https://github.com/discordjs-japan/om/commit/63291f5adff7dc59544006e2cddfe5c157a611a3))
+* update dependency discord.js to v14.24.0 ([#1119](https://github.com/discordjs-japan/om/issues/1119)) ([4ff86b8](https://github.com/discordjs-japan/om/commit/4ff86b8201e8b9112ee83160ba2c6f22041eda5c))
+* update dependency discord.js to v14.24.2 ([#1126](https://github.com/discordjs-japan/om/issues/1126)) ([ce46115](https://github.com/discordjs-japan/om/commit/ce46115bb4b040e4b73b39175045b0d095618eac))
+* update dependency discord.js to v14.25.1 ([#1152](https://github.com/discordjs-japan/om/issues/1152)) ([8f86aac](https://github.com/discordjs-japan/om/commit/8f86aac4397d96d4e8debc738853e477e66dccf1))
+* update dependency pino to v10 ([#1113](https://github.com/discordjs-japan/om/issues/1113)) ([83a0a0c](https://github.com/discordjs-japan/om/commit/83a0a0c001e026251ce091f82878e7b581a354db))
+* update dependency pino to v9.14.0 ([#1075](https://github.com/discordjs-japan/om/issues/1075)) ([9a6fb4f](https://github.com/discordjs-japan/om/commit/9a6fb4f5dfe6d0f3d56583bb3f3bf54cba5638a1))
+* update dependency pino to v9.7.0 ([#940](https://github.com/discordjs-japan/om/issues/940)) ([624c5c6](https://github.com/discordjs-japan/om/commit/624c5c62227f94f09f685b8efa564a2ead9f7241))
+* update dependency pino to v9.8.0 ([#1032](https://github.com/discordjs-japan/om/issues/1032)) ([06ae853](https://github.com/discordjs-japan/om/commit/06ae853a19221e27140c47d9fe93cbe8ab6e9a9d))
+* update dependency pino to v9.9.0 ([#1042](https://github.com/discordjs-japan/om/issues/1042)) ([bf0be4f](https://github.com/discordjs-japan/om/commit/bf0be4f4bce7b42c89fdee88b715e1d4a1053b4a))
+* update runner image to debian13 ([#1161](https://github.com/discordjs-japan/om/issues/1161)) ([729933f](https://github.com/discordjs-japan/om/commit/729933f43b5c3cdb20db9bff82fb4c25e9d7e50c))
+* update runner image to nodejs24 ([#1160](https://github.com/discordjs-japan/om/issues/1160)) ([a863fe1](https://github.com/discordjs-japan/om/commit/a863fe1a83d5175e8a5f2b31d638e93a03360553))
+
+
+### Reverts
+
+* "deps: update dependency @discordjs/voice to v0.19.0" ([#1048](https://github.com/discordjs-japan/om/issues/1048)) ([c77696f](https://github.com/discordjs-japan/om/commit/c77696f769d8e25f1b02f7fa7fa0d25fcc7de0f7))
+
 ## [0.6.0](https://github.com/discordjs-japan/om/compare/v0.5.3...v0.6.0) (2025-02-17)
 
 
