@@ -34,7 +34,7 @@
     "eslint-plugin-import-x": "4.16.1",
     "globals": "17.1.0",
     "husky": "9.1.7",
-    "lint-staged": "16.2.7",
+    "lint-staged": "16.3.2",
     "npm-run-all2": "8.0.4",
     "prettier": "3.8.1",
     "tsx": "4.21.0",
