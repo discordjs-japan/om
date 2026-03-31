@@ -42,7 +42,7 @@
     "typescript-eslint": "8.58.0"
   },
   "dependencies": {
-    "@discordjs-japan/om-syrinx": "github:discordjs-japan/om-syrinx#v0.5.2",
+    "@discordjs-japan/om-syrinx": "github:discordjs-japan/om-syrinx#v0.5.3",
     "@discordjs/voice": "0.19.2",
     "@snazzah/davey": "0.1.11",
     "discord-markdown-parser": "1.1.0",
