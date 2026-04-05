@@ -1,5 +1,4 @@
 import { build } from "esbuild";
-import esbuildPluginPino from "esbuild-plugin-pino";
 import { esbuildPluginVersionInjector } from "esbuild-plugin-version-injector";
 
 await build({
@@ -9,10 +8,7 @@ await build({
   platform: "node",
   format: "esm",
   packages: "external",
-  plugins: [
-    esbuildPluginVersionInjector(),
-    esbuildPluginPino({ transports: [] }),
-  ],
+  plugins: [esbuildPluginVersionInjector()],
   minify: true,
   sourcemap: true,
 });
