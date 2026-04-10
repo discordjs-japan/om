@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/discordjs-japan/om/compare/v0.7.0...v0.7.1) (2026-04-10)
+
+
+### Dependencies
+
+* update dependency discord.js to v14.26.2 ([#1224](https://github.com/discordjs-japan/om/issues/1224)) ([bef9df9](https://github.com/discordjs-japan/om/commit/bef9df92d3e63d4b380310d751b6935b3a817315))
+
 ## [0.7.0](https://github.com/discordjs-japan/om/compare/v0.6.0...v0.7.0) (2026-03-31)
 
 
