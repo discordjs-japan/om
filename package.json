@@ -48,5 +48,10 @@
     "discord.js": "14.26.4",
     "pino": "10.3.1",
     "simple-markdown": "0.7.3"
+  },
+  "allowScripts": {
+    "github:discordjs-japan/om-syrinx#e6932946f173b9fb41def87b734d8577e024cb00": true,
+    "esbuild@0.28.1": true,
+    "unrs-resolver@1.11.1": true
   }
 }
