@@ -1,6 +1,5 @@
 import eslint from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
-import eslintPluginImportX from "eslint-plugin-import-x";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -8,9 +7,6 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
   {
-    plugins: {
-      "import-x": eslintPluginImportX,
-    },
     languageOptions: {
       parserOptions: {
         sourceType: "module",
@@ -22,13 +18,6 @@ export default tseslint.config(
       },
     },
     rules: {
-      "import-x/order": [
-        "error",
-        {
-          alphabetize: { order: "asc" },
-          "newlines-between": "never",
-        },
-      ],
       "@typescript-eslint/restrict-template-expressions": "off",
       "@typescript-eslint/no-base-to-string": "off",
       "@typescript-eslint/no-unused-vars": [
