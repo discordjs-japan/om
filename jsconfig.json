@@ -2,7 +2,7 @@
   "extends": "@tsconfig/node24",
   "compilerOptions": {
     "module": "Preserve",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "types": ["node"],
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true,
