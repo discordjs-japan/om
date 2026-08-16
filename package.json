@@ -30,7 +30,6 @@
     "esbuild-plugin-version-injector": "1.2.1",
     "eslint": "10.8.0",
     "eslint-config-prettier": "10.1.5",
-    "eslint-plugin-import-x": "4.17.1",
     "globals": "17.11.0",
     "husky": "9.1.7",
     "lint-staged": "17.3.0",
@@ -51,7 +50,6 @@
   },
   "allowScripts": {
     "github:discordjs-japan/om-syrinx#e6932946f173b9fb41def87b734d8577e024cb00": true,
-    "esbuild@0.28.1": true,
-    "unrs-resolver@1.11.1": true
+    "esbuild@0.28.1": true
   }
 }

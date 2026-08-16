@@ -1,6 +1,6 @@
 import { once } from "node:events";
-import { StreamType, createAudioResource } from "@discordjs/voice";
 import { EncoderType, Syrinx } from "@discordjs-japan/om-syrinx";
+import { StreamType, createAudioResource } from "@discordjs/voice";
 import type { Message } from "discord.js";
 import { config } from "../env";
 import { createSynthesisOption } from "./options";
