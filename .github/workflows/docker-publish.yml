@@ -140,6 +140,7 @@ jobs:
       packages: write
       id-token: write
       attestations: write
+      artifact-metadata: write
     needs: [env, meta, docker-publish]
     if: ${{ fromJson(needs.env.outputs.PUSH) }}
     runs-on: ubuntu-latest
@@ -181,3 +182,4 @@ jobs:
         with:
           subject-name: ${{ needs.env.outputs.REGISTRY_IMAGE }}
           subject-digest: ${{ fromJson(steps.get-image-digest.outputs.digest) }}
+          push-to-registry: true
