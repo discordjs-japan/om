@@ -36,10 +36,51 @@ export function cleanMarkdown(message: Message) {
   return text(ast, message.guild);
 }
 
-const dateTimeFormat = new Intl.DateTimeFormat("ja-JP", {
-  timeZone: "Asia/Tokyo",
-  dateStyle: "full",
-  timeStyle: "full",
+const dateTimeFormats: Record<string, Intl.DateTimeFormat> = {
+  // full date and time, e.g. 2018年1月1日月曜日 21時30分10秒
+  "": new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    dateStyle: "full",
+    timeStyle: "full",
+  }),
+  // full date and time, e.g. 2018年1月1日月曜日 21時30分10秒
+  f: new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    dateStyle: "full",
+    timeStyle: "full",
+  }),
+  // full date, e.g. 2018年1月1日月曜日
+  F: new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    dateStyle: "full",
+  }),
+  // date, e.g. 2018年1月1日
+  d: new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    dateStyle: "long",
+  }),
+  // short date with weekday, e.g. 2018年1月1日月曜日
+  D: new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    dateStyle: "full",
+  }),
+  // time, e.g. 21時30分
+  t: new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    hour: "numeric",
+    minute: "numeric",
+  }),
+  // longer time, e.g. 21時30分10秒
+  T: new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  }),
+};
+
+const relativeTimeFormat = new Intl.RelativeTimeFormat("ja-JP", {
+  numeric: "auto",
 });
 
 function text(ast: ASTNode, guild: Guild | null): string {
@@ -132,18 +173,27 @@ function text(ast: ASTNode, guild: Guild | null): string {
     }
     case "timestamp": {
       const timestamp = stringOrEmpty(ast.timestamp);
+      const format = stringOrEmpty(ast.format);
       const date = Number(timestamp) * 1000;
       if (!Number.isInteger(date) || Math.abs(date) > 8640000000000000)
         return " 不明な日付 ";
 
-      const full = dateSegments(date);
-      const now = dateSegments(Date.now());
-      // read only different segments from now
-      for (let i = 0; i < full.length; i++) {
-        if (full[i] !== now[i]) return full.slice(i).join("");
+      if (format === "R") return relativeTimeText(date);
+      if (format === "t" || format === "T")
+        return timeText(date, format === "T");
+      const formatter = dateTimeFormats[format] ?? dateTimeFormats[""];
+      if (format === "" || format === "f") {
+        // read only different segments from now
+        const full = dateSegments(date, formatter);
+        const now = dateSegments(Date.now(), formatter);
+        for (let i = 0; i < full.length; i++) {
+          if (full[i] !== now[i]) return full.slice(i).join("");
+        }
+
+        return "今";
       }
 
-      return "今";
+      return dateSegments(date, formatter).join("");
     }
 
     case "attachmentLink":
@@ -214,8 +264,22 @@ export function cleanTwemojis(s: string) {
   return text(ast, null); // should be only twemoji and text, so no problem with null
 }
 
-function dateSegments(date: number | Date) {
-  const segments = dateTimeFormat
+function relativeTimeText(date: number): string {
+  const seconds = Math.trunc((date - Date.now()) / 1000);
+  const abs = Math.abs(seconds);
+  if (abs < 60) return relativeTimeFormat.format(seconds, "second");
+  if (abs < 3600)
+    return relativeTimeFormat.format(Math.trunc(seconds / 60), "minute");
+  if (abs < 86400)
+    return relativeTimeFormat.format(Math.trunc(seconds / 3600), "hour");
+  if (abs < 365 * 86400)
+    return relativeTimeFormat.format(Math.trunc(seconds / 86400), "day");
+
+  return relativeTimeFormat.format(Math.trunc(seconds / (365 * 86400)), "year");
+}
+
+function dateSegments(date: number | Date, format: Intl.DateTimeFormat) {
+  const segments = format
     .formatToParts(date)
     .reduce<string[]>((accumulator, { type, value }) => {
       switch (type) {
@@ -244,4 +308,19 @@ function dateSegments(date: number | Date) {
     }, []);
   segments[segments.length - 1] = segments[segments.length - 1].trimEnd();
   return segments;
+}
+
+function timeText(date: number, withSeconds: boolean): string {
+  const parts = dateTimeFormats[withSeconds ? "T" : "t"].formatToParts(date);
+  const values: Record<string, string> = {};
+  for (const { type, value } of parts) {
+    if (type !== "literal") values[type] = value;
+  }
+  const hour = Number(values.hour);
+  const minute = Number(values.minute);
+  const second = Number(values.second);
+
+  return withSeconds
+    ? `${hour}時${minute}分${second}秒`
+    : `${hour}時${minute}分`;
 }

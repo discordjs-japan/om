@@ -290,4 +290,73 @@ void test("cleanMarkdown works fine with timestamp", () => {
     ),
     "275760年9月13日土曜日 9時0分0秒",
   );
+
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(`<t:${timestamp("2017-12-17T00:00:00.000+0900")}:f>`),
+    ),
+    "17日日曜日 0時0分0秒",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(`<t:${timestamp("2017-12-17T00:00:00.000+0900")}:F>`),
+    ),
+    "2017年12月17日日曜日",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(`<t:${timestamp("2017-12-17T00:00:00.000+0900")}:d>`),
+    ),
+    "2017年12月17日",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(`<t:${timestamp("2017-12-17T00:00:00.000+0900")}:D>`),
+    ),
+    "2017年12月17日日曜日",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(`<t:${timestamp("2017-12-16T21:49:00.000+0900")}:t>`),
+    ),
+    "21時49分",
+  );
+  assert.strictEqual(
+    cleanMarkdown(
+      mockMessage(`<t:${timestamp("2017-12-16T21:49:00.000+0900")}:T>`),
+    ),
+    "21時49分0秒",
+  );
+});
+
+void test("cleanMarkdown works fine with relative timestamp", () => {
+  test.mock.timers.reset();
+  test.mock.timers.enable({
+    apis: ["Date"],
+    now: new Date("2017-12-16T21:48:02.939+0900"),
+  });
+
+  const relativeCases: Array<[string, string]> = [
+    ["2017-12-16T21:48:03.000+0900", "今"],
+    ["2017-12-16T21:48:05.000+0900", "2 秒後"],
+    ["2017-12-16T21:43:01.000+0900", "5 分前"],
+    ["2017-12-16T21:53:03.000+0900", "5 分後"],
+    ["2017-12-16T16:48:02.000+0900", "5 時間前"],
+    ["2017-12-16T23:48:03.000+0900", "2 時間後"],
+    ["2017-12-15T21:48:01.000+0900", "昨日"],
+    ["2017-12-17T21:48:02.000+0900", "23 時間後"],
+    ["2017-12-17T21:48:03.000+0900", "明日"],
+    ["2017-12-11T21:48:02.000+0900", "5 日前"],
+    ["2017-12-18T21:48:03.000+0900", "明後日"],
+    ["2018-12-16T21:48:03.000+0900", "来年"],
+    ["2016-12-16T21:48:01.000+0900", "昨年"],
+  ];
+
+  for (const [iso, expected] of relativeCases) {
+    assert.strictEqual(
+      cleanMarkdown(mockMessage(`<t:${timestamp(iso)}:R>`)),
+      expected,
+      `expected ${iso} to be ${expected}`,
+    );
+  }
 });
