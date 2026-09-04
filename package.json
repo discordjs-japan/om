@@ -29,7 +29,7 @@
     "esbuild": "0.28.1",
     "esbuild-plugin-version-injector": "1.2.1",
     "eslint": "10.8.0",
-    "eslint-config-prettier": "10.1.5",
+    "eslint-config-prettier": "10.1.8",
     "globals": "17.12.0",
     "husky": "9.1.7",
     "lint-staged": "17.4.1",
