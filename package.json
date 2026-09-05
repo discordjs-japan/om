@@ -12,7 +12,7 @@
     "fix": "run-s -c *:fix",
     "format:check": "oxfmt --check",
     "format:fix": "oxfmt --write",
-    "type:check": "tsc -p tsconfig.json -p jsconfig.json",
+    "type:check": "tsc -p tsconfig.json && tsc -p jsconfig.json",
     "lint:check": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "node .husky/install.mjs",
