@@ -1,7 +1,5 @@
-import { rulesExtended } from "discord-markdown-parser";
+import { rulesExtended, SimpleMarkdown } from "discord-markdown-parser";
 import type { Guild, Message } from "discord.js";
-import SimpleMarkdown from "simple-markdown";
-import type { SingleASTNode, ASTNode, Capture } from "simple-markdown";
 
 const parser = SimpleMarkdown.parserFor(
   {
@@ -10,7 +8,7 @@ const parser = SimpleMarkdown.parserFor(
       order: rulesExtended.strong.order,
       match: (source: string) =>
         /^<\/([\w-]+(?: [\w-]+)?(?: [\w-]+)?):(\d{17,20})>/.exec(source),
-      parse: (capture: Capture) => ({
+      parse: (capture) => ({
         name: capture[1],
         id: capture[2],
         type: "command",
@@ -22,7 +20,7 @@ const parser = SimpleMarkdown.parserFor(
         /^https:\/\/(?:(?:media|images)\.discordapp\.net|cdn\.discordapp\.com)\/(?:attachments|ephemeral-attachments)\/\d+\/\d+\/([\w.-]*[\w-])(?:\?[\w?&=-]*)?/.exec(
           source,
         ),
-      parse: (capture: Capture) => ({
+      parse: (capture) => ({
         filename: capture[1],
         type: "attachmentLink",
       }),
@@ -30,6 +28,9 @@ const parser = SimpleMarkdown.parserFor(
   },
   { inline: true },
 );
+
+type SingleASTNode = ReturnType<typeof parser>[number];
+type ASTNode = SingleASTNode | SingleASTNode[];
 
 export function cleanMarkdown(message: Message) {
   const ast = parser(message.content);
