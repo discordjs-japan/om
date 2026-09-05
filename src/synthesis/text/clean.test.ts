@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import test from "node:test";
 import { Collection, type Guild, type Message } from "discord.js";
-import { cleanMarkdown } from "./clean";
+import { cleanMarkdown, cleanTwemojis } from "./clean";
 
 type PartialRecursive<T> = {
   [P in keyof T]?: PartialRecursive<T[P]>;
@@ -224,6 +224,19 @@ void test("cleanMarkdown works fine with several mentions", () => {
 
 void test("cleanMarkdown works fine with twemoji", () => {
   assert.strictEqual(cleanMarkdown(mockMessage("👍")), "👍");
+});
+
+void test("cleanTwemojis preserves emojis and literal markup in names", () => {
+  for (const name of [
+    "",
+    "雑談 👍",
+    "👍🏽 👨‍👩‍👧‍👦 ❤️ 🇯🇵",
+    "**名前** _name_ ~~text~~ ||spoiler||",
+    "[名前](https://example.com)",
+    "<@351992405831974915> <:emoji:1068113836965642280>",
+  ]) {
+    assert.strictEqual(cleanTwemojis(name), name);
+  }
 });
 
 function timestamp(s: string) {
