@@ -1,0 +1,6 @@
+import { defineConfig } from "lint-staged/config";
+
+export default defineConfig({
+  "*.{js,ts,mts}": ["oxlint --fix", "oxfmt --write"],
+  "!*.{js,ts,mts}": ["oxfmt --no-error-on-unmatched-pattern --write"],
+});
