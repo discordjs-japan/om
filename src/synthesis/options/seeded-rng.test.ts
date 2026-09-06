@@ -1,15 +1,15 @@
 import assert from "node:assert";
-import test from "node:test";
+import { test } from "vitest";
 import SeededRng from "./seeded-rng";
 
-void test("SeededRng generates same value", () => {
+test("SeededRng generates same value", () => {
   const rng = new SeededRng("391390986770710528"); // guild id
   assert.strictEqual(rng.range(0, 1), 0.06029782586744892);
   assert.strictEqual(rng.range(0, 1), 0.6363524476235511);
   assert.strictEqual(rng.range(0, 1), -0.6310007635648366);
 });
 
-void test("SeededRng.range exponent can change distribution", () => {
+test("SeededRng.range exponent can change distribution", () => {
   for (const seed of [
     "391392503955324928", // vc#1 id
     "395747236186685441", // vc#2 id

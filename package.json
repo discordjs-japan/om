@@ -5,39 +5,35 @@
   "type": "module",
   "main": "dist/main.js",
   "scripts": {
-    "dev": "node --import=tsx --env-file=.env src/main.ts",
-    "build": "node scripts/build.js",
+    "dev": "run-s build start:dev",
+    "build": "rolldown --config",
     "start": "node dist/main.js",
+    "start:dev": "node --enable-source-maps --env-file=.env dist/main.js",
     "check": "run-s -c *:check",
     "fix": "run-s -c *:fix",
     "format:check": "oxfmt --check",
     "format:fix": "oxfmt --write",
-    "type:check": "tsc -p tsconfig.json -p jsconfig.json",
-    "lint:check": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "type:check": "tsc --build",
+    "lint:check": "oxlint",
+    "lint:fix": "oxlint --fix",
     "prepare": "node .husky/install.mjs",
-    "test": "node --import=tsx --test --watch src/**/*.test.ts",
-    "test:ci": "node --import=tsx --test src/**/*.test.ts"
+    "test": "vitest",
+    "test:ci": "vitest run"
   },
   "author": "Discord.js Japan User Group (discordjs-japan.org)",
   "license": "MIT",
   "devDependencies": {
-    "@eslint/js": "10.0.1",
     "@tsconfig/node24": "24.0.5",
     "@types/node": "24.13.3",
-    "@types/punycode": "2.1.4",
-    "esbuild": "0.28.1",
-    "esbuild-plugin-version-injector": "1.2.1",
-    "eslint": "10.8.0",
-    "eslint-config-prettier": "10.1.5",
-    "globals": "17.12.0",
     "husky": "9.1.7",
     "lint-staged": "17.4.1",
     "npm-run-all2": "9.0.3",
     "oxfmt": "0.66.0",
-    "tsx": "4.23.5",
-    "typescript": "6.0.3",
-    "typescript-eslint": "8.66.0"
+    "oxlint": "1.81.0",
+    "oxlint-tsgolint": "7.0.2001",
+    "rolldown": "1.2.7",
+    "typescript": "7.0.2",
+    "vitest": "4.1.11"
   },
   "dependencies": {
     "@discordjs-japan/om-syrinx": "github:discordjs-japan/om-syrinx#v0.5.3",
@@ -48,7 +44,6 @@
     "pino": "10.3.1"
   },
   "allowScripts": {
-    "github:discordjs-japan/om-syrinx#e6932946f173b9fb41def87b734d8577e024cb00": true,
-    "esbuild@0.28.1": true
+    "github:discordjs-japan/om-syrinx#e6932946f173b9fb41def87b734d8577e024cb00": true
   }
 }

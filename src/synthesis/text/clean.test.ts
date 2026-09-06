@@ -1,6 +1,6 @@
 import assert from "node:assert";
-import test from "node:test";
 import { Collection, type Guild, type Message } from "discord.js";
+import { onTestFinished, test, vi } from "vitest";
 import { cleanMarkdown, cleanTwemojis } from "./clean";
 
 type PartialRecursive<T> = {
@@ -25,7 +25,7 @@ function mockMessage(content: string) {
   return { content, guild } as Message;
 }
 
-void test("cleanMarkdown works fine with simple rules", () => {
+test("cleanMarkdown works fine with simple rules", () => {
   assert.strictEqual(
     cleanMarkdown(mockMessage("[link text](https://example.com)")),
     "link text",
@@ -73,7 +73,7 @@ console.log("hello world!");
   );
 });
 
-void test("cleanMarkdown works fine with url", () => {
+test("cleanMarkdown works fine with url", () => {
   assert.strictEqual(
     cleanMarkdown(mockMessage("https://www.example.com")),
     " URL省略 ",
@@ -189,7 +189,7 @@ void test("cleanMarkdown works fine with url", () => {
   );
 });
 
-void test("cleanMarkdown works fine with several mentions", () => {
+test("cleanMarkdown works fine with several mentions", () => {
   assert.strictEqual(
     cleanMarkdown(mockMessage("<@!351992405831974915>")).trim(),
     "InkoHX",
@@ -222,11 +222,11 @@ void test("cleanMarkdown works fine with several mentions", () => {
   assert.strictEqual(cleanMarkdown(mockMessage("@here")), " @ヒア ");
 });
 
-void test("cleanMarkdown works fine with twemoji", () => {
+test("cleanMarkdown works fine with twemoji", () => {
   assert.strictEqual(cleanMarkdown(mockMessage("👍")), "👍");
 });
 
-void test("cleanTwemojis preserves emojis and literal markup in names", () => {
+test("cleanTwemojis preserves emojis and literal markup in names", () => {
   for (const name of [
     "",
     "雑談 👍",
@@ -243,11 +243,13 @@ function timestamp(s: string) {
   return Math.floor(Date.parse(s) / 1000);
 }
 
-void test("cleanMarkdown works fine with timestamp", () => {
-  test.mock.timers.enable({
-    apis: ["Date"],
-    now: new Date("2017-12-16T21:48:02.939+0900"),
+test("cleanMarkdown works fine with timestamp", () => {
+  vi.useFakeTimers();
+  onTestFinished(() => {
+    vi.useRealTimers();
   });
+
+  vi.setSystemTime(new Date("2017-12-16T21:48:02.939+0900"));
 
   assert.strictEqual(
     cleanMarkdown(

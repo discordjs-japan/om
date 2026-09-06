@@ -1,12 +1,7 @@
 {
-  "extends": "@tsconfig/node24",
-  "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "types": ["node"],
-    "noEmit": true,
-    "forceConsistentCasingInFileNames": true,
-    "verbatimModuleSyntax": true
-  },
-  "include": ["src/**/*"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.tooling.json" }
+  ]
 }

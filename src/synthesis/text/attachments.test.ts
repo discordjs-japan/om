@@ -1,6 +1,6 @@
 import assert from "node:assert";
-import test from "node:test";
 import { Collection, type Attachment, type Message } from "discord.js";
+import { test } from "vitest";
 import { getSuffixFromAttachments } from "./attachments";
 
 function mockMessage(attachments: Partial<Attachment>[]): Message {
@@ -18,7 +18,7 @@ function mockMessage(attachments: Partial<Attachment>[]): Message {
   } as Message;
 }
 
-void test("getSuffixFromAttachments handles different attachment types correctly", () => {
+test("getSuffixFromAttachments handles different attachment types correctly", () => {
   assert.strictEqual(
     getSuffixFromAttachments(mockMessage([{ contentType: "image/png" }])),
     "画像",
@@ -45,7 +45,7 @@ void test("getSuffixFromAttachments handles different attachment types correctly
   );
 });
 
-void test("getSuffixFromAttachments handles multiple attachments correctly", () => {
+test("getSuffixFromAttachments handles multiple attachments correctly", () => {
   assert.strictEqual(
     getSuffixFromAttachments(
       mockMessage([
@@ -98,6 +98,6 @@ void test("getSuffixFromAttachments handles multiple attachments correctly", () 
   );
 });
 
-void test("getSuffixFromAttachments handles empty attachments", () => {
+test("getSuffixFromAttachments handles empty attachments", () => {
   assert.strictEqual(getSuffixFromAttachments(mockMessage([])), "");
 });

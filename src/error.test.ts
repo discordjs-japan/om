@@ -1,9 +1,9 @@
 import assert from "node:assert";
-import test from "node:test";
 import { MessageFlags } from "discord.js";
+import { test } from "vitest";
 import { ReplyableError } from "./error";
 
-void test("ReplyableError works fine", () => {
+test("ReplyableError works fine", () => {
   const error = new ReplyableError("This is a replyable error");
   assert.strictEqual(error.message, "This is a replyable error");
   assert.deepStrictEqual(error.toReply(), {
@@ -12,7 +12,7 @@ void test("ReplyableError works fine", () => {
   });
 });
 
-void test("ReplyableError.from works fine", () => {
+test("ReplyableError.from works fine", () => {
   const replyableError = new ReplyableError("This is a ReplyableError");
   assert.strictEqual(ReplyableError.from(replyableError), replyableError);
 

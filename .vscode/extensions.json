@@ -1,7 +1,7 @@
 {
   "recommendations": [
-    "dbaeumer.vscode-eslint",
     "editorconfig.editorconfig",
-    "oxc.oxc-vscode"
+    "oxc.oxc-vscode",
+    "vitest.explorer"
   ]
 }
