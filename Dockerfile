@@ -16,7 +16,7 @@ ARG NODE_ENV=development
 WORKDIR /app
 RUN npm config set cache /.npm
 COPY --link ./.husky/install.mjs ./.husky/
-COPY --link ./scripts/build.js ./scripts/
+COPY --link ./rolldown.config.mts ./
 COPY --link ./package*.json ./
 ARG BUILDPLATFORM
 RUN --mount=type=cache,id=npm-$BUILDPLATFORM,target=/.npm \

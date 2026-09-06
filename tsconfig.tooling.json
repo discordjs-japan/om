@@ -1,0 +1,11 @@
+{
+  "extends": "@tsconfig/node24",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "verbatimModuleSyntax": true,
+    "composite": true
+  },
+  "include": ["./*.config.mts"]
+}
