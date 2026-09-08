@@ -13,7 +13,6 @@
     "fix": "run-s -c *:fix",
     "format:check": "oxfmt --check",
     "format:fix": "oxfmt --write",
-    "type:check": "tsc --build",
     "lint:check": "oxlint",
     "lint:fix": "oxlint --fix",
     "prepare": "node .husky/install.mjs",

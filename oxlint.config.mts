@@ -21,5 +21,6 @@ export default defineConfig({
   ignorePatterns: ["dist/", ".husky/install.mjs"],
   options: {
     typeAware: true,
+    typeCheck: true,
   },
 });
