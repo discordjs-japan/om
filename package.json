@@ -30,7 +30,7 @@
     "oxfmt": "0.70.0",
     "oxlint": "1.85.0",
     "oxlint-tsgolint": "7.0.2002",
-    "rolldown": "1.2.9",
+    "rolldown": "1.2.10",
     "typescript": "7.0.2",
     "vitest": "5.0.1"
   },
