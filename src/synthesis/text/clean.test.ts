@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { Collection, type Guild, type Message } from "discord.js";
-import { onTestFinished, test, vi } from "vitest";
+import { beforeEach, describe, test, vi } from "vitest";
 import { cleanMarkdown, cleanTwemojis } from "./clean";
 
 type PartialRecursive<T> = {
@@ -243,66 +243,267 @@ function timestamp(s: string) {
   return Math.floor(Date.parse(s) / 1000);
 }
 
-test("cleanMarkdown works fine with timestamp", () => {
-  vi.useFakeTimers();
-  onTestFinished(() => {
-    vi.useRealTimers();
+describe("cleanMarkdown works fine with timestamps", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2017-12-16T21:48:02.939+0900"));
+    return () => {
+      vi.useRealTimers();
+    };
   });
 
-  vi.setSystemTime(new Date("2017-12-16T21:48:02.939+0900"));
+  test.for([
+    {
+      name: "same moment",
+      content: `<t:${timestamp("2017-12-16T21:48:02.000+0900")}>`,
+      expected: "2017年12月16日 21時48分",
+    },
+    {
+      name: "different second (same minute)",
+      content: `<t:${timestamp("2017-12-16T21:48:04.000+0900")}>`,
+      expected: "2017年12月16日 21時48分",
+    },
+    {
+      name: "different minute",
+      content: `<t:${timestamp("2017-12-16T21:49:00.000+0900")}>`,
+      expected: "2017年12月16日 21時49分",
+    },
+    {
+      name: "different hour",
+      content: `<t:${timestamp("2017-12-16T22:00:00.000+0900")}>`,
+      expected: "2017年12月16日 22時0分",
+    },
+    {
+      name: "different day",
+      content: `<t:${timestamp("2017-12-17T00:00:00.000+0900")}>`,
+      expected: "2017年12月17日 0時0分",
+    },
+    {
+      name: "different month",
+      content: `<t:${timestamp("2017-11-01T00:00:00.000+0900")}>`,
+      expected: "2017年11月1日 0時0分",
+    },
+    {
+      name: "different year",
+      content: `<t:${timestamp("2018-01-01T00:00:00.000+0900")}>`,
+      expected: "2018年1月1日 0時0分",
+    },
+    {
+      name: "4-digit year limit (year 10000 in JST)",
+      content: `<t:${timestamp("+010000-01-01T08:59:00.000+0900")}>`,
+      expected: "10000年1月1日 8時59分",
+    },
+    {
+      name: "maximum value (year 275760)",
+      content: `<t:${timestamp("+275760-09-13T09:00:00.000+0900")}>`,
+      expected: "275760年9月13日 9時0分",
+    },
+    {
+      name: "f style",
+      content: `<t:${timestamp("2017-12-17T00:00:00.000+0900")}:f>`,
+      expected: "2017年12月17日 0時0分",
+    },
+    {
+      name: "negative timestamp",
+      content: "<t:-1>",
+      expected: "1970年1月1日 8時59分",
+    },
+    {
+      name: "out of range (unknown date)",
+      // Exceeds 8.64e15 ms (the ECMAScript limit)
+      content: "<t:8640000000001>",
+      expected: " 不明な日付 ",
+    },
+  ])("$name", ({ content, expected }) => {
+    assert.strictEqual(cleanMarkdown(mockMessage(content)), expected);
+  });
 
-  assert.strictEqual(
-    cleanMarkdown(
-      mockMessage(`<t:${timestamp("2017-12-16T21:48:02.000+0900")}>`),
-    ),
-    "今",
-  );
-  assert.strictEqual(
-    cleanMarkdown(
-      mockMessage(`<t:${timestamp("2017-12-16T21:48:04.000+0900")}>`),
-    ),
-    "4秒",
-  ); // ほんまか？
-  assert.strictEqual(
-    cleanMarkdown(
-      mockMessage(`<t:${timestamp("2017-12-16T21:49:00.000+0900")}>`),
-    ),
-    "49分0秒",
-  );
-  assert.strictEqual(
-    cleanMarkdown(
-      mockMessage(`<t:${timestamp("2017-12-16T22:00:00.000+0900")}>`),
-    ),
-    "22時0分0秒",
-  );
-  assert.strictEqual(
-    cleanMarkdown(
-      mockMessage(`<t:${timestamp("2017-12-17T00:00:00.000+0900")}>`),
-    ),
-    "17日日曜日 0時0分0秒",
-  );
-  assert.strictEqual(
-    cleanMarkdown(
-      mockMessage(`<t:${timestamp("2017-11-01T00:00:00.000+0900")}>`),
-    ),
-    "11月1日水曜日 0時0分0秒",
-  );
-  assert.strictEqual(
-    cleanMarkdown(
-      mockMessage(`<t:${timestamp("2018-01-01T00:00:00.000+0900")}>`),
-    ),
-    "2018年1月1日月曜日 0時0分0秒",
-  );
-  assert.strictEqual(
-    cleanMarkdown(
-      mockMessage(`<t:${timestamp("+010000-01-01T08:59:00.000+0900")}>`),
-    ),
-    "10000年1月1日土曜日 8時59分0秒",
-  );
-  assert.strictEqual(
-    cleanMarkdown(
-      mockMessage(`<t:${timestamp("+275760-09-13T09:00:00.000+0900")}>`),
-    ),
-    "275760年9月13日土曜日 9時0分0秒",
-  );
+  // Discord spec: F = Full Date+Short Time, d/D = Short/Long Date,
+  // s/S = Short Date+Short/Medium Time, t/T = Short/Medium Time.
+  // d is treated the same as D so that it reads aloud properly.
+  test.for([
+    {
+      style: "F",
+      content: `<t:${timestamp("2017-12-17T00:00:00.000+0900")}:F>`,
+      expected: "2017年12月17日日曜日 0時0分",
+    },
+    {
+      style: "d",
+      content: `<t:${timestamp("2017-12-17T00:00:00.000+0900")}:d>`,
+      expected: "2017年12月17日",
+    },
+    {
+      style: "D",
+      content: `<t:${timestamp("2017-12-17T00:00:00.000+0900")}:D>`,
+      expected: "2017年12月17日",
+    },
+    {
+      style: "t",
+      content: `<t:${timestamp("2017-12-16T21:49:00.000+0900")}:t>`,
+      expected: "21時49分",
+    },
+    {
+      style: "T",
+      content: `<t:${timestamp("2017-12-16T21:49:00.000+0900")}:T>`,
+      expected: "21時49分0秒",
+    },
+    {
+      style: "s",
+      content: `<t:${timestamp("2017-12-16T21:49:00.000+0900")}:s>`,
+      expected: "2017年12月16日 21時49分",
+    },
+    {
+      style: "S",
+      content: `<t:${timestamp("2017-12-16T21:49:00.000+0900")}:S>`,
+      expected: "2017年12月16日 21時49分0秒",
+    },
+  ])("style $style", ({ content, expected }) => {
+    assert.strictEqual(cleanMarkdown(mockMessage(content)), expected);
+  });
+
+  test.for([
+    {
+      name: "alphabet",
+      content: `<t:${timestamp("2017-12-16T21:49:00.000+0900")}:x>`,
+      expected: "2017年12月16日 21時49分",
+    },
+  ])("unknown style $name", ({ content, expected }) => {
+    assert.strictEqual(cleanMarkdown(mockMessage(content)), expected);
+  });
+
+  test("anything other than a single alphabet character is not recognized as a style", () => {
+    for (const content of [
+      `<t:${timestamp("2017-12-16T21:49:00.000+0900")}:xx>`,
+      `<t:${timestamp("2017-12-16T21:49:00.000+0900")}:>`,
+      `<t:${timestamp("2017-12-16T21:49:00.000+0900")}:%>`,
+    ]) {
+      assert.strictEqual(cleanMarkdown(mockMessage(content)), content);
+    }
+  });
+
+  // Discord's R is the same as moment's humanize (verified by probing
+  // real clients: 21 hours later -> "21時間後", 22 hours later -> "1日後",
+  // 26 days later -> "1ヶ月後", 45 days later (1.5 months) -> "1ヶ月後",
+  // 364 days later -> "1年後").
+  // Thresholds: seconds<=44 -> a few seconds / minutes<45 / hours<22
+  // (22h or more is a day) / days<26 (26 days or more is a month) /
+  // months<11, otherwise years.
+  // Each unit is rounded; weeks are invalid in moment.
+  // Months are days/30.436875, years are rounded months/12.
+  test.for([
+    {
+      name: "now (less than 1 second)",
+      content: `<t:${timestamp("2017-12-16T21:48:02.000+0900")}:R>`,
+      expected: "数秒前",
+    },
+    {
+      name: "2 seconds later (44 seconds or less is a few seconds)",
+      content: `<t:${timestamp("2017-12-16T21:48:05.000+0900")}:R>`,
+      expected: "数秒後",
+    },
+    {
+      name: "46 seconds later (45 seconds or more is 1 minute)",
+      content: `<t:${timestamp("2017-12-16T21:48:49.000+0900")}:R>`,
+      expected: "1分後",
+    },
+    {
+      name: "minutes ago",
+      content: `<t:${timestamp("2017-12-16T21:43:01.000+0900")}:R>`,
+      expected: "5分前",
+    },
+    {
+      name: "minutes later",
+      content: `<t:${timestamp("2017-12-16T21:53:03.000+0900")}:R>`,
+      expected: "5分後",
+    },
+    {
+      name: "hours ago",
+      content: `<t:${timestamp("2017-12-16T16:48:02.000+0900")}:R>`,
+      expected: "5時間前",
+    },
+    {
+      name: "hours later",
+      content: `<t:${timestamp("2017-12-16T23:48:03.000+0900")}:R>`,
+      expected: "2時間後",
+    },
+    {
+      name: "21 hours later (less than 22 hours stays in hours)",
+      content: `<t:${timestamp("2017-12-17T18:48:03.000+0900")}:R>`,
+      expected: "21時間後",
+    },
+    {
+      name: "22 hours later (22 hours or more is 1 day)",
+      content: `<t:${timestamp("2017-12-17T19:48:03.000+0900")}:R>`,
+      expected: "1日後",
+    },
+    {
+      // 86401.9 seconds ago = 1 day and 1 second ago
+      // (round gives days=1 -> "1日前")
+      name: "1 day and 1 second ago",
+      content: `<t:${timestamp("2017-12-15T21:48:01.000+0900")}:R>`,
+      expected: "1日前",
+    },
+    {
+      name: "almost 1 day later (in the 23-hour range)",
+      content: `<t:${timestamp("2017-12-17T21:48:02.000+0900")}:R>`,
+      expected: "1日後",
+    },
+    {
+      name: "1 day 12 hours later (1.5 days rounds to 2 days)",
+      content: `<t:${timestamp("2017-12-18T09:48:03.000+0900")}:R>`,
+      expected: "2日後",
+    },
+    {
+      name: "5 days ago",
+      content: `<t:${timestamp("2017-12-11T21:48:02.000+0900")}:R>`,
+      expected: "5日前",
+    },
+    {
+      name: "25 days later (less than 26 days stays in days)",
+      content: `<t:${timestamp("2018-01-10T21:48:03.000+0900")}:R>`,
+      expected: "25日後",
+    },
+    {
+      name: "26 days later (26 days or more is 1 month)",
+      content: `<t:${timestamp("2018-01-11T21:48:03.000+0900")}:R>`,
+      expected: "1ヶ月後",
+    },
+    {
+      name: "45 days later (1.5 months is 1 month)",
+      content: `<t:${timestamp("2018-01-30T21:48:03.000+0900")}:R>`,
+      expected: "1ヶ月後",
+    },
+    {
+      name: "46 days later (over 1.5 months is 2 months)",
+      content: `<t:${timestamp("2018-01-31T21:48:03.000+0900")}:R>`,
+      expected: "2ヶ月後",
+    },
+    {
+      name: "300 days later (10 months)",
+      content: `<t:${timestamp("2018-10-12T21:48:03.000+0900")}:R>`,
+      expected: "10ヶ月後",
+    },
+    {
+      name: "364 days later (rounds to 1 year despite being less than a year)",
+      content: `<t:${timestamp("2018-12-15T21:48:03.000+0900")}:R>`,
+      expected: "1年後",
+    },
+    {
+      name: "exactly 365 days later",
+      content: `<t:${timestamp("2018-12-16T21:48:03.000+0900")}:R>`,
+      expected: "1年後",
+    },
+    {
+      name: "exactly 365 days ago (366 days across a leap year)",
+      content: `<t:${timestamp("2016-12-16T21:48:01.000+0900")}:R>`,
+      expected: "1年前",
+    },
+    {
+      name: "2 years ago",
+      content: `<t:${timestamp("2015-12-16T21:48:01.000+0900")}:R>`,
+      expected: "2年前",
+    },
+  ])("R: $name -> $expected", ({ content, expected }) => {
+    assert.strictEqual(cleanMarkdown(mockMessage(content)), expected);
+  });
 });

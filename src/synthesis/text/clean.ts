@@ -1,5 +1,13 @@
 import { rulesExtended, SimpleMarkdown } from "discord-markdown-parser";
 import type { Guild, Message } from "discord.js";
+import { logger } from "../../logger";
+
+const timestampStyles = ["R", "t", "T", "d", "D", "f", "F", "s", "S"] as const;
+type TimestampStyle = (typeof timestampStyles)[number] | "";
+
+// Accept any alphabet character as a style so that unknown styles
+// are still read aloud.
+const timestampRegex = /^<t:(-?\d+)(?::([a-zA-Z]))?>/;
 
 const parser = SimpleMarkdown.parserFor(
   {
@@ -25,6 +33,12 @@ const parser = SimpleMarkdown.parserFor(
         type: "attachmentLink",
       }),
     },
+    // We need to handle s/S and unknown styles as well, so the
+    // matcher is replaced with timestampRegex.
+    timestamp: {
+      ...rulesExtended.timestamp,
+      match: (source: string) => timestampRegex.exec(source),
+    },
   },
   { inline: true },
 );
@@ -37,10 +51,26 @@ export function cleanMarkdown(message: Message) {
   return text(ast, message.guild);
 }
 
-const dateTimeFormat = new Intl.DateTimeFormat("ja-JP", {
+const dateFormats = {
+  // long date, e.g. 2017年12月17日
+  long: new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    dateStyle: "long",
+  }),
+  // full date with weekday, e.g. 2017年12月17日日曜日
+  full: new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    dateStyle: "full",
+  }),
+};
+
+// hour/minute/second values in Asia/Tokyo (24-hour clock), used as
+// components for Japanese time text built in timeText.
+const timeFormat = new Intl.DateTimeFormat("ja-JP", {
   timeZone: "Asia/Tokyo",
-  dateStyle: "full",
-  timeStyle: "full",
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric",
 });
 
 function text(ast: ASTNode, guild: Guild | null): string {
@@ -133,18 +163,39 @@ function text(ast: ASTNode, guild: Guild | null): string {
     }
     case "timestamp": {
       const timestamp = stringOrEmpty(ast.timestamp);
+      const style = toTimestampStyle(ast.format);
       const date = Number(timestamp) * 1000;
       if (!Number.isInteger(date) || Math.abs(date) > 8640000000000000)
         return " 不明な日付 ";
 
-      const full = dateSegments(date);
-      const now = dateSegments(Date.now());
-      // read only different segments from now
-      for (let i = 0; i < full.length; i++) {
-        if (full[i] !== now[i]) return full.slice(i).join("");
+      switch (style) {
+        case undefined:
+          logger.warn(
+            { style: stringOrEmpty(ast.format) },
+            "Unknown timestamp style, reading as f format",
+          );
+          return dateTimeText(date, dateFormats.long, false);
+        case "R":
+          return relativeTimeText(date);
+        case "t":
+          return timeText(date, false);
+        case "T":
+          return timeText(date, true);
+        case "":
+        case "f":
+          return dateTimeText(date, dateFormats.long, false);
+        case "F":
+          return dateTimeText(date, dateFormats.full, false);
+        case "s":
+          return dateTimeText(date, dateFormats.long, false);
+        case "S":
+          return dateTimeText(date, dateFormats.long, true);
+        case "d":
+        case "D":
+          return dateText(date, dateFormats.long);
+        default:
+          throw new ExhaustiveError(style);
       }
-
-      return "今";
     }
 
     case "attachmentLink":
@@ -169,6 +220,18 @@ function isSingleASTNode(ast: unknown): ast is SingleASTNode {
     "type" in ast &&
     typeof ast.type === "string"
   );
+}
+
+function toTimestampStyle(format: unknown): TimestampStyle | undefined {
+  const str = stringOrEmpty(format);
+  if (str === "") return "";
+  return timestampStyles.find((style) => style === str);
+}
+
+class ExhaustiveError extends Error {
+  constructor(value: never) {
+    super(`想定外の値: ${value}`);
+  }
 }
 
 function stringOrEmpty(str: unknown): string {
@@ -215,34 +278,93 @@ export function cleanTwemojis(s: string) {
   return text(ast, null); // should be only twemoji and text, so no problem with null
 }
 
-function dateSegments(date: number | Date) {
-  const segments = dateTimeFormat
-    .formatToParts(date)
-    .reduce<string[]>((accumulator, { type, value }) => {
-      switch (type) {
-        case "year":
-        case "month":
-        case "day":
-        case "hour":
-        case "minute":
-        case "second": {
-          // remove leading 0
-          const val = +value;
-          accumulator.push(Number.isNaN(val) ? value : `${val}`);
-          break;
-        }
-        case "weekday":
-        case "literal":
-          if (accumulator.length === 0) {
-            accumulator.push(value);
-          } else {
-            // string-concatenatation
-            accumulator[accumulator.length - 1] += value;
-          }
-          break;
+// Discord's R renders the same as moment's humanize:
+// 21 hours later -> "21時間後", 22 hours later -> "1日後",
+// 26 days later -> "1ヶ月後", 45 days later (1.5 months) -> "1ヶ月後",
+// 364 days later -> "1年後".
+// Reproduces moment's algorithm as-is:
+// - each unit is rounded; thresholds (44s / 45m / 22h / 26d / 11mo)
+//   are checked from the smallest unit
+// - weeks (w) are invalid in moment
+// - months are converted as 400 years = 146097 days
+//   (30.436875 days/month); years are rounded months/12
+function relativeTimeText(date: number): string {
+  const diff = date - Date.now();
+  const abs = Math.abs(diff);
+  const seconds = Math.round(abs / 1000);
+  const minutes = Math.round(abs / 60000);
+  const hours = Math.round(abs / 3600000);
+  const days = Math.round(abs / 86400000);
+  const months = Math.round(((abs / 86400000) * 4800) / 146097);
+  const years = Math.round(((abs / 86400000) * 4800) / 146097 / 12);
+  const suffix = diff > 0 ? "後" : "前";
+
+  if (seconds <= 44) return `数秒${suffix}`;
+  if (minutes <= 1) return `1分${suffix}`;
+  if (minutes < 45) return `${minutes}分${suffix}`;
+  if (hours <= 1) return `1時間${suffix}`;
+  if (hours < 22) return `${hours}時間${suffix}`;
+  if (days <= 1) return `1日${suffix}`;
+  if (days < 26) return `${days}日${suffix}`;
+  if (months <= 1) return `1ヶ月${suffix}`;
+  if (months < 11) return `${months}ヶ月${suffix}`;
+  if (years <= 1) return `1年${suffix}`;
+  return `${years}年${suffix}`;
+}
+
+function dateText(date: number, format: Intl.DateTimeFormat): string {
+  return dateSegments(format.formatToParts(date)).join("");
+}
+
+function dateSegments(parts: Intl.DateTimeFormatPart[]) {
+  const segments = parts.reduce<string[]>((accumulator, { type, value }) => {
+    switch (type) {
+      case "year":
+      case "month":
+      case "day": {
+        accumulator.push(stripLeadingZero(value));
+        break;
       }
-      return accumulator;
-    }, []);
-  segments[segments.length - 1] = segments[segments.length - 1].trimEnd();
+      case "weekday":
+      case "literal":
+        if (accumulator.length === 0) {
+          accumulator.push(value);
+        } else {
+          // string-concatenatation
+          accumulator[accumulator.length - 1] += value;
+        }
+        break;
+    }
+    return accumulator;
+  }, []);
   return segments;
+}
+
+// remove leading 0
+function stripLeadingZero(value: string): string {
+  const val = +value;
+  return Number.isNaN(val) ? value : `${val}`;
+}
+
+function timeValues(date: number): Record<string, string> {
+  const values: Record<string, string> = {};
+  for (const { type, value } of timeFormat.formatToParts(date)) {
+    if (type !== "literal") values[type] = stripLeadingZero(value);
+  }
+  return values;
+}
+
+function timeText(date: number, withSeconds: boolean): string {
+  const { hour, minute, second } = timeValues(date);
+  return withSeconds
+    ? `${hour}時${minute}分${second}秒`
+    : `${hour}時${minute}分`;
+}
+
+function dateTimeText(
+  date: number,
+  dateFormat: Intl.DateTimeFormat,
+  withSeconds: boolean,
+): string {
+  return `${dateText(date, dateFormat)} ${timeText(date, withSeconds)}`;
 }
