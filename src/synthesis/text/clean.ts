@@ -161,48 +161,48 @@ function text(ast: ASTNode, guild: Guild | null): string {
       // TODO: proper text to read aloud
       return stringOrEmpty(ast.name);
     }
-    case "timestamp": {
-      const timestamp = stringOrEmpty(ast.timestamp);
-      const style = toTimestampStyle(ast.format);
-      const date = Number(timestamp) * 1000;
-      if (!Number.isInteger(date) || Math.abs(date) > 8640000000000000)
-        return " 不明な日付 ";
-
-      return ((): string => {
-        switch (style) {
-          case undefined:
-            logger.warn(
-              { style: stringOrEmpty(ast.format) },
-              "Unknown timestamp style, reading as f format",
-            );
-            return dateTimeText(date, dateFormats.long, false);
-          case "R":
-            return relativeTimeText(date);
-          case "t":
-            return timeText(date, false);
-          case "T":
-            return timeText(date, true);
-          case "":
-          case "f":
-            return dateTimeText(date, dateFormats.long, false);
-          case "F":
-            return dateTimeText(date, dateFormats.full, false);
-          case "s":
-            return dateTimeText(date, dateFormats.long, false);
-          case "S":
-            return dateTimeText(date, dateFormats.long, true);
-          case "d":
-          case "D":
-            return dateText(date, dateFormats.long);
-        }
-      })();
-    }
+    case "timestamp":
+      return timestampText(ast.timestamp, ast.format);
 
     case "attachmentLink":
       return stringOrEmpty(ast.filename);
   }
 
   return "";
+}
+
+function timestampText(timestamp: unknown, format: unknown): string {
+  const style = toTimestampStyle(format);
+  const date = Number(stringOrEmpty(timestamp)) * 1000;
+  if (!Number.isInteger(date) || Math.abs(date) > 8640000000000000)
+    return " 不明な日付 ";
+
+  switch (style) {
+    case undefined:
+      logger.warn(
+        { style: stringOrEmpty(format) },
+        "Unknown timestamp style, reading as f format",
+      );
+      return dateTimeText(date, dateFormats.long, false);
+    case "R":
+      return relativeTimeText(date);
+    case "t":
+      return timeText(date, false);
+    case "T":
+      return timeText(date, true);
+    case "":
+    case "f":
+      return dateTimeText(date, dateFormats.long, false);
+    case "F":
+      return dateTimeText(date, dateFormats.full, false);
+    case "s":
+      return dateTimeText(date, dateFormats.long, false);
+    case "S":
+      return dateTimeText(date, dateFormats.long, true);
+    case "d":
+    case "D":
+      return dateText(date, dateFormats.long);
+  }
 }
 
 function astNodeOrEmpty(ast: unknown): ASTNode {
