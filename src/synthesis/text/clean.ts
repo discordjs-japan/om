@@ -168,34 +168,34 @@ function text(ast: ASTNode, guild: Guild | null): string {
       if (!Number.isInteger(date) || Math.abs(date) > 8640000000000000)
         return " 不明な日付 ";
 
-      switch (style) {
-        case undefined:
-          logger.warn(
-            { style: stringOrEmpty(ast.format) },
-            "Unknown timestamp style, reading as f format",
-          );
-          return dateTimeText(date, dateFormats.long, false);
-        case "R":
-          return relativeTimeText(date);
-        case "t":
-          return timeText(date, false);
-        case "T":
-          return timeText(date, true);
-        case "":
-        case "f":
-          return dateTimeText(date, dateFormats.long, false);
-        case "F":
-          return dateTimeText(date, dateFormats.full, false);
-        case "s":
-          return dateTimeText(date, dateFormats.long, false);
-        case "S":
-          return dateTimeText(date, dateFormats.long, true);
-        case "d":
-        case "D":
-          return dateText(date, dateFormats.long);
-        default:
-          throw new ExhaustiveError(style);
-      }
+      return ((): string => {
+        switch (style) {
+          case undefined:
+            logger.warn(
+              { style: stringOrEmpty(ast.format) },
+              "Unknown timestamp style, reading as f format",
+            );
+            return dateTimeText(date, dateFormats.long, false);
+          case "R":
+            return relativeTimeText(date);
+          case "t":
+            return timeText(date, false);
+          case "T":
+            return timeText(date, true);
+          case "":
+          case "f":
+            return dateTimeText(date, dateFormats.long, false);
+          case "F":
+            return dateTimeText(date, dateFormats.full, false);
+          case "s":
+            return dateTimeText(date, dateFormats.long, false);
+          case "S":
+            return dateTimeText(date, dateFormats.long, true);
+          case "d":
+          case "D":
+            return dateText(date, dateFormats.long);
+        }
+      })();
     }
 
     case "attachmentLink":
@@ -226,12 +226,6 @@ function toTimestampStyle(format: unknown): TimestampStyle | undefined {
   const str = stringOrEmpty(format);
   if (str === "") return "";
   return timestampStyles.find((style) => style === str);
-}
-
-class ExhaustiveError extends Error {
-  constructor(value: never) {
-    super(`想定外の値: ${value}`);
-  }
 }
 
 function stringOrEmpty(str: unknown): string {
