@@ -1,5 +1,5 @@
 import { rulesExtended, SimpleMarkdown } from "discord-markdown-parser";
-import type { Guild, Message } from "discord.js";
+import { FormattingPatterns, type Guild, type Message } from "discord.js";
 import { logger } from "../../logger";
 
 const timestampStyles = ["R", "t", "T", "d", "D", "f", "F", "s", "S"] as const;
@@ -9,18 +9,34 @@ type TimestampStyle = (typeof timestampStyles)[number] | "";
 // are still read aloud.
 const timestampRegex = /^<t:(-?\d+)(?::([a-zA-Z]))?>/;
 
+// discord-markdown-parser's SlashCommandRegex is too loose (`'`, 21-digit
+// IDs, crash on empty names).
+const slashCommandRegex = new RegExp(
+  `^${FormattingPatterns.SlashCommand.source}`,
+  FormattingPatterns.SlashCommand.flags,
+);
+
+// Capture doesn't declare `groups`, and narrowing parse's parameter
+// doesn't compile.
+type SlashCommandMatch = NonNullable<
+  ReturnType<typeof slashCommandRegex.exec>
+> & {
+  groups: {
+    fullName: string;
+    id: string;
+  };
+};
+
 const parser = SimpleMarkdown.parserFor(
   {
     ...rulesExtended,
-    command: {
-      order: rulesExtended.strong.order,
-      match: (source: string) =>
-        /^<\/([\w-]+(?: [\w-]+)?(?: [\w-]+)?):(\d{17,20})>/.exec(source),
-      parse: (capture) => ({
-        name: capture[1],
-        id: capture[2],
-        type: "command",
-      }),
+    slashCommand: {
+      ...rulesExtended.slashCommand,
+      match: (source: string) => slashCommandRegex.exec(source),
+      parse: (capture) => {
+        const { groups } = capture as SlashCommandMatch;
+        return { name: groups.fullName, id: groups.id };
+      },
     },
     attachmentLink: {
       order: rulesExtended.url.order - 0.5,
@@ -147,7 +163,7 @@ function text(ast: ASTNode, guild: Guild | null): string {
     case "emoji": {
       return stringOrEmpty(ast.name);
     }
-    case "command": {
+    case "slashCommand": {
       const name = stringOrEmpty(ast.name);
       return ` ${name}コマンド `;
     }
