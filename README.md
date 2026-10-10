@@ -19,7 +19,7 @@ Discord.js Japan User Groupのための読み上げボットです．
 <!-- x-release-please-start-version -->
 
 ```bash
-docker run --rm -d --env-file .env ghcr.io/discordjs-japan/om:0.7.0
+docker run --rm -d --env-file .env ghcr.io/discordjs-japan/om:0.8.0
 ```
 
 <!-- x-release-please-end -->
