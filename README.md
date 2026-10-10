@@ -28,7 +28,7 @@ docker run --rm -d --env-file .env ghcr.io/discordjs-japan/om:0.7.0
 
 このボットを起動するには，以下のような準備が必要です．具体的な手順については，[Dockerfile](./Dockerfile)を参考にしてください．
 
-- [`.node-version`](./.node-version)で指定されているバージョンのNode.jsをインストールする
+- [`package.json`](./package.json)の`devEngines.runtime`で指定されているバージョンのNode.jsをインストールする
 - 依存関係 (`node_modules`) をインストールする
   - Dockerfileの`deps`ステージに対応します．
   - `dependencies`をインストールすることが必要です．

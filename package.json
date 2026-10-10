@@ -21,6 +21,13 @@
   },
   "author": "Discord.js Japan User Group (discordjs-japan.org)",
   "license": "MIT",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "24.21.0",
+      "onFail": "warn"
+    }
+  },
   "devDependencies": {
     "@tsconfig/node24": "24.0.5",
     "@types/node": "24.19.1",
