@@ -214,12 +214,53 @@ test("cleanMarkdown works fine with several mentions", () => {
     cleanMarkdown(mockMessage("<a:inkohx_dancing:1068113836965642280>")),
     "inkohx_dancing",
   );
-  assert.strictEqual(
-    cleanMarkdown(mockMessage("</join:000000000000000000>")),
-    " joinコマンド ",
-  );
   assert.strictEqual(cleanMarkdown(mockMessage("@everyone")), " @エブリワン ");
   assert.strictEqual(cleanMarkdown(mockMessage("@here")), " @ヒア ");
+});
+
+describe("cleanMarkdown works fine with slash command mentions", () => {
+  test.for([
+    {
+      name: "18-digit ID",
+      content: "</join:000000000000000000>",
+      expected: " joinコマンド ",
+    },
+    {
+      name: "17-digit ID",
+      content: "</join:00000000000000000>",
+      expected: " joinコマンド ",
+    },
+    {
+      name: "20-digit ID",
+      content: "</join:00000000000000000000>",
+      expected: " joinコマンド ",
+    },
+    {
+      name: "subcommand group",
+      content: "</join sub group:000000000000000000>",
+      expected: " join sub groupコマンド ",
+    },
+    {
+      name: "Unicode name",
+      content: "</テスト:000000000000000000>",
+      expected: " テストコマンド ",
+    },
+  ])("recognizes a mention with $name", ({ content, expected }) => {
+    assert.strictEqual(cleanMarkdown(mockMessage(content)), expected);
+  });
+
+  test.for([
+    { name: "16-digit ID", content: "</join:0000000000000000>" },
+    { name: "21-digit ID", content: "</join:000000000000000000000>" },
+    { name: "apostrophe in name", content: "</a'b:000000000000000000>" },
+    { name: "empty name", content: "</:000000000000000000>" },
+    {
+      name: "four name parts",
+      content: "</join sub group extra:000000000000000000>",
+    },
+  ])("$name is left as-is", ({ content }) => {
+    assert.strictEqual(cleanMarkdown(mockMessage(content)), content);
+  });
 });
 
 test("cleanMarkdown works fine with twemoji", () => {
