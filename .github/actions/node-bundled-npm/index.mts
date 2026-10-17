@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * node-bundled-npm
  *
@@ -30,15 +29,22 @@ const index = (await (await fetch(INDEX_URL)).json()) as (Record<
   unknown
 > & { version: string; npm?: string })[];
 const nodeVersion = packageJson.devEngines.runtime.version;
+console.log(
+  `Resolving npm bundled with node v${nodeVersion} from ${INDEX_URL}`,
+);
 const release = index.find((release) => release.version === `v${nodeVersion}`)!;
 const npmVersion = release.npm!;
+console.log(`node v${nodeVersion} bundles npm v${npmVersion}`);
 
 packageJson.devEngines.packageManager.version = npmVersion;
 
 const updated = `${JSON.stringify(packageJson, null, 2)}\n`;
 const changed = updated !== raw;
 if (changed) {
+  console.log(`Updating devEngines.packageManager.version to v${npmVersion}`);
   await writeFile(resolvedPackageJsonPath, updated);
+} else {
+  console.log(`devEngines.packageManager.version already v${npmVersion}`);
 }
 if (typeof process.env.GITHUB_OUTPUT === "string") {
   await appendFile(
