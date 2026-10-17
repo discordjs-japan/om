@@ -26,6 +26,11 @@
       "name": "node",
       "version": "24.21.0",
       "onFail": "warn"
+    },
+    "packageManager": {
+      "name": "npm",
+      "version": "11.19.0",
+      "onFail": "warn"
     }
   },
   "devDependencies": {

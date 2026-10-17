@@ -1,0 +1,12 @@
+name: Node Bundled Npm
+description: Apply the npm version bundled with devEngines.runtime's Node.js to devEngines.packageManager
+outputs:
+  npm-version:
+    description: The npm version bundled with the resolved Node.js release
+  nodeVersion:
+    description: The Node.js version from devEngines.runtime used to resolve the bundled npm
+  changed:
+    description: Whether package.json was actually modified (true/false)
+runs:
+  using: node24
+  main: index.mts
