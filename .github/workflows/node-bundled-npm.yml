@@ -1,0 +1,39 @@
+name: Ensure bundled npm version
+
+on:
+  pull_request:
+    paths:
+      - package.json
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  node-bundled-npm:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - id: bundled
+        name: Resolve bundled npm version
+        uses: $/.github/actions/node-bundled-npm
+      - if: ${{ fromJSON(steps.bundled.outputs.changed) }}
+        name: Commit package.json
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          COMMIT_MESSAGE: "chore: bundle npm v${{ steps.bundled.outputs.npm-version }} for node v${{ steps.bundled.outputs.nodeVersion }}"
+        run: |
+          sha="$(git rev-parse 'HEAD:package.json')"
+          readonly sha
+          gh api --method PUT "repos/{owner}/{repo}/contents/package.json" \
+            --raw-field branch="${BRANCH}" \
+            --raw-field message="${COMMIT_MESSAGE}" \
+            --raw-field sha="${sha}" \
+            --raw-field content="$(base64 --wrap=0 package.json)"
