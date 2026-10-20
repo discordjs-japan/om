@@ -19,21 +19,20 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - id: bundled
-        name: Resolve bundled npm version
-        uses: $/.github/actions/node-bundled-npm
-      - if: ${{ fromJSON(steps.bundled.outputs.changed) }}
-        name: Commit package.json
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          BRANCH: ${{ github.event.pull_request.head.ref }}
-          COMMIT_MESSAGE: "chore: bundle npm v${{ steps.bundled.outputs.npm-version }} for node v${{ steps.bundled.outputs.nodeVersion }}"
-        run: |
-          sha="$(git rev-parse 'HEAD:package.json')"
-          readonly sha
-          gh api --method PUT "repos/{owner}/{repo}/contents/package.json" \
-            --raw-field branch="${BRANCH}" \
-            --raw-field message="${COMMIT_MESSAGE}" \
-            --raw-field sha="${sha}" \
-            --raw-field content="$(base64 --wrap=0 package.json)"
+          persist-credentials: false
+      - id: setup
+        name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: "package.json"
+          package-manager-cache: false
+      - id: npm
+        shell: bash -xe {0}
+        run: echo "npm_version=$(npm --version)" >> "${GITHUB_OUTPUT}"
+      - run: npm pkg set "devEngines.packageManager.version=${{ steps.npm.outputs.npm_version }}"
+      - run: npm install --package-lock-only
+      - name: Commit changes
+        uses: suzuki-shunsuke/commit-action@5eaa5ecce3ffe93d09a85b946dc5136e3713b1b7 # v1.1.0
+        with:
+          commit_message: "chore: bundle npm v${{ steps.npm.outputs.npm_version }} for node ${{ steps.setup.outputs.node-version }}"
+          fail_on_self_push: false
