@@ -11,6 +11,15 @@ on:
         required: true
         type: string
 
+# ghcr への push 順を保証する
+concurrency:
+  group: |-
+    ${{ case(
+      github.event_name != 'pull_request', 'docker-publish',
+      github.run_id
+    ) }}
+  queue: max
+
 env:
   IMAGE_NAME: om
   # バージョン指定
