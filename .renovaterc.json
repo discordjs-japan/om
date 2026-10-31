@@ -6,7 +6,7 @@
   ],
   "ignoreDeps": ["npm"],
   "constraints": {
-    "npm": "11.19.1"
+    "npm": "11.20.0"
   },
   "gitIgnoredAuthors": ["41898282+github-actions[bot]@users.noreply.github.com"]
 }
