@@ -1,5 +1,5 @@
 {
-  "extends": "@tsconfig/node24",
+  "extends": "@tsconfig/node26",
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "Bundler",
