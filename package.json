@@ -43,7 +43,7 @@
     "oxlint-tsgolint": "7.0.2005",
     "rolldown": "1.2.16",
     "typescript": "7.0.2",
-    "vitest": "5.0.5"
+    "vitest": "5.1.0"
   },
   "dependencies": {
     "@discordjs-japan/om-syrinx": "github:discordjs-japan/om-syrinx#v0.5.3",
