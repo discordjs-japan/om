@@ -97,6 +97,7 @@ function text(ast: ASTNode, guild: Guild | null): string {
   switch (ast.type) {
     case "link":
     case "blockQuote":
+    case "heading":
     case "em":
     case "strong":
     case "underline":
