@@ -98,6 +98,7 @@ function text(ast: ASTNode, guild: Guild | null): string {
     case "link":
     case "blockQuote":
     case "heading":
+    case "subtext":
     case "em":
     case "strong":
     case "underline":
