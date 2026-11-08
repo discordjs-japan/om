@@ -31,6 +31,16 @@ test("cleanMarkdown works fine with simple rules", () => {
     "link text",
   );
   assert.strictEqual(cleanMarkdown(mockMessage("> blockquote")), "blockquote");
+  assert.strictEqual(cleanMarkdown(mockMessage("# heading")), "heading");
+  assert.strictEqual(cleanMarkdown(mockMessage("## heading")), "heading");
+  assert.strictEqual(cleanMarkdown(mockMessage("### heading")), "heading");
+  assert.strictEqual(cleanMarkdown(mockMessage("# *em*")), "em");
+  assert.strictEqual(cleanMarkdown(mockMessage("#チャンネル")), "#チャンネル");
+  assert.strictEqual(cleanMarkdown(mockMessage("#### h4")), "#### h4");
+  assert.strictEqual(
+    cleanMarkdown(mockMessage("本文\n# 見出し")),
+    "本文\n見出し",
+  );
   assert.strictEqual(cleanMarkdown(mockMessage("*em*")), "em");
   assert.strictEqual(cleanMarkdown(mockMessage("**strong**")), "strong");
   assert.strictEqual(cleanMarkdown(mockMessage("__underline__")), "underline");
