@@ -5,7 +5,7 @@ ARG NODE_ENV=production
 WORKDIR /app
 RUN npm config set cache /.npm
 COPY --link ./.husky/install.mjs ./.husky/
-COPY --link ./package*.json ./
+COPY --link ./package.json ./package-lock.json ./
 ARG TARGETPLATFORM
 RUN --mount=type=cache,id=npm-$TARGETPLATFORM,target=/.npm \
     npm ci
@@ -17,7 +17,7 @@ WORKDIR /app
 RUN npm config set cache /.npm
 COPY --link ./.husky/install.mjs ./.husky/
 COPY --link ./rolldown.config.mts ./
-COPY --link ./package*.json ./
+COPY --link ./package.json ./package-lock.json ./
 ARG BUILDPLATFORM
 RUN --mount=type=cache,id=npm-$BUILDPLATFORM,target=/.npm \
     npm ci
