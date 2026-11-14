@@ -1,5 +1,46 @@
 # Changelog
 
+## [0.8.0](https://github.com/discordjs-japan/om/compare/v0.7.0...v0.8.0) (2026-11-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* timestamp reading changes as follows
+    - `<t:xxx>`: was relative (`今`, `4秒`, ...), now `f`
+    - `<t:xxx:R|t|T|d|D|f|F>`: was style-ignored, now per style
+    - `<t:xxx:s|S>` / unknown: was raw text, now read aloud
+    - `f` format itself changed from full to long
+
+### Features
+
+* support all timestamp styles ([#1365](https://github.com/discordjs-japan/om/issues/1365)) ([7073bed](https://github.com/discordjs-japan/om/commit/7073bed90b8204463f82b741c05abd4433676a2b)), closes [#790](https://github.com/discordjs-japan/om/issues/790)
+
+
+### Bug Fixes
+
+* read heading content aloud ([#1465](https://github.com/discordjs-japan/om/issues/1465)) ([d1869bc](https://github.com/discordjs-japan/om/commit/d1869bc2bf94fe2ac1b9f99c15e5ea853863a72b)), closes [#1443](https://github.com/discordjs-japan/om/issues/1443)
+* read subtext content aloud ([#1466](https://github.com/discordjs-japan/om/issues/1466)) ([1587d08](https://github.com/discordjs-japan/om/commit/1587d08fbc04408834001a82e50fc0db03c0edf1)), closes [#1447](https://github.com/discordjs-japan/om/issues/1447)
+* use SimpleMarkdown from discord-markdown-parser ([#1370](https://github.com/discordjs-japan/om/issues/1370)) ([9adba08](https://github.com/discordjs-japan/om/commit/9adba08ddafa753562e1b3269562d924a918775b))
+* use strict pattern for slash command mentions ([#1425](https://github.com/discordjs-japan/om/issues/1425)) ([eafa7c8](https://github.com/discordjs-japan/om/commit/eafa7c85eab55fd820995e2614dc77621de43e92)), closes [#717](https://github.com/discordjs-japan/om/issues/717)
+
+
+### Dependencies
+
+* lock file maintenance ([#1235](https://github.com/discordjs-japan/om/issues/1235)) ([c487195](https://github.com/discordjs-japan/om/commit/c4871955d19813270b0fdd51fbd8a9935fb4bbf9))
+* lock file maintenance ([#1403](https://github.com/discordjs-japan/om/issues/1403)) ([430b60c](https://github.com/discordjs-japan/om/commit/430b60c1a62f97dfc06207946631bee694b4f8bf))
+* lock file maintenance ([#1428](https://github.com/discordjs-japan/om/issues/1428)) ([8c978cb](https://github.com/discordjs-japan/om/commit/8c978cb0f83436726fa86c4222aca91a3dbfd093))
+* lock file maintenance ([#1454](https://github.com/discordjs-japan/om/issues/1454)) ([af20ebb](https://github.com/discordjs-japan/om/commit/af20ebb7ba47d970ada1c4ecb92a4a59ae86bdc0))
+* update dependency @snazzah/davey to v0.1.12 ([#1291](https://github.com/discordjs-japan/om/issues/1291)) ([4f161ca](https://github.com/discordjs-japan/om/commit/4f161cac1b17ab7b77701d2dc69d70c0d78fdf08))
+* update dependency @snazzah/davey to v0.2.0 ([#1457](https://github.com/discordjs-japan/om/issues/1457)) ([eef2b75](https://github.com/discordjs-japan/om/commit/eef2b75a868c4d04e202e3a6d10a54e9b97bd643))
+* update dependency discord.js to v14.26.2 ([#1224](https://github.com/discordjs-japan/om/issues/1224)) ([bef9df9](https://github.com/discordjs-japan/om/commit/bef9df92d3e63d4b380310d751b6935b3a817315))
+* update dependency discord.js to v14.26.3 ([#1242](https://github.com/discordjs-japan/om/issues/1242)) ([a2c8795](https://github.com/discordjs-japan/om/commit/a2c879516a62fd6b3103c916196d899ce03fab0a))
+* update dependency discord.js to v14.26.4 ([#1251](https://github.com/discordjs-japan/om/issues/1251)) ([1672968](https://github.com/discordjs-japan/om/commit/1672968e77c93954d769bc518be7c17487535aaa))
+* update dependency discord.js to v14.26.5 ([#1313](https://github.com/discordjs-japan/om/issues/1313)) ([5a784ec](https://github.com/discordjs-japan/om/commit/5a784ec5af32c2b7653bc5796fd851c92ba1d9ca))
+* update dependency discord.js to v14.27.0 ([#1321](https://github.com/discordjs-japan/om/issues/1321)) ([a560041](https://github.com/discordjs-japan/om/commit/a5600415285a845e25767d06383a0ae9e0691c85))
+* update dependency discord.js to v14.28.0 ([#1455](https://github.com/discordjs-japan/om/issues/1455)) ([46428f0](https://github.com/discordjs-japan/om/commit/46428f0d6672b20172840e668d73b6c83416a342))
+* update dependency discord.js to v14.28.1 ([#1464](https://github.com/discordjs-japan/om/issues/1464)) ([214a768](https://github.com/discordjs-japan/om/commit/214a76895fdec06647080cd364a0efa7ef05b320))
+* update dependency pino to v10.4.0 ([#1415](https://github.com/discordjs-japan/om/issues/1415)) ([ff5063a](https://github.com/discordjs-japan/om/commit/ff5063a8e391dec0e043002df8a7e757e7f9e095))
+
 ## [0.7.0](https://github.com/discordjs-japan/om/compare/v0.6.0...v0.7.0) (2026-03-31)
 
 
