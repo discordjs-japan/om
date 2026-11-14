@@ -2,7 +2,7 @@
 
 FROM node:26.13.1-bookworm@sha256:b7087bc4d973034b30854b378ba107f9fab622b47514cb7e2592e41b8bab8d49 AS deps
 ARG NODE_ENV=production
-WORKDIR /app
+WORKDIR /work
 RUN npm config set cache /.npm
 COPY --link ./.husky/install.mjs ./.husky/
 COPY --link ./package.json ./package-lock.json ./
@@ -13,7 +13,7 @@ RUN node --print "require('@discordjs-japan/om-syrinx').JPREPROCESS_VERSION" > .
 
 FROM --platform=$BUILDPLATFORM node:26.13.1-bookworm@sha256:b7087bc4d973034b30854b378ba107f9fab622b47514cb7e2592e41b8bab8d49 AS builder
 ARG NODE_ENV=development
-WORKDIR /app
+WORKDIR /work
 RUN npm config set cache /.npm
 COPY --link ./.husky/install.mjs ./.husky/
 COPY --link ./rolldown.config.mts ./
@@ -25,17 +25,17 @@ COPY --link ./src/ ./src/
 RUN npm run build
 
 FROM --platform=$BUILDPLATFORM node:26.13.1-bookworm@sha256:b7087bc4d973034b30854b378ba107f9fab622b47514cb7e2592e41b8bab8d49 AS dictionary
-WORKDIR /app
-COPY --link --from=deps /app/.jpreprocess-version ./
+WORKDIR /work
+COPY --link --from=deps /work/.jpreprocess-version ./
 RUN curl -L "https://github.com/jpreprocess/jpreprocess/releases/download/v$(cat .jpreprocess-version)/naist-jdic-jpreprocess.tar.gz" | tar xzf -
 
 FROM --platform=$BUILDPLATFORM node:26.13.1-bookworm@sha256:b7087bc4d973034b30854b378ba107f9fab622b47514cb7e2592e41b8bab8d49 AS models
-WORKDIR /app
+WORKDIR /work
 RUN curl -L "https://github.com/icn-lab/htsvoice-tohoku-f01/archive/refs/heads/master.tar.gz" | tar xzf -
 
 FROM --platform=$BUILDPLATFORM node:26.13.1-bookworm@sha256:b7087bc4d973034b30854b378ba107f9fab622b47514cb7e2592e41b8bab8d49 AS user-dictionary
-WORKDIR /app
-COPY --link --from=deps /app/.jpreprocess-version ./
+WORKDIR /work
+COPY --link --from=deps /work/.jpreprocess-version ./
 RUN curl -L "https://github.com/jpreprocess/jpreprocess/releases/download/v$(cat .jpreprocess-version)/jpreprocess-$(uname -m)-unknown-linux-gnu.tgz" | tar xzf -
 COPY --link ./data/dict.csv ./
 RUN ./jpreprocess/dict_tools build -u lindera dict.csv user-dictionary.bin
@@ -44,13 +44,13 @@ FROM gcr.io/distroless/nodejs26-debian13:nonroot@sha256:1d736cf8b5716c07a245301f
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --link ./package.json ./
-COPY --link --from=builder /app/dist/ ./dist/
-COPY --link --from=deps /app/node_modules/ ./node_modules/
-COPY --link --from=dictionary /app/ ./dictionary/
+COPY --link --from=builder /work/dist/ ./dist/
+COPY --link --from=deps /work/node_modules/ ./node_modules/
+COPY --link --from=dictionary /work/ ./dictionary/
 ENV DICTIONARY=dictionary/naist-jdic
-COPY --link --from=models /app/ ./models/
+COPY --link --from=models /work/ ./models/
 ENV MODELS=models/htsvoice-tohoku-f01-master/tohoku-f01-neutral.htsvoice
-COPY --link --from=user-dictionary /app/ ./user-dictionary/
+COPY --link --from=user-dictionary /work/ ./user-dictionary/
 ENV USER_DICTIONARY=user-dictionary/user-dictionary.bin
 
 CMD ["--enable-source-maps", "dist/main.js"]
