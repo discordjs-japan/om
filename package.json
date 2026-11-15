@@ -33,7 +33,7 @@
     }
   },
   "devDependencies": {
-    "@tsconfig/node26": "26.0.1",
+    "@tsconfig/node26": "26.0.2",
     "@types/node": "26.6.6",
     "husky": "9.1.7",
     "lint-staged": "17.6.0",
