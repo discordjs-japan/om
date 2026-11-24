@@ -8,7 +8,7 @@ import packageJson from "./package.json" with { type: "json" };
  * バージョン文字列を決める。優先順位は次のとおり。
  *
  * 1. 環境変数 `OM_VERSION`(ビルド時にバージョンの値を指定したいとき)
- * 2. `git describe` の出力
+ * 2. `git describe` の出力(`version:git-describe` スクリプト経由)
  * 3. `package.json` の `version`(フォールバック)
  *
  * `git describe` の出力はタグ上なら `vX.Y.Z`、タグから進んでいれば
@@ -20,15 +20,12 @@ function resolveVersion(): string {
   if (fromEnvironment.length >= 1) return fromEnvironment;
 
   const { status, stdout } = spawnSync(
-    "git",
-    [
-      "describe",
-      "--tags",
-      "--match=v[0-9]*.[0-9]*.[0-9]*",
-      "--always",
-      "--dirty",
-    ],
-    { encoding: "utf8" },
+    "npm run --silent version:git-describe",
+    {
+      encoding: "utf8",
+      // Windows では npm の実体が npm.cmd であるため、shell なしでは spawn できない
+      shell: true,
+    },
   );
 
   if (status === 0) return stdout.trim();

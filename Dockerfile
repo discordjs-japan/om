@@ -22,7 +22,7 @@ if [ "$(git rev-parse --is-shallow-repository)" = true ]; then
 fi
 
 mkdir -p /out
-git describe --tags --match='v[0-9]*.[0-9]*.[0-9]*' --always --dirty > /out/git-describe
+npm run --silent version:git-describe > /out/git-describe
 EOF
 
 FROM --platform=$BUILDPLATFORM node:26.13.1-bookworm@sha256:b7087bc4d973034b30854b378ba107f9fab622b47514cb7e2592e41b8bab8d49 AS builder
