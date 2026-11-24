@@ -1,7 +1,42 @@
+import { spawnSync } from "node:child_process";
 import type { RolldownOptions } from "rolldown";
 import { defineConfig } from "rolldown/config";
 import { replacePlugin } from "rolldown/plugins";
 import packageJson from "./package.json" with { type: "json" };
+
+/**
+ * バージョン文字列を決める。優先順位は次のとおり。
+ *
+ * 1. 環境変数 `OM_VERSION`(ビルド時にバージョンの値を指定したいとき)
+ * 2. `git describe` の出力
+ * 3. `package.json` の `version`(フォールバック)
+ *
+ * `git describe` の出力はタグ上なら `vX.Y.Z`、タグから進んでいれば
+ * `vX.Y.Z-<コミット数>-g<短縮 SHA>`、未コミットの変更があれば `-dirty` が付く。
+ * 該当するタグが無ければ短縮 SHA になる。
+ */
+function resolveVersion(): string {
+  const fromEnvironment = process.env.OM_VERSION?.trim() ?? "";
+  if (fromEnvironment.length >= 1) return fromEnvironment;
+
+  const { status, stdout } = spawnSync(
+    "git",
+    [
+      "describe",
+      "--tags",
+      "--match=v[0-9]*.[0-9]*.[0-9]*",
+      "--always",
+      "--dirty",
+    ],
+    { encoding: "utf8" },
+  );
+
+  if (status === 0) return stdout.trim();
+
+  return `v${packageJson.version}`;
+}
+
+const VERSION_PLACEHOLDER = "[VI]{{inject}}[/VI]";
 
 export default defineConfig({
   input: "src/main.ts",
@@ -9,7 +44,7 @@ export default defineConfig({
   external: /^[^./](?!:[/\\])/,
   plugins: [
     replacePlugin(
-      { "[VI]{{inject}}[/VI]": packageJson.version },
+      { [VERSION_PLACEHOLDER]: resolveVersion() },
       { delimiters: ['"', '"'] },
     ),
   ],
