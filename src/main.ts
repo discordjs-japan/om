@@ -21,7 +21,7 @@ const client = new Client({
     activities: [
       {
         type: ActivityType.Custom,
-        name: `v${OM_VERSION}`,
+        name: OM_VERSION,
       },
     ],
   },

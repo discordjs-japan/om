@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "run-s build start:dev",
     "build": "rolldown --config",
+    "version:git-describe": "git describe --tags --match=\"v[0-9]*.[0-9]*.[0-9]*\" --always --dirty",
     "start": "node dist/main.js",
     "start:dev": "node --enable-source-maps --env-file=.env dist/main.js",
     "check": "run-s -c *:check",
