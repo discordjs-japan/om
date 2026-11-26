@@ -27,9 +27,19 @@ export interface StateOptions
 
 export default class Pipeline extends EventEmitter<PipelineEventsMap> {
   static #cache = new Collection<string, Pipeline>();
+  static #shuttingDown = false;
 
   static get(guildId: string): Pipeline | null {
     return Pipeline.#cache.get(guildId) ?? null;
+  }
+
+  static isShuttingDown(): boolean {
+    return Pipeline.#shuttingDown;
+  }
+
+  static beginShutdown(): Pipeline[] {
+    Pipeline.#shuttingDown = true;
+    return [...Pipeline.#cache.values()];
   }
 
   private readonly logger: Logger;

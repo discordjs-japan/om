@@ -64,6 +64,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 
 client.on(Events.VoiceStateUpdate, async (_, n) => {
+  if (Pipeline.isShuttingDown()) return;
+
   const pipeline = Pipeline.get(n.guild.id);
 
   if (!pipeline) return;
@@ -99,8 +101,38 @@ client.once(Events.ClientReady, async (client) => {
 });
 
 function shutdown(signal: NodeJS.Signals) {
+  if (Pipeline.isShuttingDown()) return;
+
   logger.info(`Received ${signal}, shutting down`);
-  void client.destroy().then(() => process.exit(0));
+
+  void gracefulShutdown().catch((error: unknown) => {
+    logger.error({ error }, "Failed to shut down gracefully");
+    process.exit(1);
+  });
+}
+
+async function gracefulShutdown() {
+  const pipelines = Pipeline.beginShutdown();
+
+  await Promise.race([
+    Promise.allSettled(
+      pipelines.map(async (pipeline) => {
+        const pipelineLogger = logger.child({
+          guildId: pipeline.channel.guild.id,
+        });
+
+        await pipeline.channel
+          .send("シャットダウン処理が開始されたため退出します。")
+          .catch((error: unknown) =>
+            pipelineLogger.warn({ error }, "Failed to send shutdown notice"),
+          );
+      }),
+    ),
+    new Promise((resolve) => setTimeout(resolve, 5_000)),
+  ]);
+
+  await client.destroy();
+  process.exit(0);
 }
 
 process.on("SIGINT", shutdown);
