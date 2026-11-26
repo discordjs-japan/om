@@ -7,7 +7,7 @@ import packageJson from "./package.json" with { type: "json" };
 /**
  * バージョン文字列を決める。優先順位は次のとおり。
  *
- * 1. 環境変数 `OM_VERSION`(ビルド時にバージョンの値を指定したいとき)
+ * 1. `--environment="OM_VERSION:値"`(rolldown の CLI 引数) あるいは、環境変数 `OM_VERSION`
  * 2. `git describe` の出力(`version:git-describe` スクリプト経由)
  * 3. `package.json` の `version`(フォールバック)
  *

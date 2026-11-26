@@ -37,7 +37,7 @@ RUN --mount=type=cache,id=npm-$BUILDPLATFORM,target=/.npm \
     npm ci
 COPY --link ./src/ ./src/
 RUN --mount=type=bind,from=describe,source=/out/git-describe,target=/tmp/git-describe \
-    OM_VERSION="$(cat /tmp/git-describe)" npm run build
+    npm run build -- --environment="OM_VERSION:$(cat /tmp/git-describe)"
 
 FROM --platform=$BUILDPLATFORM node:26.13.1-bookworm@sha256:b7087bc4d973034b30854b378ba107f9fab622b47514cb7e2592e41b8bab8d49 AS dictionary
 WORKDIR /work
