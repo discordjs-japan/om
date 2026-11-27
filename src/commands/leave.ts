@@ -15,6 +15,8 @@ export const definition = {
 export async function handler(
   interaction: ChatInputCommandInteraction<"cached">,
 ) {
+  if (Pipeline.isShuttingDown()) return;
+
   const pipeline = Pipeline.get(interaction.guildId);
   if (!pipeline) {
     throw new ReplyableError("ボイスチャンネルに参加していません。");
