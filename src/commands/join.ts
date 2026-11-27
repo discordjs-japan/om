@@ -30,6 +30,12 @@ type AllowedChannelType =
 export async function handler(
   interaction: ChatInputCommandInteraction<"cached">,
 ) {
+  if (Pipeline.isShuttingDown()) {
+    throw new ReplyableError(
+      "シャットダウン処理中のため新しいボイスチャンネルに接続できません。",
+    );
+  }
+
   const channel =
     interaction.options.getChannel<AllowedChannelType>("channel") ??
     (interaction.channel?.isVoiceBased() ? interaction.channel : null) ??

@@ -27,9 +27,19 @@ export interface StateOptions
 
 export default class Pipeline extends EventEmitter<PipelineEventsMap> {
   static #cache = new Collection<string, Pipeline>();
+  static #shuttingDown = false;
 
   static get(guildId: string): Pipeline | null {
     return Pipeline.#cache.get(guildId) ?? null;
+  }
+
+  static isShuttingDown(): boolean {
+    return Pipeline.#shuttingDown;
+  }
+
+  static beginShutdown(): Pipeline[] {
+    Pipeline.#shuttingDown = true;
+    return [...Pipeline.#cache.values()];
   }
 
   private readonly logger: Logger;
@@ -53,6 +63,10 @@ export default class Pipeline extends EventEmitter<PipelineEventsMap> {
   }
 
   init() {
+    if (Pipeline.isShuttingDown()) {
+      throw new Error("Cannot initialize pipeline while shutting down");
+    }
+
     Pipeline.#cache.set(this.channel.guild.id, this);
     this.logger.info("Initializing pipeline");
     this.connection ??= joinVoiceChannel({
@@ -209,6 +223,10 @@ export default class Pipeline extends EventEmitter<PipelineEventsMap> {
   }
 
   async disconnect(signal?: AbortSignal) {
+    if (Pipeline.isShuttingDown()) {
+      throw new Error("Cannot disconnect pipeline while shutting down");
+    }
+
     this.logger.info("Disconnecting from voice channel");
     setImmediate(() => this.connection?.disconnect());
     await once(this, "disconnect", { signal });
