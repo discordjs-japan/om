@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@tsconfig/node26": "26.0.2",
-    "@types/node": "26.6.7",
+    "@types/node": "26.6.10",
     "husky": "9.1.7",
     "lint-staged": "17.6.2",
     "npm-run-all2": "9.1.0",
